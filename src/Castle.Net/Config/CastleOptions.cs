@@ -1,5 +1,4 @@
-﻿using System;
-using Castle.Net.Messages;
+﻿using Castle.Net.Messages;
 
 namespace Castle.Net.Config
 {
@@ -9,7 +8,7 @@ namespace Castle.Net.Config
 
         public ActionType FailOverStrategy { get; set; } = ActionType.Allow;
 
-        public int Timeout { get; set; } = 500;
+        public int Timeout { get; set; } = 1000;
 
         public string BaseUrl { get; set; } = "https://api.castle.io";
 

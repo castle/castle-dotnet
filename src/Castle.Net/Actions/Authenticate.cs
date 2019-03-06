@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Castle.Net.Config;
 using Castle.Net.Infrastructure;
 using Castle.Net.Infrastructure.Exceptions;
 using Castle.Net.Messages;
@@ -10,16 +11,23 @@ namespace Castle.Net.Actions
     {
         public static async Task<AuthenticateResponse> Execute(
             IMessageSender sender,
-            AuthenticateRequest request,
-            ActionType failoverStrategy)
+            ActionRequest request,
+            CastleOptions options)
         {
             try
             {
-                return await sender.Post<AuthenticateResponse>(request, "/v1/authenticate");
+                var alteredRequest = request.ShallowCopy();
+                if (request.Context != null)
+                {
+                    var scrubbed = HeaderScrubber.Scrub(request.Context.Headers, options.Whitelist, options.Blacklist);
+                    alteredRequest.Context = request.Context.WithHeaders(scrubbed);
+                }
+
+                return await sender.Post<AuthenticateResponse>(alteredRequest, "/v1/authenticate");
             }
             catch (Exception e)
             {
-                return CreateFailoverResponse(failoverStrategy, e);
+                return CreateFailoverResponse(options.FailOverStrategy, e);
             }
         }
 

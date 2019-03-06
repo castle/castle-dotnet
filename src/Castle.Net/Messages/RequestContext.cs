@@ -13,5 +13,16 @@ namespace Castle.Net.Messages
         public IDictionary<string, string> Headers { get; set; }
 
         public LibraryInfo Library { get; set; }
+
+        internal RequestContext WithHeaders(IDictionary<string, string> headers)
+        {
+            return new RequestContext()
+            {
+                ClientId = ClientId,
+                Ip = Ip,
+                Library = Library,
+                Headers = headers
+            };
+        }
     }
 }

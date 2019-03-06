@@ -17,7 +17,7 @@ namespace Tests
                 Timeout = 1000
             };
 
-            var actionRequest = new AuthenticateRequest()
+            var actionRequest = new ActionRequest()
             {
                 Event = "testing",
                 UserId = "123",

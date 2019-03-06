@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Castle.Net.Messages
 {
-    public abstract class ActionRequest
+    public class ActionRequest
     {
         [JsonProperty("sent_at")]
         public DateTime? SentAt { get; set; }
@@ -25,5 +25,10 @@ namespace Castle.Net.Messages
         public IDictionary<string, string> Properties { get; set; }
 
         public RequestContext Context { get; set; }
+
+        internal ActionRequest ShallowCopy()
+        {
+            return (ActionRequest) MemberwiseClone();
+        }
     }
 }

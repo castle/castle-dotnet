@@ -19,9 +19,9 @@ namespace Castle.Net
             _logger = new LoggerWithLevel(logger, options.LogLevel);
         }
 
-        public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest request)
+        public async Task<AuthenticateResponse> Authenticate(ActionRequest request)
         {
-            return await TryRequest(() => Actions.Authenticate.Execute(_messageSender, request, _options.FailOverStrategy));
+            return await TryRequest(() => Actions.Authenticate.Execute(_messageSender, request, _options));
         }
 
         private async Task<T> TryRequest<T>(Func<Task<T>> request)
