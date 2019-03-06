@@ -6,9 +6,9 @@ using Xunit;
 
 namespace Tests
 {
-    public class RunEndToEnd
+    public class Run_end_to_end
     {
-        [Fact]
+        [Fact(Skip = "manual")]
         public async Task Send()
         {
             var castleOptions = new CastleOptions()
@@ -17,7 +17,7 @@ namespace Tests
                 Timeout = 1000
             };
 
-            var actionRequest = new ActionRequest()
+            var actionRequest = new AuthenticateRequest()
             {
                 Event = "testing",
                 UserId = "123",

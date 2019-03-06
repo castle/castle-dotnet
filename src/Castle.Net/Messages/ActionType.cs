@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Castle.Net.Config
+namespace Castle.Net.Messages
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum FailOverStrategy
+    public enum ActionType
     {
-        Allow = 0,
+        None = 0,
+        Allow,
         Challenge,
-        Deny,
-        None
+        Deny
     }
 }

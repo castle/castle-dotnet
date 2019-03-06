@@ -29,7 +29,7 @@ namespace Castle.Net.Infrastructure
             WithLevelGuard(() => _externalLogger.Error(message), LogLevel.Error);
         }
 
-        private void WithLevelGuard(Action log, LogLevel level)
+        private void WithLevelGuard(System.Action log, LogLevel level)
         {
             if (_logLevel <= level)
             {

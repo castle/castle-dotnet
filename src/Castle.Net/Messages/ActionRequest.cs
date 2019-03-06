@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Castle.Net.Messages
 {
-    public class ActionRequest
+    public abstract class ActionRequest
     {
         [JsonProperty("sent_at")]
         public DateTime? SentAt { get; set; }

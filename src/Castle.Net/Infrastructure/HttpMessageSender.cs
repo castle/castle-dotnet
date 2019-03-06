@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Castle.Net.Config;
 using Castle.Net.Infrastructure.Exceptions;
+using Castle.Net.Infrastructure.Extensions;
 using Castle.Net.Messages;
 
 namespace Castle.Net.Infrastructure
@@ -17,7 +18,7 @@ namespace Castle.Net.Infrastructure
         {
             _httpClient = new HttpClient()
             {
-                BaseAddress = options.BaseUrl, 
+                BaseAddress = new Uri(options.BaseUrl), 
                 Timeout = TimeSpan.FromMilliseconds(options.Timeout)
             };
 
@@ -25,29 +26,33 @@ namespace Castle.Net.Infrastructure
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
         }
 
-        public async Task Post(ActionRequest payload, string endpoint)
+        public async Task<TResponse> Post<TResponse>(ActionRequest payload, string endpoint)
         {
             var jsonContent = PayloadToJson(payload);
+            var message = new HttpRequestMessage(HttpMethod.Post, endpoint)
+            {
+                Content = jsonContent
+            };
 
-            await SendRequest(() => _httpClient.PostAsync(endpoint, jsonContent));
+            return await SendRequest<TResponse>(message);
         }
 
-        private static async Task<HttpResponseMessage> SendRequest(Func<Task<HttpResponseMessage>> send)
+        private async Task<T> SendRequest<T>(HttpRequestMessage requestMessage)
         {
             try
             {
-                var response = await send();
+                var response = await _httpClient.SendAsync(requestMessage);
                 if (response.IsSuccessStatusCode)
                 {
-                    return response;
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvertForCastle.DeserializeObject<T>(content);
                 }
 
-                throw new CastleInternalException(response);
+                throw await response.ToCastleException(requestMessage.RequestUri.AbsoluteUri);
             }
-            catch (TaskCanceledException ce)
+            catch (OperationCanceledException)
             {
-                // timeout
-                throw new CastleInternalException(ce);
+                throw new CastleTimeoutException(requestMessage.RequestUri.AbsoluteUri, _httpClient.Timeout.Milliseconds);
             }
         }
 
@@ -58,10 +63,5 @@ namespace Castle.Net.Infrastructure
                 Encoding.UTF8, 
                 "application/json");
         }
-    }
-
-    internal interface IMessageSender
-    {
-        Task Post(ActionRequest payload, string endpoint);
     }
 }

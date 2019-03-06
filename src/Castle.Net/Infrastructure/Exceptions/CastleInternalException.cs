@@ -1,18 +1,31 @@
 ﻿using System;
-using System.Net.Http;
+using System.Net;
 
 namespace Castle.Net.Infrastructure.Exceptions
 {
-    class CastleInternalException : Exception
+    internal class CastleInternalException : Exception
     {
-        public CastleInternalException(HttpResponseMessage responseMessage)
-        {
-            var content = responseMessage.Content.ReadAsStringAsync().Result;
-        }
-
-        public CastleInternalException(Exception innerException)
+        protected CastleInternalException(string message)
+            : base(message)
         {
 
         }
+
+        protected CastleInternalException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+
+        }
+
+        public CastleInternalException(string message, string requestUri, HttpStatusCode? httpStatusCode = null)
+            : base(message)
+        {
+            HttpStatusCode = httpStatusCode;
+            RequestUri = requestUri;
+        }
+
+        public HttpStatusCode? HttpStatusCode { get; set; }
+
+        public string RequestUri { get; set; }
     }
 }

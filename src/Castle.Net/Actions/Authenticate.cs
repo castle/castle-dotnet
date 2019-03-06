@@ -1,22 +1,41 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Castle.Net.Infrastructure;
+using Castle.Net.Infrastructure.Exceptions;
 using Castle.Net.Messages;
 
 namespace Castle.Net.Actions
 {
-    internal class Authenticate
+    internal static class Authenticate
     {
-        private readonly IMessageSender _messageSender;
-
-        public Authenticate(IMessageSender messageSender)
+        public static async Task<AuthenticateResponse> Execute(
+            IMessageSender sender,
+            AuthenticateRequest request,
+            ActionType failoverStrategy)
         {
-            _messageSender = messageSender;
+            try
+            {
+                return await sender.Post<AuthenticateResponse>(request, "/v1/authenticate");
+            }
+            catch (Exception e)
+            {
+                return CreateFailoverResponse(failoverStrategy, e);
+            }
         }
 
-        public async Task<ActionResponse> Execute(ActionRequest request)
+        private static AuthenticateResponse CreateFailoverResponse(ActionType strategy, Exception exception)
         {
-            await _messageSender.Post(request, "/v1/authenticate");
-            return new ActionResponse();
+            if (strategy == ActionType.None)
+            {
+                throw new CastleExternalException("Attempted failover, but no strategy was set.");
+            }
+
+            return new AuthenticateResponse()
+            {
+                Action = strategy,
+                Failover = true,
+                FailoverReason = exception is CastleTimeoutException ? "timeout" : "server error"
+            };
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Castle.Net.Actions;
 using Castle.Net.Config;
 using Castle.Net.Infrastructure;
-using Castle.Net.Infrastructure.Exceptions;
 using Castle.Net.Messages;
 
 namespace Castle.Net
@@ -21,27 +19,15 @@ namespace Castle.Net
             _logger = new LoggerWithLevel(logger, options.LogLevel);
         }
 
-        public async Task<ActionResponse> Authenticate(ActionRequest request)
+        public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest request)
         {
-            return await Try(() => new Authenticate(_messageSender).Execute(request));
+            return await TryRequest(() => Actions.Authenticate.Execute(_messageSender, request, _options.FailOverStrategy));
         }
 
-        private async Task<T> Try<T>(Func<Task<T>> call)
+        private async Task<T> TryRequest<T>(Func<Task<T>> request)
             where T : new()
         {
-            try
-            {
-                return await call();
-            }
-            catch (CastleExternalException)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return await Task.FromResult(new T());
-            }
+            return await ExceptionGuard.Try(request, _logger);
         }
     }
 }

@@ -8,12 +8,19 @@ namespace Castle.Net.Infrastructure
         private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            NullValueHandling = NullValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Ignore,
+            DateFormatHandling = DateFormatHandling.IsoDateFormat,
+            DateTimeZoneHandling = DateTimeZoneHandling.Utc
         };
 
         public static string SerializeObject(object obj)
         {
             return JsonConvert.SerializeObject(obj, JsonSettings);
+        }
+
+        public static T DeserializeObject<T>(string value)
+        {
+            return JsonConvert.DeserializeObject<T>(value, JsonSettings);
         }
     }
 }

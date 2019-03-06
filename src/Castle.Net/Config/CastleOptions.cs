@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.Net.Messages;
 
 namespace Castle.Net.Config
 {
@@ -6,11 +7,11 @@ namespace Castle.Net.Config
     {
         public string ApiSecret { get; set; }
 
-        public FailOverStrategy FailOverStrategy { get; set; } = FailOverStrategy.Allow;
+        public ActionType FailOverStrategy { get; set; } = ActionType.Allow;
 
         public int Timeout { get; set; } = 500;
 
-        public Uri BaseUrl { get; set; } = new Uri("https://api.castle.io");
+        public string BaseUrl { get; set; } = "https://api.castle.io";
 
         public bool LogHttp { get; set; } = false;
 
