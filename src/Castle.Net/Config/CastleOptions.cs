@@ -1,6 +1,6 @@
-﻿using Castle.Net.Messages;
+﻿using Castle.Messages;
 
-namespace Castle.Net.Config
+namespace Castle.Config
 {
     public class CastleOptions
     {

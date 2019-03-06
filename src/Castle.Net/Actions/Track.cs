@@ -1,14 +1,15 @@
-﻿using System.Threading.Tasks;
-using Castle.Net.Config;
-using Castle.Net.Infrastructure;
-using Castle.Net.Messages;
+﻿using System;
+using System.Threading.Tasks;
+using Castle.Config;
+using Castle.Infrastructure;
+using Castle.Messages;
 
-namespace Castle.Net.Actions
+namespace Castle.Actions
 {
     internal static class Track
     {
         public static async Task<VoidResponse> Execute(
-            IMessageSender sender,
+            Func<ActionRequest, Task<VoidResponse>> send,
             ActionRequest request,
             CastleOptions options)
         {
@@ -19,7 +20,7 @@ namespace Castle.Net.Actions
                 alteredRequest.Context = request.Context.WithHeaders(scrubbed);
             }
 
-            return await sender.Post<VoidResponse>(alteredRequest, "/v1/track");
+            return await send(alteredRequest);
         }
     }
 }

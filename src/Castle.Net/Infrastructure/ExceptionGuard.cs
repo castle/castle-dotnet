@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Castle.Net.Infrastructure.Exceptions;
+using Castle.Infrastructure.Exceptions;
 
-namespace Castle.Net.Infrastructure
+namespace Castle.Infrastructure
 {
     internal static class ExceptionGuard
     {

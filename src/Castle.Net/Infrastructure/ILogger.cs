@@ -1,4 +1,4 @@
-﻿namespace Castle.Net.Infrastructure
+﻿namespace Castle.Infrastructure
 {
     public interface ILogger
     {

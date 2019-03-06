@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Castle.Net.Infrastructure.Exceptions
+namespace Castle.Infrastructure.Exceptions
 {
     public class CastleExternalException : Exception
     {

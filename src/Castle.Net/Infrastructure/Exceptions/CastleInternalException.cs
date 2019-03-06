@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Castle.Net.Infrastructure.Exceptions
+namespace Castle.Infrastructure.Exceptions
 {
     internal class CastleInternalException : Exception
     {

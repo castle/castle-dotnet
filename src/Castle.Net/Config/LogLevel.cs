@@ -1,4 +1,4 @@
-﻿namespace Castle.Net.Config
+﻿namespace Castle.Config
 {
     public enum LogLevel
     {

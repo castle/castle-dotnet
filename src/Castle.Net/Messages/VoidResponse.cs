@@ -1,6 +1,9 @@
-﻿namespace Castle.Net.Messages
+﻿namespace Castle.Messages
 {
-    public class VoidResponse
+    /// <summary>
+    /// Provides consistent internal interfaces for requests with no response
+    /// </summary>
+    internal class VoidResponse
     {
     }
 }

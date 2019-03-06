@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Castle.Net.Messages
+namespace Castle.Messages
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ActionType

@@ -1,10 +1,14 @@
 ﻿using System.Threading.Tasks;
-using Castle.Net.Messages;
+using Castle.Messages;
 
-namespace Castle.Net.Infrastructure
+namespace Castle.Infrastructure
 {
     internal interface IMessageSender
     {
-        Task<TResponse> Post<TResponse>(ActionRequest payload, string endpoint);
+        Task<TResponse> Post<TResponse>(ActionRequest payload, string endpoint) where TResponse : class, new(); 
+        
+        Task<TResponse> Get<TResponse>(string endpoint) where TResponse : class, new();
+
+        Task<TResponse> Put<TResponse>(string endpoint) where TResponse : class, new();
     }
 }

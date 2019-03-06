@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoFixture.Xunit2;
-using Castle.Net.Infrastructure;
+using Castle.Infrastructure;
 using FluentAssertions;
 using Xunit;
 

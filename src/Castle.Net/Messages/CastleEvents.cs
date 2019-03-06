@@ -1,4 +1,4 @@
-﻿namespace Castle.Net.Messages
+﻿namespace Castle.Messages
 {
     public class CastleEvents
     {

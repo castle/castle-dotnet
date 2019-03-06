@@ -1,7 +1,6 @@
-﻿using System;
-using Castle.Net.Config;
+﻿using Castle.Config;
 
-namespace Castle.Net.Infrastructure
+namespace Castle.Infrastructure
 {
     internal class LoggerWithLevel : ILogger
     {

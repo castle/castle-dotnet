@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Castle.Net.Actions;
-using Castle.Net.Config;
-using Castle.Net.Infrastructure;
-using Castle.Net.Infrastructure.Exceptions;
-using Castle.Net.Messages;
+using Castle.Actions;
+using Castle.Config;
+using Castle.Infrastructure.Exceptions;
+using Castle.Messages;
 using FluentAssertions;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace Tests
@@ -20,12 +16,11 @@ namespace Tests
         public async Task Should_return_response_if_successful(
             ActionRequest request,
             CastleOptions options,
-            AuthenticateResponse response)
+            Verdict response)
         {
-            var sender = Substitute.For<IMessageSender>();
-            sender.Post<AuthenticateResponse>(request, Arg.Any<string>()).Returns(response);
+            Task<Verdict> Send(ActionRequest req) => Task.FromResult(response);
 
-            var result = await Authenticate.Execute(sender, request, options);
+            var result = await Authenticate.Execute(Send, request, options);
 
             result.Should().Be(response);
         }
@@ -36,10 +31,9 @@ namespace Tests
             string requestUri,
             int timeout)
         {
-            var sender = Substitute.For<IMessageSender>();
-            sender.Post<AuthenticateResponse>(request, Arg.Any<string>()).Throws(new CastleTimeoutException(requestUri, timeout));
+            Task<Verdict> Send(ActionRequest req) => throw new CastleTimeoutException(requestUri, timeout);
 
-            var result = await Authenticate.Execute(sender, request, new CastleOptions() { FailOverStrategy = ActionType.Allow });
+            var result = await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.Allow });
 
             result.Failover.Should().Be(true);
             result.FailoverReason.Should().Be("timeout");
@@ -48,10 +42,9 @@ namespace Tests
         [Theory, AutoData]
         public async Task Should_return_failover_response_if_any_exception(ActionRequest request)
         {
-            var sender = Substitute.For<IMessageSender>();
-            sender.Post<AuthenticateResponse>(request, Arg.Any<string>()).Throws(new Exception("error!"));
+            Task<Verdict> Send(ActionRequest req) => throw new Exception("error!");
 
-            var result = await Authenticate.Execute(sender, request, new CastleOptions() { FailOverStrategy = ActionType.Allow });
+            var result = await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.Allow });
 
             result.Failover.Should().Be(true);
             result.FailoverReason.Should().Be("server error");
@@ -60,10 +53,9 @@ namespace Tests
         [Theory, AutoData]
         public async Task Should_throw_exception_if_failing_over_with_no_strategy(ActionRequest request)
         {
-            var sender = Substitute.For<IMessageSender>();
-            sender.Post<AuthenticateResponse>(request, Arg.Any<string>()).Throws(new Exception("error!"));
+            Task<Verdict> Send(ActionRequest req) => throw new Exception("error!");
 
-            Func<Task> act = async () => await Authenticate.Execute(sender, request, new CastleOptions() { FailOverStrategy = ActionType.None });
+            Func<Task> act = async () => await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.None });
 
             await act.Should().ThrowAsync<CastleExternalException>();
         }
@@ -71,17 +63,19 @@ namespace Tests
         [Theory, AutoData]
         public async Task Should_scrub_headers(
             ActionRequest request,
-            CastleOptions options)
+            CastleOptions options,
+            Verdict response)
         {
-            var sender = Substitute.For<IMessageSender>();
+            ActionRequest requestArg = null;
+            Task<Verdict> Send(ActionRequest req)
+            {
+                requestArg = req;
+                return Task.FromResult(response);
+            }
 
-            await Authenticate.Execute(sender, request, options);
+            await Authenticate.Execute(Send, request, options);
 
-            await sender.Received().Post<AuthenticateResponse>(
-                Arg.Is<ActionRequest>(match => match.Context.Headers != request.Context.Headers),
-                Arg.Any<string>());
-
-            
+            requestArg.Context.Headers.Should().NotEqual(request.Context.Headers); 
         }
     }
 }

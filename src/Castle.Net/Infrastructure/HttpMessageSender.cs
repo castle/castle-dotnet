@@ -3,12 +3,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Castle.Net.Config;
-using Castle.Net.Infrastructure.Exceptions;
-using Castle.Net.Infrastructure.Extensions;
-using Castle.Net.Messages;
+using Castle.Config;
+using Castle.Infrastructure.Exceptions;
+using Castle.Infrastructure.Extensions;
+using Castle.Messages;
 
-namespace Castle.Net.Infrastructure
+namespace Castle.Infrastructure
 {
     internal class HttpMessageSender : IMessageSender
     {
@@ -27,6 +27,7 @@ namespace Castle.Net.Infrastructure
         }
 
         public async Task<TResponse> Post<TResponse>(ActionRequest payload, string endpoint)
+            where TResponse : class, new()
         {
             var jsonContent = PayloadToJson(payload);
             var message = new HttpRequestMessage(HttpMethod.Post, endpoint)
@@ -37,7 +38,22 @@ namespace Castle.Net.Infrastructure
             return await SendRequest<TResponse>(message);
         }
 
-        private async Task<T> SendRequest<T>(HttpRequestMessage requestMessage)
+        public async Task<TResponse> Get<TResponse>(string endpoint)
+            where TResponse : class, new()
+        {
+            var message = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            return await SendRequest<TResponse>(message);
+        }
+
+        public async Task<TResponse> Put<TResponse>(string endpoint)
+            where TResponse : class, new()
+        {
+            var message = new HttpRequestMessage(HttpMethod.Put, endpoint);
+            return await SendRequest<TResponse>(message);
+        }
+
+        private async Task<TResponse> SendRequest<TResponse>(HttpRequestMessage requestMessage)
+            where TResponse : class, new()
         {
             try
             {
@@ -45,14 +61,16 @@ namespace Castle.Net.Infrastructure
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvertForCastle.DeserializeObject<T>(content);
+                    return JsonConvertForCastle.DeserializeObject<TResponse>(content);
                 }
 
                 throw await response.ToCastleException(requestMessage.RequestUri.AbsoluteUri);
             }
             catch (OperationCanceledException)
             {
-                throw new CastleTimeoutException(requestMessage.RequestUri.AbsoluteUri, (int)_httpClient.Timeout.TotalMilliseconds);
+                throw new CastleTimeoutException(
+                    requestMessage.RequestUri.AbsoluteUri, 
+                    (int)_httpClient.Timeout.TotalMilliseconds);
             }
         }
 

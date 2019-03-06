@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
 
-namespace Castle.Net.Messages
+namespace Castle.Messages
 {
     public class RequestContext
     {
-        [JsonProperty("client_id")]
         public string ClientId { get; set; }
 
         public string Ip { get; set; }

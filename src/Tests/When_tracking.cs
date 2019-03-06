@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Castle.Net.Actions;
-using Castle.Net.Config;
-using Castle.Net.Infrastructure;
-using Castle.Net.Messages;
-using NSubstitute;
+using Castle.Actions;
+using Castle.Config;
+using Castle.Messages;
+using FluentAssertions;
 using Xunit;
 
 namespace Tests
@@ -14,15 +13,19 @@ namespace Tests
         [Theory, AutoData]
         public async Task Should_scrub_headers(
             ActionRequest request,
-            CastleOptions options)
+            CastleOptions options,
+            Verdict response)
         {
-            var sender = Substitute.For<IMessageSender>();
+            ActionRequest requestArg = null;
+            Task<Verdict> Send(ActionRequest req)
+            {
+                requestArg = req;
+                return Task.FromResult(response);
+            }
 
-            await Track.Execute(sender, request, options);
+            await Authenticate.Execute(Send, request, options);
 
-            await sender.Received().Post<VoidResponse>(
-                Arg.Is<ActionRequest>(match => match.Context.Headers != request.Context.Headers),
-                Arg.Any<string>());
+            requestArg.Context.Headers.Should().NotEqual(request.Context.Headers);
         }
     }
 }

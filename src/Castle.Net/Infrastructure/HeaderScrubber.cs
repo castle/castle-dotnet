@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Castle.Net.Infrastructure
+namespace Castle.Infrastructure
 {
     internal static class HeaderScrubber
     {

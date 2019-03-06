@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Castle.Net.Infrastructure.Exceptions
+﻿namespace Castle.Infrastructure.Exceptions
 {
     internal class CastleTimeoutException : CastleInternalException
     {

@@ -1,8 +1,8 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using Castle.Net.Infrastructure.Exceptions;
+using Castle.Infrastructure.Exceptions;
 
-namespace Castle.Net.Infrastructure.Extensions
+namespace Castle.Infrastructure.Extensions
 {
     internal static class HttpResponseExtensions
     {
