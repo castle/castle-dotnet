@@ -24,6 +24,11 @@ namespace Castle.Net
             return await TryRequest(() => Actions.Authenticate.Execute(_messageSender, request, _options));
         }
 
+        public async Task Track(ActionRequest request)
+        {
+            await TryRequest(() => Actions.Track.Execute(_messageSender, request, _options));
+        }
+
         private async Task<T> TryRequest<T>(Func<Task<T>> request)
             where T : new()
         {

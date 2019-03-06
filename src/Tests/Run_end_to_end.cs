@@ -8,15 +8,31 @@ namespace Tests
 {
     public class Run_end_to_end
     {
-        [Fact(Skip = "manual")]
-        public async Task Send()
+        private readonly CastleOptions _options = new CastleOptions()
         {
-            var castleOptions = new CastleOptions()
-            {
-                ApiSecret = "gQpLzXqezkdHpbpd8vUzTzNdKQL3RotD",
-                Timeout = 1000
-            };
+            ApiSecret = "gQpLzXqezkdHpbpd8vUzTzNdKQL3RotD",
+            Timeout = 1000
+        };
 
+        private readonly ActionRequest _request = new ActionRequest()
+        {
+            Event = "testing",
+            UserId = "123",
+            DeviceToken = "ey...",
+            Context = new RequestContext()
+            {
+                Ip = "111.111.111.111",
+                ClientId = "123",
+                Headers = new Dictionary<string, string>
+                {
+                    ["User-Agent"] = "x"
+                }
+            },
+        };
+
+        [Fact(Skip = "manual")]
+        public async Task Authenticate()
+        {
             var actionRequest = new ActionRequest()
             {
                 Event = "testing",
@@ -34,9 +50,16 @@ namespace Tests
             };
 
 
-            var castle = new Castle.Net.Castle(castleOptions);
-            await castle.Authenticate(actionRequest);
+            var castle = new Castle.Net.Castle(_options);
+            await castle.Authenticate(_request);
+        }
 
+        //[Fact(Skip = "manual")]
+        [Fact]
+        public async Task Track()
+        {
+            var castle = new Castle.Net.Castle(_options);
+            await castle.Track(_request);
         }
     }
 }

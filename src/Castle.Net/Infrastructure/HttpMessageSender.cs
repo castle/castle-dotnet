@@ -52,7 +52,7 @@ namespace Castle.Net.Infrastructure
             }
             catch (OperationCanceledException)
             {
-                throw new CastleTimeoutException(requestMessage.RequestUri.AbsoluteUri, _httpClient.Timeout.Milliseconds);
+                throw new CastleTimeoutException(requestMessage.RequestUri.AbsoluteUri, (int)_httpClient.Timeout.TotalMilliseconds);
             }
         }
 
