@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using Castle.Config;
 using Castle.Infrastructure;
 using Castle.Messages;
-using Castle.Messages.SdkRequests;
+using Castle.Messages.Requests;
+using Castle.Messages.Responses;
 
 namespace Castle
 {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace Castle.Messages
+namespace Castle.Messages.Requests
 {
     public class RequestContext
     {
@@ -8,9 +9,10 @@ namespace Castle.Messages
 
         public string Ip { get; set; }
 
-        public IDictionary<string, string> Headers { get; set; }
+        public IDictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
-        public LibraryInfo Library { get; set; }
+        [JsonProperty]
+        internal LibraryInfo Library { get; set; } = new LibraryInfo();
 
         internal RequestContext WithHeaders(IDictionary<string, string> headers)
         {

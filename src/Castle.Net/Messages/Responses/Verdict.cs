@@ -1,4 +1,4 @@
-﻿namespace Castle.Messages
+﻿namespace Castle.Messages.Responses
 {
     public class Verdict
     {

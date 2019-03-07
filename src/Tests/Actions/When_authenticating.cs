@@ -5,7 +5,8 @@ using Castle.Actions;
 using Castle.Config;
 using Castle.Infrastructure.Exceptions;
 using Castle.Messages;
-using Castle.Messages.SdkRequests;
+using Castle.Messages.Requests;
+using Castle.Messages.Responses;
 using FluentAssertions;
 using Xunit;
 
@@ -82,5 +83,23 @@ namespace Tests
 
             requestArg.Context.Headers.Should().NotEqual(request.Context.Headers); 
         }
+
+        [Theory, AutoData]
+        public async Task Should_set_sent_date(
+            ActionRequest request,
+            CastleOptions options,
+            Verdict response)
+        {
+            ActionRequest requestArg = null;
+            Task<Verdict> Send(ActionRequest req)
+            {
+                requestArg = req;
+                return Task.FromResult(response);
+            }
+
+            await Authenticate.Execute(Send, request, options);
+
+            requestArg.SentAt.Should().BeAfter(DateTime.MinValue);
+        }        
     }
 }

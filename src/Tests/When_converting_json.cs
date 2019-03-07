@@ -1,6 +1,7 @@
 ﻿using System;
 using Castle.Infrastructure;
 using Castle.Messages;
+using Castle.Messages.Responses;
 using FluentAssertions;
 using Xunit;
 

@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Castle.Config;
 using Castle.Infrastructure;
-using Castle.Messages;
-using Castle.Messages.SdkRequests;
+using Castle.Messages.Requests;
+using Castle.Messages.Responses;
 
 namespace Castle.Actions
 {
@@ -20,6 +20,8 @@ namespace Castle.Actions
                 var scrubbed = HeaderScrubber.Scrub(request.Context.Headers, options.Whitelist, options.Blacklist);
                 alteredRequest.Context = request.Context.WithHeaders(scrubbed);
             }
+
+            alteredRequest.SentAt = DateTime.Now;
 
             return await send(alteredRequest);
         }

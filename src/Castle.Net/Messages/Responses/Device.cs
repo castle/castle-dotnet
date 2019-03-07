@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Castle.Messages
+namespace Castle.Messages.Responses
 {
     public class Device
     {

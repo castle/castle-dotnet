@@ -1,4 +1,4 @@
-﻿namespace Castle.Messages.SdkRequests
+﻿namespace Castle.Messages.Requests
 {
     public class ImpersonateStartRequest
     {
@@ -6,6 +6,6 @@
 
         public string Impersonator { get; set; }
 
-        public RequestContext Context { get; set; }
+        public RequestContext Context { get; set; } = new RequestContext();
     }
 }
