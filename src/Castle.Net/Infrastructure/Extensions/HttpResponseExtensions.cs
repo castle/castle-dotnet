@@ -9,7 +9,7 @@ namespace Castle.Infrastructure.Extensions
         public static async Task<CastleInternalException> ToCastleException(this HttpResponseMessage message, string requestUri)
         {
             var content = await message.Content.ReadAsStringAsync();
-            return new CastleInternalException(requestUri, content, message.StatusCode);
+            return new CastleInternalException(content, requestUri, message.StatusCode);
         }
     }
 }

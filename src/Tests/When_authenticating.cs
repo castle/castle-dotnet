@@ -5,6 +5,7 @@ using Castle.Actions;
 using Castle.Config;
 using Castle.Infrastructure.Exceptions;
 using Castle.Messages;
+using Castle.Messages.SdkRequests;
 using FluentAssertions;
 using Xunit;
 

@@ -3,6 +3,7 @@ using AutoFixture.Xunit2;
 using Castle.Actions;
 using Castle.Config;
 using Castle.Messages;
+using Castle.Messages.SdkRequests;
 using FluentAssertions;
 using Xunit;
 

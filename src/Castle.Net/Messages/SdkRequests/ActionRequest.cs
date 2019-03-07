@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Castle.Messages
+namespace Castle.Messages.SdkRequests
 {
     public class ActionRequest
     {

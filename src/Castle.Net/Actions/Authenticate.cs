@@ -4,6 +4,7 @@ using Castle.Config;
 using Castle.Infrastructure;
 using Castle.Infrastructure.Exceptions;
 using Castle.Messages;
+using Castle.Messages.SdkRequests;
 
 namespace Castle.Actions
 {

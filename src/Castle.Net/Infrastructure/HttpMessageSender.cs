@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Castle.Config;
 using Castle.Infrastructure.Exceptions;
 using Castle.Infrastructure.Extensions;
-using Castle.Messages;
 
 namespace Castle.Infrastructure
 {
@@ -26,7 +25,7 @@ namespace Castle.Infrastructure
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
         }
 
-        public async Task<TResponse> Post<TResponse>(ActionRequest payload, string endpoint)
+        public async Task<TResponse> Post<TResponse>(string endpoint, object payload)
             where TResponse : class, new()
         {
             var jsonContent = PayloadToJson(payload);
@@ -38,7 +37,7 @@ namespace Castle.Infrastructure
             return await SendRequest<TResponse>(message);
         }
 
-        public async Task<TResponse> Get<TResponse>(string endpoint)
+        public async Task<TResponse> Get<TResponse>(string endpoint) 
             where TResponse : class, new()
         {
             var message = new HttpRequestMessage(HttpMethod.Get, endpoint);
@@ -49,6 +48,17 @@ namespace Castle.Infrastructure
             where TResponse : class, new()
         {
             var message = new HttpRequestMessage(HttpMethod.Put, endpoint);
+            return await SendRequest<TResponse>(message);
+        }
+
+        public async Task<TResponse> Delete<TResponse>(string endpoint, object payload)
+            where TResponse : class, new()
+        {
+            var jsonContent = PayloadToJson(payload);
+            var message = new HttpRequestMessage(HttpMethod.Delete, endpoint)
+            {
+                Content = jsonContent
+            };
             return await SendRequest<TResponse>(message);
         }
 
