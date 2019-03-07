@@ -41,9 +41,11 @@ namespace Tests
         }
 
         [Theory, AutoData]
-        public async Task Should_return_failover_response_if_any_exception(ActionRequest request)
+        public async Task Should_return_failover_response_if_any_exception(
+            ActionRequest request,
+            Exception exception)
         {
-            Task<Verdict> Send(ActionRequest req) => throw new Exception("error!");
+            Task<Verdict> Send(ActionRequest req) => throw exception;
 
             var result = await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.Allow });
 
@@ -52,9 +54,11 @@ namespace Tests
         }
 
         [Theory, AutoData]
-        public async Task Should_throw_exception_if_failing_over_with_no_strategy(ActionRequest request)
+        public async Task Should_throw_exception_if_failing_over_with_no_strategy(
+            ActionRequest request,
+            Exception exception)
         {
-            Task<Verdict> Send(ActionRequest req) => throw new Exception("error!");
+            Task<Verdict> Send(ActionRequest req) => throw exception;
 
             Func<Task> act = async () => await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.None });
 
