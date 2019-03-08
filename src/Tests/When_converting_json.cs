@@ -90,7 +90,7 @@ namespace Tests
 
         // Null values are skipped by Newtonsoft.Json, so we don't test those
         [Theory]
-        [InlineData("non-empty", "\"client_id\":\"non-epty\"")]
+        [InlineData("non-empty", "\"client_id\":\"non-empty\"")]
         [InlineData("", "\"client_id\":false")]
         public void Should_serialize_client_id_to_false_if_empty(string value, string expected)
         {
