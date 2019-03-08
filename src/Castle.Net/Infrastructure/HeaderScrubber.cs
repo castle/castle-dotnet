@@ -11,26 +11,29 @@ namespace Castle.Infrastructure
             string[] whitelist,
             string[] blacklist)
         {
-            var scrubbed = new Dictionary<string, string>();
+            return headers
+                .Select(header => Scrub(whitelist, blacklist, header))
+                .ToDictionary(x => x.Key, y => y.Value);
+        }
 
-            // Do blacklist first, so we don't stray outside the whitelist
-            if (blacklist != null)
+        private static KeyValuePair<string, string> Scrub(
+            string[] whitelist, 
+            string[] blacklist, 
+            KeyValuePair<string, string> header)
+        {
+            const string scrubValue = "true";
+
+            if (blacklist.Contains(header.Key, StringComparer.OrdinalIgnoreCase))
             {
-                foreach (var key in headers.Keys.Except(blacklist, StringComparer.OrdinalIgnoreCase))
-                {
-                    scrubbed.Add(key, headers[key]);
-                }
+                return new KeyValuePair<string, string>(header.Key, scrubValue);
             }
 
-            if (whitelist != null && whitelist.Length > 0)
+            if (whitelist.Length > 0 && !whitelist.Contains(header.Key, StringComparer.OrdinalIgnoreCase))
             {
-                foreach (var key in scrubbed.Keys.Except(whitelist, StringComparer.OrdinalIgnoreCase).ToList())
-                {
-                    scrubbed.Remove(key);
-                }
+                return new KeyValuePair<string, string>(header.Key, scrubValue);
             }
 
-            return scrubbed;
+            return new KeyValuePair<string, string>(header.Key, header.Value);
         }
     }
 }

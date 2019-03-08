@@ -3,17 +3,17 @@ using Newtonsoft.Json;
 
 namespace Castle.Infrastructure.Json
 {
-    internal class EmptyStringToFalseConverter : JsonConverter
+    internal class StringScrubConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if ((string)value == string.Empty)
+            if ((string)value == "true")
             {
-                writer.WriteValue(false);
+                writer.WriteValue(true);
             }
             else
             {
-                writer.WriteValue(value);   
+                writer.WriteValue(value);
             }
         }
 
@@ -25,6 +25,6 @@ namespace Castle.Infrastructure.Json
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(string);
-        }
+        }        
     }
 }

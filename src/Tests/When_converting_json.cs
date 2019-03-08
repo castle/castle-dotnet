@@ -102,11 +102,9 @@ namespace Tests
         }
 
         [Theory]
-        [InlineData("Cookie", "non-empty", "\"Cookie\":true")]
-        [InlineData("cookie", "non-empty", "\"cookie\":true")]
-        [InlineData("Cookie", "", "\"Cookie\":\"\"")]
-        [InlineData("Cookie", null, "\"Cookie\":null")]
-        public void Should_serialize_Cookie_header_to_true_if_nonempty(
+        [InlineData("Cookie", "true", "\"Cookie\":true")]
+        [InlineData("cookie", "non-empty", "\"cookie\":\"non-empty\"")]
+        public void Should_serialize_header_to_truebool_if_truestring(
             string name,
             string value, 
             string expected)

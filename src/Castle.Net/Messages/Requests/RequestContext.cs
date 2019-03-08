@@ -11,7 +11,7 @@ namespace Castle.Messages.Requests
 
         public string Ip { get; set; }
 
-        [JsonProperty(ItemConverterType = typeof(HeaderConverter))]
+        [JsonProperty(ItemConverterType = typeof(StringScrubConverter))]
         public IDictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
         [JsonProperty]
