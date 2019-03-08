@@ -1,6 +1,7 @@
 ﻿using System;
-using Castle.Infrastructure;
-using Castle.Messages;
+using System.Collections.Generic;
+using Castle.Infrastructure.Json;
+using Castle.Messages.Requests;
 using Castle.Messages.Responses;
 using FluentAssertions;
 using Xunit;
@@ -9,6 +10,8 @@ namespace Tests
 {
     public class When_converting_json
     {
+        #region General
+
         [Fact]
         public void Should_serialize_lowercase_properties()
         {
@@ -63,7 +66,7 @@ namespace Tests
         {
             const string json = "{\"user_id\":\"123\"}";
 
-            var result = JsonConvertForCastle.DeserializeObject<TestObject>(json);
+            var result = JsonConvertForCastle.DeserializeObject<GenericObject>(json);
 
             result.UserId.Should().Be("123");
         }
@@ -76,9 +79,53 @@ namespace Tests
             result.Should().NotBeNull();
         }
 
-        private class TestObject
+        private class GenericObject
         {
             public string UserId { get; set; }
         }
+
+        #endregion
+
+        #region Domain
+
+        // Null values are skipped by Newtonsoft.Json, so we don't test those
+        [Theory]
+        [InlineData("non-empty", "\"client_id\":\"non-empty\"")]
+        [InlineData("", "\"client_id\":false")]
+        public void Should_serialize_client_id_to_false_if_empty(string value, string expected)
+        {
+            var obj = new RequestContext() { ClientId = value };
+
+            var result = JsonConvertForCastle.SerializeObject(obj);
+
+            result.Should().Contain(expected);
+        }
+
+        [Theory]
+        [InlineData("Cookie", "non-empty", "\"Cookie\":true")]
+        [InlineData("cookie", "non-empty", "\"cookie\":true")]
+        [InlineData("Cookie", "", "\"Cookie\":\"\"")]
+        [InlineData("Cookie", null, "\"Cookie\":null")]
+        public void Should_serialize_Cookie_header_to_true_if_nonempty(
+            string name,
+            string value, 
+            string expected)
+        {
+            var obj = new RequestContext()
+            {
+                Headers = new Dictionary<string, string>()
+                {
+                    [name] = value
+                }
+            };
+        
+
+        var result = JsonConvertForCastle.SerializeObject(obj);
+
+            result.Should().Contain(expected);
+        }
+
+        #endregion  
+       
     }
 }

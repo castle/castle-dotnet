@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+using Castle.Infrastructure.Json;
 using Newtonsoft.Json;
 
 namespace Castle.Messages.Requests
 {
     public class RequestContext
     {
+        [JsonConverter(typeof(EmptyStringToFalseConverter))]
         public string ClientId { get; set; }
 
         public string Ip { get; set; }
 
+        [JsonProperty(ItemConverterType = typeof(HeaderConverter))]
         public IDictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
         [JsonProperty]

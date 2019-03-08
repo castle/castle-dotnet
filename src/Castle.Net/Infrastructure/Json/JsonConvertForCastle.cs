@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Castle.Infrastructure
+namespace Castle.Infrastructure.Json
 {
     internal static class JsonConvertForCastle
     {

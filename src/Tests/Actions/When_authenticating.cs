@@ -67,7 +67,7 @@ namespace Tests
         }
 
         [Theory, AutoData]
-        public async Task Should_scrub_headers(
+        public async Task Should_prepare_request_for_send(
             ActionRequest request,
             CastleOptions options,
             Verdict response)
@@ -81,25 +81,7 @@ namespace Tests
 
             await Authenticate.Execute(Send, request, options);
 
-            requestArg.Context.Headers.Should().NotEqual(request.Context.Headers); 
-        }
-
-        [Theory, AutoData]
-        public async Task Should_set_sent_date(
-            ActionRequest request,
-            CastleOptions options,
-            Verdict response)
-        {
-            ActionRequest requestArg = null;
-            Task<Verdict> Send(ActionRequest req)
-            {
-                requestArg = req;
-                return Task.FromResult(response);
-            }
-
-            await Authenticate.Execute(Send, request, options);
-
-            requestArg.SentAt.Should().BeAfter(DateTime.MinValue);
-        }        
+            requestArg.Should().NotBe(request); 
+        }         
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Castle.Config;
-using Castle.Infrastructure;
 using Castle.Infrastructure.Exceptions;
 using Castle.Messages;
 using Castle.Messages.Requests;
@@ -18,16 +17,9 @@ namespace Castle.Actions
         {
             try
             {
-                var alteredRequest = request.ShallowCopy();
-                if (request.Context != null)
-                {
-                    var scrubbed = HeaderScrubber.Scrub(request.Context.Headers, options.Whitelist, options.Blacklist);
-                    alteredRequest.Context = request.Context.WithHeaders(scrubbed);
-                }
+                var apiRequest = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
 
-                alteredRequest.SentAt = DateTime.Now;
-
-                return await send(alteredRequest);
+                return await send(apiRequest);
             }
             catch (Exception e)
             {

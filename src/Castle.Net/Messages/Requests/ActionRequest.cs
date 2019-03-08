@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Castle.Infrastructure;
 using Newtonsoft.Json;
 
 namespace Castle.Messages.Requests
@@ -26,6 +27,20 @@ namespace Castle.Messages.Requests
         internal ActionRequest ShallowCopy()
         {
             return (ActionRequest) MemberwiseClone();
+        }
+
+        internal ActionRequest PrepareApiCopy(string[] whitelist, string[] blacklist)
+        {
+            var copy = (ActionRequest) MemberwiseClone();
+            var scrubbed = HeaderScrubber.Scrub(Context.Headers, whitelist, blacklist);
+            copy.Context = Context.WithHeaders(scrubbed);
+
+            copy.SentAt = DateTime.Now;
+
+            // Newtonsoft.Json doesn't apply custom converter to null values, so this must be empty instead
+            copy.Context.ClientId = copy.Context.ClientId ?? "";
+
+            return copy;
         }
     }
 }
