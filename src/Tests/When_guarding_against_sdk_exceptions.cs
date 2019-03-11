@@ -68,7 +68,7 @@ namespace Tests
 
             await ExceptionGuard.Try(DoRequest, logger);
 
-            logger.Received().Error(exception.Message);
+            logger.Received().Error(exception.ToString());
         }
 
         [Theory, AutoFakeData]

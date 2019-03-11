@@ -21,7 +21,7 @@ namespace Castle.Infrastructure
             }
             catch (Exception e)
             {
-                logger.Error(e.Message);
+                logger.Error(e.ToString());
                 return await Task.FromResult(new TResponse());
             }
         }

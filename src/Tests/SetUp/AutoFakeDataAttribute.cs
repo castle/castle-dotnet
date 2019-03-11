@@ -10,6 +10,15 @@ namespace Tests.SetUp
             : base(() => new Fixture().Customize(new AutoNSubstituteCustomization()))
         {
             
+        }        
+    }
+
+    public class InlineAutoFakeDataAttribute : InlineAutoDataAttribute
+    {
+        public InlineAutoFakeDataAttribute(params object[] values)
+            : base(new AutoFakeDataAttribute(), values)
+        {
+            
         }
     }
 }

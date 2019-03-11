@@ -16,10 +16,12 @@ namespace Castle
         public Castle(CastleOptions options, ILogger logger = null)
         {
             _options = options;
-            _messageSender = options.DoNotTrack 
-                ? (IMessageSender) new NoTrackMessageSender()
-                : new HttpMessageSender(options);
+            
             _logger = new LoggerWithLevel(logger, options.LogLevel);
+
+            _messageSender = options.DoNotTrack
+                ? (IMessageSender)new NoTrackMessageSender()
+                : new HttpMessageSender(options, _logger);
         }
 
         public async Task<Verdict> Authenticate(ActionRequest request)
@@ -27,7 +29,8 @@ namespace Castle
             return await TryRequest(() => Actions.Authenticate.Execute(
                 req => _messageSender.Post<Verdict>("/v1/authenticate", req), 
                 request, 
-                _options));
+                _options,
+                _logger));
         }
 
         public async Task Track(ActionRequest request)

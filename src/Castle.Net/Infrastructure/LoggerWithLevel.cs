@@ -30,7 +30,7 @@ namespace Castle.Infrastructure
 
         private void WithLevelGuard(System.Action log, LogLevel level)
         {
-            if (_logLevel <= level)
+            if (_logLevel >= level)
             {
                 log();
             }
