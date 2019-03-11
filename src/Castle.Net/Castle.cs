@@ -16,7 +16,9 @@ namespace Castle
         public Castle(CastleOptions options, ILogger logger = null)
         {
             _options = options;
-            _messageSender = new HttpMessageSender(options);
+            _messageSender = options.DoNotTrack 
+                ? (IMessageSender) new NoTrackMessageSender()
+                : new HttpMessageSender(options);
             _logger = new LoggerWithLevel(logger, options.LogLevel);
         }
 

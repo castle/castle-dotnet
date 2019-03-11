@@ -15,6 +15,9 @@ namespace Castle.Actions
             ActionRequest request,
             CastleOptions options)
         {
+            if (options.DoNotTrack)
+                return CreateFailoverResponse(options.FailOverStrategy, "do not track");
+
             try
             {
                 var apiRequest = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
@@ -27,7 +30,7 @@ namespace Castle.Actions
             }
         }
 
-        private static Verdict CreateFailoverResponse(ActionType strategy, Exception exception)
+        private static Verdict CreateFailoverResponse(ActionType strategy, string reason)
         {
             if (strategy == ActionType.None)
             {
@@ -38,8 +41,13 @@ namespace Castle.Actions
             {
                 Action = strategy,
                 Failover = true,
-                FailoverReason = exception is CastleTimeoutException ? "timeout" : "server error"
+                FailoverReason = reason
             };
+        }
+
+        private static Verdict CreateFailoverResponse(ActionType strategy, Exception exception)
+        {
+            return CreateFailoverResponse(strategy, exception is CastleTimeoutException ? "timeout" : "server error");
         }
     }
 }

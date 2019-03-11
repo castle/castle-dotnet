@@ -31,11 +31,13 @@ namespace Tests
         public async Task Should_return_failover_response_if_timeout(
             ActionRequest request,
             string requestUri,
-            int timeout)
+            CastleOptions options)
         {
-            Task<Verdict> Send(ActionRequest req) => throw new CastleTimeoutException(requestUri, timeout);
+            options.FailOverStrategy = ActionType.Allow;
 
-            var result = await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.Allow });
+            Task<Verdict> Send(ActionRequest req) => throw new CastleTimeoutException(requestUri, options.Timeout);
+
+            var result = await Authenticate.Execute(Send, request, options);
 
             result.Failover.Should().Be(true);
             result.FailoverReason.Should().Be("timeout");
@@ -44,11 +46,14 @@ namespace Tests
         [Theory, AutoData]
         public async Task Should_return_failover_response_if_any_exception(
             ActionRequest request,
-            Exception exception)
+            Exception exception,
+            CastleOptions options)
         {
+            options.FailOverStrategy = ActionType.Allow;
+
             Task<Verdict> Send(ActionRequest req) => throw exception;
 
-            var result = await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.Allow });
+            var result = await Authenticate.Execute(Send, request, options);
 
             result.Failover.Should().Be(true);
             result.FailoverReason.Should().Be("server error");
@@ -57,11 +62,14 @@ namespace Tests
         [Theory, AutoData]
         public async Task Should_throw_exception_if_failing_over_with_no_strategy(
             ActionRequest request,
-            Exception exception)
+            Exception exception,
+            CastleOptions options)
         {
+            options.FailOverStrategy = ActionType.None;
+
             Task<Verdict> Send(ActionRequest req) => throw exception;
 
-            Func<Task> act = async () => await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.None });
+            Func<Task> act = async () => await Authenticate.Execute(Send, request, options);
 
             await act.Should().ThrowAsync<CastleExternalException>();
         }
@@ -82,6 +90,23 @@ namespace Tests
             await Authenticate.Execute(Send, request, options);
 
             requestArg.Should().NotBe(request); 
-        }         
+        }
+
+        [Theory, AutoData]
+        public async Task Should_return_failover_response_if_do_not_track_is_set(
+            ActionRequest request,
+            CastleOptions options,
+            Verdict response)
+        {
+            options.DoNotTrack = true;
+            options.FailOverStrategy = ActionType.Allow;
+
+            Task<Verdict> Send(ActionRequest req) => Task.FromResult(response);
+
+            var result = await Authenticate.Execute(Send, request, options);
+
+            result.Failover.Should().Be(true);
+            result.FailoverReason.Should().Be("do not track");
+        }
     }
 }
