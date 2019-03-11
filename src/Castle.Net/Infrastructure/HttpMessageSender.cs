@@ -15,17 +15,17 @@ namespace Castle.Infrastructure
         private readonly ILogger _logger;
         private readonly HttpClient _httpClient;
 
-        public HttpMessageSender(CastleOptions options, ILogger logger)
+        public HttpMessageSender(CastleConfiguration configuration, ILogger logger)
         {
             _logger = logger;
 
             _httpClient = new HttpClient()
             {
-                BaseAddress = new Uri(options.BaseUrl), 
-                Timeout = TimeSpan.FromMilliseconds(options.Timeout)
+                BaseAddress = new Uri(configuration.BaseUrl), 
+                Timeout = TimeSpan.FromMilliseconds(configuration.Timeout)
             };
 
-            var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(":" + options.ApiSecret));
+            var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(":" + configuration.ApiSecret));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
         }
 

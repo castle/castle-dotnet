@@ -14,22 +14,22 @@ namespace Castle.Actions
         public static async Task<Verdict> Execute(
             Func<ActionRequest, Task<Verdict>> send,
             ActionRequest request,
-            CastleOptions options,
+            CastleConfiguration configuration,
             ILogger logger)
         {
-            if (options.DoNotTrack)
-                return CreateFailoverResponse(options.FailOverStrategy, "do not track");
+            if (configuration.DoNotTrack)
+                return CreateFailoverResponse(configuration.FailOverStrategy, "do not track");
 
             try
             {
-                var apiRequest = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
+                var apiRequest = request.PrepareApiCopy(configuration.Whitelist, configuration.Blacklist);
 
                 return await send(apiRequest);
             }
             catch (Exception e)
             {
                 logger.Warn("Failover, " + e);
-                return CreateFailoverResponse(options.FailOverStrategy, e);
+                return CreateFailoverResponse(configuration.FailOverStrategy, e);
             }
         }
 

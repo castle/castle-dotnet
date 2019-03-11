@@ -9,24 +9,27 @@ namespace Castle
 {
     public class Castle
     {
-        private readonly CastleOptions _options;
+        private readonly CastleConfiguration _configuration;
         private readonly IMessageSender _messageSender;
         private readonly ILogger _logger;
 
         /// <summary>
         /// Main SDK entry point
         /// </summary>
-        /// <param name="options">Configuration options for this instance</param>
+        /// <param name="configuration">Configuration options for this instance</param>
         /// <param name="logger">Enable customized logging by passing in an implementation of <see cref="ILogger"/></param>
-        public Castle(CastleOptions options, ILogger logger = null)
+        public Castle(CastleConfiguration configuration, ILogger logger = null)
         {
-            _options = options;
-            
-            _logger = new LoggerWithLevel(logger, options.LogLevel);
+            if (string.IsNullOrEmpty(configuration.ApiSecret))
+                throw  new ArgumentException("Api secret is a required configuration option");
 
-            _messageSender = options.DoNotTrack
+            _configuration = configuration;
+            
+            _logger = new LoggerWithLevel(logger, configuration.LogLevel);
+
+            _messageSender = configuration.DoNotTrack
                 ? (IMessageSender)new NoTrackMessageSender()
-                : new HttpMessageSender(options, _logger);
+                : new HttpMessageSender(configuration, _logger);
         }
 
         public async Task<Verdict> Authenticate(ActionRequest request)
@@ -34,7 +37,7 @@ namespace Castle
             return await TryRequest(() => Actions.Authenticate.Execute(
                 req => _messageSender.Post<Verdict>("/v1/authenticate", req), 
                 request, 
-                _options,
+                _configuration,
                 _logger));
         }
 
@@ -43,7 +46,7 @@ namespace Castle
             await TryRequest(() => Actions.Track.Execute(
                 req => _messageSender.Post<VoidResponse>("/v1/track", req),
                 request, 
-                _options));
+                _configuration));
         }
 
         public async Task<DeviceList> GetDevicesForUser(string userId)

@@ -15,7 +15,7 @@ namespace Tests
         [Theory, AutoData]
         public async Task Should_prepare_request_for_send(
             ActionRequest request,
-            CastleOptions options)
+            CastleConfiguration options)
         {
             ActionRequest requestArg = null;
             Task<VoidResponse> Send(ActionRequest req)

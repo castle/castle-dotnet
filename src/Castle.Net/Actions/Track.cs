@@ -11,9 +11,9 @@ namespace Castle.Actions
         public static async Task<VoidResponse> Execute(
             Func<ActionRequest, Task<VoidResponse>> send,
             ActionRequest request,
-            CastleOptions options)
+            CastleConfiguration configuration)
         {
-            var apiRequest = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
+            var apiRequest = request.PrepareApiCopy(configuration.Whitelist, configuration.Blacklist);
 
             return await send(apiRequest);
         }

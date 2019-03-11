@@ -11,7 +11,7 @@ namespace Tests.Actions
     public class When_preparing_request
     {
         [Theory, AutoData]
-        public void Should_scrub_headers(ActionRequest request, CastleOptions options)
+        public void Should_scrub_headers(ActionRequest request, CastleConfiguration options)
         {
             var result = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
 
@@ -19,7 +19,7 @@ namespace Tests.Actions
         }
 
         [Theory, AutoData]
-        public void Should_set_sent_date(ActionRequest request, CastleOptions options)
+        public void Should_set_sent_date(ActionRequest request, CastleConfiguration options)
         {
             var result = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
 
@@ -27,7 +27,7 @@ namespace Tests.Actions
         }
 
         [Theory, AutoData]
-        public void Should_set_null_clientid_to_empty(ActionRequest request, CastleOptions options)
+        public void Should_set_null_clientid_to_empty(ActionRequest request, CastleConfiguration options)
         {
             request.Context.ClientId = null;
 
@@ -37,7 +37,7 @@ namespace Tests.Actions
         }
 
         [Theory, AutoData]
-        public void Should_preserve_valid_clientid(ActionRequest request, CastleOptions options)
+        public void Should_preserve_valid_clientid(ActionRequest request, CastleConfiguration options)
         {
             var result = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
 

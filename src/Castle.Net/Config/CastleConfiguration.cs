@@ -2,10 +2,10 @@
 
 namespace Castle.Config
 {
-    public class CastleOptions
+    public class CastleConfiguration
     {
         /// <summary>
-        /// Secret used to authenticate with the Castle Api
+        /// Secret used to authenticate with the Castle Api (Required)
         /// </summary>
         public string ApiSecret { get; set; }
 
