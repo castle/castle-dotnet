@@ -1,9 +1,15 @@
-﻿using Castle.Messages;
+﻿using Castle.Infrastructure;
+using Castle.Messages;
 
 namespace Castle.Config
 {
     public class CastleConfiguration
     {
+        public CastleConfiguration(string apiSecret)
+        {
+            ApiSecret = apiSecret;
+        }
+
         /// <summary>
         /// Secret used to authenticate with the Castle Api (Required)
         /// </summary>
@@ -23,8 +29,6 @@ namespace Castle.Config
         /// Base Castle Api url
         /// </summary>
         public string BaseUrl { get; set; } = "https://api.castle.io";
-
-        public bool LogHttp { get; set; } = false;
 
         /// <summary>
         /// Log level applied by the injected <see cref="ILogger"/> implementation

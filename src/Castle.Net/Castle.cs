@@ -7,6 +7,9 @@ using Castle.Messages.Responses;
 
 namespace Castle
 {
+    /// <summary>
+    /// Main SDK entry point
+    /// </summary>
     public class Castle
     {
         private readonly CastleConfiguration _configuration;
@@ -14,15 +17,12 @@ namespace Castle
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Main SDK entry point
+        /// 
         /// </summary>
         /// <param name="configuration">Configuration options for this instance</param>
         /// <param name="logger">Enable customized logging by passing in an implementation of <see cref="ILogger"/></param>
         public Castle(CastleConfiguration configuration, ILogger logger = null)
         {
-            if (string.IsNullOrEmpty(configuration.ApiSecret))
-                throw  new ArgumentException("Api secret is a required configuration option");
-
             _configuration = configuration;
             
             _logger = new LoggerWithLevel(logger, configuration.LogLevel);

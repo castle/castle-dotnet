@@ -1,5 +1,8 @@
 ﻿namespace Castle
 {
+    /// <summary>
+    /// Castle tracking event constants
+    /// </summary>
     public static class Events
     {
         public const string LoginFailed = "$login.failed";

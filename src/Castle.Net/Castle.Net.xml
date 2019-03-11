@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Net</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Castle">
+            <summary>
+            Main SDK entry point
+            </summary>
+        </member>
+        <member name="M:Castle.Castle.#ctor(Castle.Config.CastleConfiguration,Castle.Infrastructure.ILogger)">
+            <summary>
+            
+            </summary>
+            <param name="configuration">Configuration options for this instance</param>
+            <param name="logger">Enable customized logging by passing in an implementation of <see cref="T:Castle.Infrastructure.ILogger"/></param>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.ApiSecret">
+            <summary>
+            Secret used to authenticate with the Castle Api (Required)
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.FailOverStrategy">
+            <summary>
+            The response action to return in case of a failover in an Authenticate request
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.Timeout">
+            <summary>
+            Timeout for requests, in milliseconds
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.BaseUrl">
+            <summary>
+            Base Castle Api url
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.LogLevel">
+            <summary>
+            Log level applied by the injected <see cref="T:Castle.Infrastructure.ILogger"/> implementation
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.Whitelist">
+            <summary>
+            Whitelist for headers in request context object
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.Blacklist">
+            <summary>
+            Blacklist for headers in request context object
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.DoNotTrack">
+            <summary>
+            If true, no requests are actually sent to the Caste Api, and Authenticate returns a failover response
+            </summary>
+        </member>
+        <member name="T:Castle.Events">
+            <summary>
+            Castle tracking event constants
+            </summary>
+        </member>
+        <member name="T:Castle.Headers">
+            <summary>
+            Recommended request context headers
+            </summary>
+        </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastleExternalException">
+            <summary>
+            Exception that will be allowed to escape the SDK
+            </summary>
+        </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastleInternalException">
+            <summary>
+            Exception for internal SDK errors, which must not escape to the outside
+            </summary>
+        </member>
+        <member name="T:Castle.Messages.Responses.VoidResponse">
+            <summary>
+            Provides consistent internal interfaces for requests with no response
+            </summary>
+        </member>
+        <member name="M:Castle.Signature.Compute(System.String,System.String)">
+            <summary>
+            Computes hex-encoded (lower-case) SHA-256 HMAC
+            </summary>
+            <param name="key"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
