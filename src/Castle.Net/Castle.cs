@@ -13,6 +13,11 @@ namespace Castle
         private readonly IMessageSender _messageSender;
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Main SDK entry point
+        /// </summary>
+        /// <param name="options">Configuration options for this instance</param>
+        /// <param name="logger">Enable customized logging by passing in an implementation of <see cref="ILogger"/></param>
         public Castle(CastleOptions options, ILogger logger = null)
         {
             _options = options;
