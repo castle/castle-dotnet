@@ -14,9 +14,9 @@ namespace Tests
         [Theory, AutoData]
         public void Should_handle_receiving_null_logger(
             LogLevel level,
-            string message)
+            Func<string> getMessage)
         {
-            Action act = () => new LoggerWithLevel(null, level).Error(message);
+            Action act = () => new LoggerWithLevels(null, level).Error(getMessage);
 
             act.Should().NotThrow();
         }
@@ -27,12 +27,12 @@ namespace Tests
         [InlineAutoFakeData(LogLevel.Info)]
         public void Should_log_errors_if_loglevel_is_error_or_higher(
             [Frozen] LogLevel level,
-            string message,
-            ILogger logger)
+            Func<string> getMessage,
+            ICastleLogger logger)
         {
-            new LoggerWithLevel(logger, level).Error(message);
+            new LoggerWithLevels(logger, level).Error(getMessage);
 
-            logger.Received().Error(message);
+            logger.Received().Error(getMessage());
         }
 
         [Theory]
@@ -40,36 +40,36 @@ namespace Tests
         [InlineAutoFakeData(LogLevel.Info)]
         public void Should_log_warnings_if_loglevel_is_warn_or_higher(
             [Frozen] LogLevel level,
-            string message,
-            ILogger logger)
+            Func<string> getMessage,
+            ICastleLogger logger)
         {
-            new LoggerWithLevel(logger, level).Warn(message);
+            new LoggerWithLevels(logger, level).Warn(getMessage);
 
-            logger.Received().Warn(message);
+            logger.Received().Warn(getMessage());
         }
 
         [Theory]
         [InlineAutoFakeData(LogLevel.Error)]
         public void Should_not_log_warnings_if_loglevel_is_error(
             [Frozen] LogLevel level,
-            string message,
-            ILogger logger)
+            Func<string> getMessage,
+            ICastleLogger logger)
         {
-            new LoggerWithLevel(logger, level).Warn(message);
+            new LoggerWithLevels(logger, level).Warn(getMessage);
 
-            logger.DidNotReceive().Warn(message);
+            logger.DidNotReceive().Warn(getMessage());
         }
 
         [Theory]
         [InlineAutoFakeData(LogLevel.Info)]
         public void Should_log_info_if_loglevel_is_info(
             [Frozen] LogLevel level,
-            string message,
-            ILogger logger)
+            Func<string> getMessage,
+            ICastleLogger logger)
         {
-            new LoggerWithLevel(logger, level).Info(message);
+            new LoggerWithLevels(logger, level).Info(getMessage);
 
-            logger.Received().Info(message);
+            logger.Received().Info(getMessage());
         }
 
         [Theory]
@@ -77,12 +77,12 @@ namespace Tests
         [InlineAutoFakeData(LogLevel.Warn)]
         public void Should_not_log_info_if_loglevel_is_warn_or_lower(
             [Frozen] LogLevel level,
-            string message,
-            ILogger logger)
+            Func<string> getMessage,
+            ICastleLogger logger)
         {
-            new LoggerWithLevel(logger, level).Info(message);
+            new LoggerWithLevels(logger, level).Info(getMessage);
 
-            logger.DidNotReceive().Info(message);
+            logger.DidNotReceive().Info(getMessage());
         }
     }
 }

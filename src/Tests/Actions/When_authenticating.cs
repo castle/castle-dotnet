@@ -21,7 +21,7 @@ namespace Tests
             ActionRequest request,
             CastleConfiguration configuration,
             Verdict response,
-            ILogger logger)
+            IInternalLogger logger)
         {
             Task<Verdict> Send(ActionRequest req) => Task.FromResult(response);
 
@@ -35,7 +35,7 @@ namespace Tests
             ActionRequest request,
             string requestUri,
             CastleConfiguration configuration,
-            ILogger logger)
+            IInternalLogger logger)
         {
             configuration.FailOverStrategy = ActionType.Allow;
 
@@ -52,7 +52,7 @@ namespace Tests
             ActionRequest request,
             Exception exception,
             CastleConfiguration configuration,
-            ILogger logger)
+            IInternalLogger logger)
         {
             configuration.FailOverStrategy = ActionType.Allow;
 
@@ -69,7 +69,7 @@ namespace Tests
             ActionRequest request,
             Exception exception,
             CastleConfiguration configuration,
-            ILogger logger)
+            IInternalLogger logger)
         {
             configuration.FailOverStrategy = ActionType.Allow;
 
@@ -77,7 +77,7 @@ namespace Tests
 
             await Authenticate.Execute(Send, request, configuration, logger);
 
-            logger.Received().Warn("Failover, " + exception.ToString());
+            logger.Received().Warn(Arg.Is<Func<string>>(x => x() == "Failover, " + exception));
         }
 
         [Theory, AutoFakeData]
@@ -85,7 +85,7 @@ namespace Tests
             ActionRequest request,
             Exception exception,
             CastleConfiguration configuration,
-            ILogger logger)
+            IInternalLogger logger)
         {
             configuration.FailOverStrategy = ActionType.None;
 
@@ -101,7 +101,7 @@ namespace Tests
             ActionRequest request,
             CastleConfiguration configuration,
             Verdict response,
-            ILogger logger)
+            IInternalLogger logger)
         {
             ActionRequest requestArg = null;
             Task<Verdict> Send(ActionRequest req)
@@ -120,7 +120,7 @@ namespace Tests
             ActionRequest request,
             CastleConfiguration configuration,
             Verdict response,
-            ILogger logger)
+            IInternalLogger logger)
         {
             configuration.DoNotTrack = true;
             configuration.FailOverStrategy = ActionType.Allow;

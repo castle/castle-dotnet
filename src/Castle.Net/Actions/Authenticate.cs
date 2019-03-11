@@ -15,7 +15,7 @@ namespace Castle.Actions
             Func<ActionRequest, Task<Verdict>> send,
             ActionRequest request,
             CastleConfiguration configuration,
-            ILogger logger)
+            IInternalLogger logger)
         {
             if (configuration.DoNotTrack)
                 return CreateFailoverResponse(configuration.FailOverStrategy, "do not track");
@@ -28,7 +28,7 @@ namespace Castle.Actions
             }
             catch (Exception e)
             {
-                logger.Warn("Failover, " + e);
+                logger.Warn(() => "Failover, " + e);
                 return CreateFailoverResponse(configuration.FailOverStrategy, e);
             }
         }

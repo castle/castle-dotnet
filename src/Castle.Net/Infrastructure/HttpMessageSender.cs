@@ -12,10 +12,10 @@ namespace Castle.Infrastructure
 {
     internal class HttpMessageSender : IMessageSender
     {
-        private readonly ILogger _logger;
+        private readonly IInternalLogger _logger;
         private readonly HttpClient _httpClient;
 
-        public HttpMessageSender(CastleConfiguration configuration, ILogger logger)
+        public HttpMessageSender(CastleConfiguration configuration, IInternalLogger logger)
         {
             _logger = logger;
 
@@ -71,11 +71,11 @@ namespace Castle.Infrastructure
         {
             try
             {
-                _logger.Info("Sending, " + requestMessage);
+                _logger.Info(() => "Sending, " + requestMessage);
 
                 var response = await _httpClient.SendAsync(requestMessage);
 
-                _logger.Info("Receiving, " + response);
+                _logger.Info(() => "Receiving, " + response);
 
                 if (response.IsSuccessStatusCode)
                 {

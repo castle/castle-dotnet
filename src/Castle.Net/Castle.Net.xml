@@ -9,12 +9,12 @@
             Main SDK entry point
             </summary>
         </member>
-        <member name="M:Castle.Castle.#ctor(Castle.Config.CastleConfiguration,Castle.Infrastructure.ILogger)">
+        <member name="M:Castle.Castle.#ctor(Castle.Config.CastleConfiguration,Castle.Infrastructure.ICastleLogger)">
             <summary>
             
             </summary>
             <param name="configuration">Configuration options for this instance</param>
-            <param name="logger">Enable customized logging by passing in an implementation of <see cref="T:Castle.Infrastructure.ILogger"/></param>
+            <param name="logger">Enable customized logging by passing in an implementation of <see cref="T:Castle.Infrastructure.ICastleLogger"/></param>
         </member>
         <member name="P:Castle.Config.CastleConfiguration.ApiSecret">
             <summary>
@@ -38,7 +38,7 @@
         </member>
         <member name="P:Castle.Config.CastleConfiguration.LogLevel">
             <summary>
-            Log level applied by the injected <see cref="T:Castle.Infrastructure.ILogger"/> implementation
+            Log level applied by the injected <see cref="!:ILogger"/> implementation
             </summary>
         </member>
         <member name="P:Castle.Config.CastleConfiguration.Whitelist">

@@ -1,5 +1,4 @@
-﻿using Castle.Infrastructure;
-using Castle.Messages;
+﻿using Castle.Messages;
 
 namespace Castle.Config
 {

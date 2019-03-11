@@ -14,18 +14,18 @@ namespace Castle
     {
         private readonly CastleConfiguration _configuration;
         private readonly IMessageSender _messageSender;
-        private readonly ILogger _logger;
+        private readonly IInternalLogger _logger;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="configuration">Configuration options for this instance</param>
-        /// <param name="logger">Enable customized logging by passing in an implementation of <see cref="ILogger"/></param>
-        public Castle(CastleConfiguration configuration, ILogger logger = null)
+        /// <param name="logger">Enable customized logging by passing in an implementation of <see cref="ICastleLogger"/></param>
+        public Castle(CastleConfiguration configuration, ICastleLogger logger = null)
         {
             _configuration = configuration;
             
-            _logger = new LoggerWithLevel(logger, configuration.LogLevel);
+            _logger = new LoggerWithLevels(logger, configuration.LogLevel);
 
             _messageSender = configuration.DoNotTrack
                 ? (IMessageSender)new NoTrackMessageSender()
