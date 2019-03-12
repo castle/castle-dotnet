@@ -53,7 +53,7 @@ namespace Castle.Config
         }
 
         /// <summary>
-        /// If true, no requests are actually sent to the Caste Api, and Authenticate returns a failover response
+        /// If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response
         /// </summary>
         public bool DoNotTrack { get; set; } = false;
 
