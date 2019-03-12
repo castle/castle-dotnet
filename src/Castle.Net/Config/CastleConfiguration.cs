@@ -1,4 +1,5 @@
-﻿using Castle.Messages;
+﻿using Castle.Infrastructure;
+using Castle.Messages;
 
 namespace Castle.Config
 {
@@ -30,7 +31,7 @@ namespace Castle.Config
         public string BaseUrl { get; set; } = "https://api.castle.io";
 
         /// <summary>
-        /// Log level applied by the injected <see cref="ILogger"/> implementation
+        /// Log level applied by the injected <see cref="ICastleLogger"/> implementation
         /// </summary>
         public LogLevel LogLevel { get; set; } = LogLevel.Error;
 

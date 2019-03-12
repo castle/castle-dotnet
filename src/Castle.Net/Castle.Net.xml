@@ -4,12 +4,12 @@
         <name>Castle.Net</name>
     </assembly>
     <members>
-        <member name="T:Castle.Castle">
+        <member name="T:Castle.CastleClient">
             <summary>
             Main SDK entry point
             </summary>
         </member>
-        <member name="M:Castle.Castle.#ctor(Castle.Config.CastleConfiguration,Castle.Infrastructure.ICastleLogger)">
+        <member name="M:Castle.CastleClient.#ctor(Castle.Config.CastleConfiguration,Castle.Infrastructure.ICastleLogger)">
             <summary>
             
             </summary>
@@ -38,7 +38,7 @@
         </member>
         <member name="P:Castle.Config.CastleConfiguration.LogLevel">
             <summary>
-            Log level applied by the injected <see cref="!:ILogger"/> implementation
+            Log level applied by the injected <see cref="T:Castle.Infrastructure.ICastleLogger"/> implementation
             </summary>
         </member>
         <member name="P:Castle.Config.CastleConfiguration.Whitelist">

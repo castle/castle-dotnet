@@ -10,7 +10,7 @@ namespace Castle
     /// <summary>
     /// Main SDK entry point
     /// </summary>
-    public class Castle
+    public class CastleClient
     {
         private readonly CastleConfiguration _configuration;
         private readonly IMessageSender _messageSender;
@@ -21,7 +21,7 @@ namespace Castle
         /// </summary>
         /// <param name="configuration">Configuration options for this instance</param>
         /// <param name="logger">Enable customized logging by passing in an implementation of <see cref="ICastleLogger"/></param>
-        public Castle(CastleConfiguration configuration, ICastleLogger logger = null)
+        public CastleClient(CastleConfiguration configuration, ICastleLogger logger = null)
         {
             _configuration = configuration;
             
