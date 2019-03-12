@@ -16,16 +16,11 @@ namespace Castle
         private readonly IMessageSender _messageSender;
         private readonly IInternalLogger _logger;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="configuration">Configuration options for this instance</param>
-        /// <param name="logger">Enable customized logging by passing in an implementation of <see cref="ICastleLogger"/></param>
-        public CastleClient(CastleConfiguration configuration, ICastleLogger logger = null)
+        public CastleClient(CastleConfiguration configuration)
         {
             _configuration = configuration;
             
-            _logger = new LoggerWithLevels(logger, configuration.LogLevel);
+            _logger = new LoggerWithLevels(configuration.Logger, configuration.LogLevel);
 
             _messageSender = configuration.DoNotTrack
                 ? (IMessageSender)new NoTrackMessageSender()

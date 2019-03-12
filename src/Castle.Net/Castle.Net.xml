@@ -9,13 +9,6 @@
             Main SDK entry point
             </summary>
         </member>
-        <member name="M:Castle.CastleClient.#ctor(Castle.Config.CastleConfiguration,Castle.Infrastructure.ICastleLogger)">
-            <summary>
-            
-            </summary>
-            <param name="configuration">Configuration options for this instance</param>
-            <param name="logger">Enable customized logging by passing in an implementation of <see cref="T:Castle.Infrastructure.ICastleLogger"/></param>
-        </member>
         <member name="P:Castle.Config.CastleConfiguration.ApiSecret">
             <summary>
             Secret used to authenticate with the Castle Api (Required)
@@ -54,6 +47,11 @@
         <member name="P:Castle.Config.CastleConfiguration.DoNotTrack">
             <summary>
             If true, no requests are actually sent to the Caste Api, and Authenticate returns a failover response
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.Logger">
+            <summary>
+            Your own logger implementation, for internal SDK logging
             </summary>
         </member>
         <member name="T:Castle.Events">

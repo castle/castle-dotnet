@@ -1,4 +1,6 @@
-﻿using Castle.Infrastructure;
+﻿using System;
+using System.Linq;
+using Castle.Infrastructure;
 using Castle.Messages;
 
 namespace Castle.Config
@@ -40,14 +42,24 @@ namespace Castle.Config
         /// </summary>
         public string[] Whitelist { get; set; } = { };
 
+        private string[] _blacklist = { "Cookie" };
         /// <summary>
         /// Blacklist for headers in request context object
         /// </summary>
-        public string[] Blacklist { get; set; } = {"Cookie"};
+        public string[] Blacklist
+        {
+            get => _blacklist;
+            set => _blacklist = new [] { "Cookie" }.Concat(value ?? new string[] { }).ToArray();
+        }
 
         /// <summary>
         /// If true, no requests are actually sent to the Caste Api, and Authenticate returns a failover response
         /// </summary>
         public bool DoNotTrack { get; set; } = false;
+
+        /// <summary>
+        /// Your own logger implementation, for internal SDK logging
+        /// </summary>
+        public ICastleLogger Logger { get; set; }
     }
 }
