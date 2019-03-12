@@ -1,76 +1,107 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AutoFixture.Xunit2;
 using Castle.Actions;
 using Castle.Config;
+using Castle.Infrastructure;
 using Castle.Infrastructure.Exceptions;
 using Castle.Messages;
 using Castle.Messages.Requests;
 using Castle.Messages.Responses;
 using FluentAssertions;
+using NSubstitute;
+using Tests.SetUp;
 using Xunit;
 
 namespace Tests
 {
     public class When_authenticating
     {
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public async Task Should_return_response_if_successful(
             ActionRequest request,
-            CastleOptions options,
-            Verdict response)
+            CastleConfiguration configuration,
+            Verdict response,
+            IInternalLogger logger)
         {
             Task<Verdict> Send(ActionRequest req) => Task.FromResult(response);
 
-            var result = await Authenticate.Execute(Send, request, options);
+            var result = await Authenticate.Execute(Send, request, configuration, logger);
 
             result.Should().Be(response);
         }
 
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public async Task Should_return_failover_response_if_timeout(
             ActionRequest request,
             string requestUri,
-            int timeout)
+            CastleConfiguration configuration,
+            IInternalLogger logger)
         {
-            Task<Verdict> Send(ActionRequest req) => throw new CastleTimeoutException(requestUri, timeout);
+            configuration.FailOverStrategy = ActionType.Allow;
 
-            var result = await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.Allow });
+            Task<Verdict> Send(ActionRequest req) => throw new CastleTimeoutException(requestUri, configuration.Timeout);
+
+            var result = await Authenticate.Execute(Send, request, configuration, logger);
 
             result.Failover.Should().Be(true);
             result.FailoverReason.Should().Be("timeout");
         }
 
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public async Task Should_return_failover_response_if_any_exception(
             ActionRequest request,
-            Exception exception)
+            Exception exception,
+            CastleConfiguration configuration,
+            IInternalLogger logger)
         {
+            configuration.FailOverStrategy = ActionType.Allow;
+
             Task<Verdict> Send(ActionRequest req) => throw exception;
 
-            var result = await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.Allow });
+            var result = await Authenticate.Execute(Send, request, configuration, logger);
 
             result.Failover.Should().Be(true);
             result.FailoverReason.Should().Be("server error");
         }
 
-        [Theory, AutoData]
-        public async Task Should_throw_exception_if_failing_over_with_no_strategy(
+        [Theory, AutoFakeData]
+        public async Task Should_log_failover_exception_as_warning(
             ActionRequest request,
-            Exception exception)
+            Exception exception,
+            CastleConfiguration configuration,
+            IInternalLogger logger)
         {
+            configuration.FailOverStrategy = ActionType.Allow;
+
             Task<Verdict> Send(ActionRequest req) => throw exception;
 
-            Func<Task> act = async () => await Authenticate.Execute(Send, request, new CastleOptions() { FailOverStrategy = ActionType.None });
+            await Authenticate.Execute(Send, request, configuration, logger);
+
+            logger.Received().Warn(Arg.Is<Func<string>>(x => x() == "Failover, " + exception));
+        }
+
+        [Theory, AutoFakeData]
+        public async Task Should_throw_exception_if_failing_over_with_no_strategy(
+            ActionRequest request,
+            Exception exception,
+            CastleConfiguration configuration,
+            IInternalLogger logger)
+        {
+            configuration.FailOverStrategy = ActionType.None;
+
+            Task<Verdict> Send(ActionRequest req) => throw exception;
+
+            Func<Task> act = async () => await Authenticate.Execute(Send, request, configuration, logger);
 
             await act.Should().ThrowAsync<CastleExternalException>();
         }
 
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public async Task Should_prepare_request_for_send(
             ActionRequest request,
-            CastleOptions options,
-            Verdict response)
+            CastleConfiguration configuration,
+            Verdict response,
+            IInternalLogger logger)
         {
             ActionRequest requestArg = null;
             Task<Verdict> Send(ActionRequest req)
@@ -79,9 +110,27 @@ namespace Tests
                 return Task.FromResult(response);
             }
 
-            await Authenticate.Execute(Send, request, options);
+            await Authenticate.Execute(Send, request, configuration, logger);
 
             requestArg.Should().NotBe(request); 
-        }         
+        }
+
+        [Theory, AutoFakeData]
+        public async Task Should_return_failover_response_if_do_not_track_is_set(
+            ActionRequest request,
+            CastleConfiguration configuration,
+            Verdict response,
+            IInternalLogger logger)
+        {
+            configuration.DoNotTrack = true;
+            configuration.FailOverStrategy = ActionType.Allow;
+
+            Task<Verdict> Send(ActionRequest req) => Task.FromResult(response);
+
+            var result = await Authenticate.Execute(Send, request, configuration, logger);
+
+            result.Failover.Should().Be(true);
+            result.FailoverReason.Should().Be("do not track");
+        }
     }
 }

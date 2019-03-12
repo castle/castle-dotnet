@@ -12,17 +12,20 @@ namespace Castle.Infrastructure
 {
     internal class HttpMessageSender : IMessageSender
     {
+        private readonly IInternalLogger _logger;
         private readonly HttpClient _httpClient;
 
-        public HttpMessageSender(CastleOptions options)
+        public HttpMessageSender(CastleConfiguration configuration, IInternalLogger logger)
         {
+            _logger = logger;
+
             _httpClient = new HttpClient()
             {
-                BaseAddress = new Uri(options.BaseUrl), 
-                Timeout = TimeSpan.FromMilliseconds(options.Timeout)
+                BaseAddress = new Uri(configuration.BaseUrl), 
+                Timeout = TimeSpan.FromMilliseconds(configuration.Timeout)
             };
 
-            var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(":" + options.ApiSecret));
+            var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(":" + configuration.ApiSecret));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
         }
 
@@ -68,7 +71,12 @@ namespace Castle.Infrastructure
         {
             try
             {
+                _logger.Info(() => "Sending, " + requestMessage);
+
                 var response = await _httpClient.SendAsync(requestMessage);
+
+                _logger.Info(() => "Receiving, " + response);
+
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();

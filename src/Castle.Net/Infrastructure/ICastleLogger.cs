@@ -1,6 +1,6 @@
 ﻿namespace Castle.Infrastructure
 {
-    public interface ILogger
+    public interface ICastleLogger
     {
         void Info(string message);
         void Warn(string message);

@@ -8,7 +8,7 @@ namespace Castle.Infrastructure
     {
         public static async Task<TResponse> Try<TResponse>(
             Func<Task<TResponse>> request, 
-            ILogger logger)
+            IInternalLogger logger)
             where TResponse : new()
         {
             try
@@ -21,7 +21,7 @@ namespace Castle.Infrastructure
             }
             catch (Exception e)
             {
-                logger.Error(e.Message);
+                logger.Error(e.ToString);
                 return await Task.FromResult(new TResponse());
             }
         }

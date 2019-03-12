@@ -24,11 +24,6 @@ namespace Castle.Messages.Requests
 
         public RequestContext Context { get; set; } = new RequestContext();
 
-        internal ActionRequest ShallowCopy()
-        {
-            return (ActionRequest) MemberwiseClone();
-        }
-
         internal ActionRequest PrepareApiCopy(string[] whitelist, string[] blacklist)
         {
             var copy = (ActionRequest) MemberwiseClone();

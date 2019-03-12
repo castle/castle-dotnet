@@ -21,6 +21,7 @@ namespace Castle.Infrastructure
             string[] blacklist, 
             KeyValuePair<string, string> header)
         {
+            // Scrub to "true" so the custom JsonConverter can find it and convert to actual boolean
             const string scrubValue = "true";
 
             if (blacklist.Contains(header.Key, StringComparer.OrdinalIgnoreCase))

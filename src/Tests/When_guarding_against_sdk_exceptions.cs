@@ -14,7 +14,7 @@ namespace Tests
         [Theory, AutoFakeData]
         public async Task Should_return_request_response_if_no_exception_is_thrown(
             int response,
-            ILogger logger)
+            IInternalLogger logger)
         {
             async Task<int> DoRequest()
             {
@@ -28,7 +28,7 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_rethrow_external_castle_exceptions(
-            ILogger logger,
+            IInternalLogger logger,
             CastleExternalException exception)
         {
             async Task<int> DoRequest()
@@ -43,7 +43,7 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_not_rethrow_non_external_exceptions(
-            ILogger logger,
+            IInternalLogger logger,
             Exception exception)
         {
             async Task<int> DoRequest()
@@ -58,7 +58,7 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_log_exceptions_as_errors(
-            ILogger logger,
+            IInternalLogger logger,
             Exception exception)
         {
             async Task<int> DoRequest()
@@ -68,12 +68,12 @@ namespace Tests
 
             await ExceptionGuard.Try(DoRequest, logger);
 
-            logger.Received().Error(exception.Message);
+            logger.Received().Error(exception.ToString);
         }
 
         [Theory, AutoFakeData]
         public async Task Should_return_empty_response_object_if_exception_was_caught(
-            ILogger logger,
+            IInternalLogger logger,
             Exception exception)
         {
             async Task<int> DoRequest()

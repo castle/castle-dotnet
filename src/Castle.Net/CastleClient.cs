@@ -7,17 +7,24 @@ using Castle.Messages.Responses;
 
 namespace Castle
 {
-    public class Castle
+    /// <summary>
+    /// Main SDK entry point
+    /// </summary>
+    public class CastleClient
     {
-        private readonly CastleOptions _options;
+        private readonly CastleConfiguration _configuration;
         private readonly IMessageSender _messageSender;
-        private readonly ILogger _logger;
+        private readonly IInternalLogger _logger;
 
-        public Castle(CastleOptions options, ILogger logger = null)
+        public CastleClient(CastleConfiguration configuration)
         {
-            _options = options;
-            _messageSender = new HttpMessageSender(options);
-            _logger = new LoggerWithLevel(logger, options.LogLevel);
+            _configuration = configuration;
+            
+            _logger = new LoggerWithLevels(configuration.Logger, configuration.LogLevel);
+
+            _messageSender = configuration.DoNotTrack
+                ? (IMessageSender)new NoTrackMessageSender()
+                : new HttpMessageSender(configuration, _logger);
         }
 
         public async Task<Verdict> Authenticate(ActionRequest request)
@@ -25,7 +32,8 @@ namespace Castle
             return await TryRequest(() => Actions.Authenticate.Execute(
                 req => _messageSender.Post<Verdict>("/v1/authenticate", req), 
                 request, 
-                _options));
+                _configuration,
+                _logger));
         }
 
         public async Task Track(ActionRequest request)
@@ -33,7 +41,7 @@ namespace Castle
             await TryRequest(() => Actions.Track.Execute(
                 req => _messageSender.Post<VoidResponse>("/v1/track", req),
                 request, 
-                _options));
+                _configuration));
         }
 
         public async Task<DeviceList> GetDevicesForUser(string userId)
