@@ -1,4 +1,8 @@
-# .Net SDK for Castle
+# .NET SDK for Castle
+
+*TODO: nuget badge*
+
+Supporting .NET Standard 2.0
 
 **[Castle](https://castle.io) analyzes device, location, and interaction patterns in your web and mobile apps and lets you stop account takeover attacks in real-time.**
 
@@ -173,21 +177,8 @@ If no failover strategy is set (i.e. `None`), a `Castle.Infrastructure.Exception
 
 See the documentation on [securing requests](https://castle.io/docs/securing_requests) in order to learn more.
 
-Use the `Castle.Signature.Compute(string key, string message)` method to create a signature to use in the frontend and to validate **Webhooks**.
-
-In order to enable secure mode using Castle.js, use the
-`io.castle.client.Castle#secureUserID` method whenever there is a need to make an identify call
-from a jsp:
-
-```jsp
-            <script type="text/javascript">
-                ...
-                _castle('secure',
-                    '<%= Castle.instance().secureUserID(someUserID) %>');
-                ...
-            </script>
-```
+Use the `Castle.Signature.Compute(string key, string message)` method, with your **API Secret** as key, to create a signature to use in the frontend and to validate **Webhooks**.
 
 # Demo application
 
-TODO
+*TODO: reference/link*
