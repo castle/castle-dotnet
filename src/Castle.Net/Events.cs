@@ -5,6 +5,7 @@
     /// </summary>
     public static class Events
     {
+        public const string LoginSucceeded = "$login.succeeded";
         public const string LoginFailed = "$login.failed";
         public const string LogoutSucceeded = "$logout.succeeded ";
         public const string ProfileUpdateSucceeded = "$profile_update.succeeded ";
