@@ -12,6 +12,10 @@ namespace Tests
         {
             context.Library.Name.Should().Be("castle-dotnet");
             context.Library.Version.Split(".").Length.Should().Be(3);
+            context.Library.Platform.Should().Be(".NET Core");
+
+            var platformVersionNumbers = context.Library.PlatformVersion.Replace(".", "");
+            int.TryParse(platformVersionNumbers, out _).Should().BeTrue();
         }
 
         public static IEnumerable<object[]> TestCases => new List<object[]>()

@@ -10,5 +10,9 @@ namespace Castle.Messages.Requests
             new AssemblyName(typeof(LibraryInfo).GetTypeInfo().Assembly.FullName)
                 .Version
                 .ToString(3);
+
+        public string Platform { get; } = Sentry.PlatformAbstractions.Runtime.Current.Name;
+
+        public string PlatformVersion { get; } = Sentry.PlatformAbstractions.Runtime.Current.Version;
     }
 }
