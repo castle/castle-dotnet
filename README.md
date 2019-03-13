@@ -2,7 +2,7 @@
 
 *TODO: nuget badge*
 
-Supporting .NET Standard 2.0
+Supporting .NET Standard 2.0, .NET Framework 4.6.1+
 
 **[Castle](https://castle.io) analyzes device, location, and interaction patterns in your web and mobile apps and lets you stop account takeover attacks in real-time.**
 
@@ -179,6 +179,18 @@ See the documentation on [securing requests](https://castle.io/docs/securing_req
 
 Use the `Castle.Signature.Compute(string key, string message)` method, with your **API Secret** as key, to create a signature to use in the frontend and to validate **Webhooks**.
 
+## Troubleshooting
+### Can't find System.Runtime.InteropServices.RuntimeInformation
+You target .NET Framework and get an exception on startup.
+
+`System.IO.FileNotFoundException: 'Could not load file or assembly 'System.Runtime.InteropServices.RuntimeInformation, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' or one of its dependencies. The system cannot find the file specified.`
+
+The Castle SDK has a dependency on [Sentry.PlatformAbstractions](https://www.nuget.org/packages/Sentry.PlatformAbstractions/), which in turn uses `System.Runtime.InteropServices.RuntimeInformation`, version 4.3.0.
+
+#### Solution
+Find the binding redirect for `System.Runtime.InteropServices.RuntimeInformation` in `web.config` and either remove the entire `dependentAssembly` element, or update `newVersion` to 4.3.0.
+
+
 # Demo application
 
-*TODO: reference/link*
+There is a sample application using ASP&#46;NET Core Razor Pages and this SDK [here](https://github.com/castle/dotnet-example)
