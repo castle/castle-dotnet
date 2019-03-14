@@ -4,16 +4,16 @@ using Castle.Config;
 using Castle.Infrastructure;
 using Castle.Infrastructure.Exceptions;
 using Castle.Messages;
-using Castle.Messages.Requests;
 using Castle.Messages.Responses;
+using Newtonsoft.Json.Linq;
 
 namespace Castle.Actions
 {
     internal static class Authenticate
     {
         public static async Task<Verdict> Execute(
-            Func<ActionRequest, Task<Verdict>> send,
-            ActionRequest request,
+            Func<JObject, Task<Verdict>> send,
+            JObject request,
             CastleConfiguration configuration,
             IInternalLogger logger)
         {
@@ -21,10 +21,8 @@ namespace Castle.Actions
                 return CreateFailoverResponse(configuration.FailOverStrategy, "do not track");
 
             try
-            {
-                var apiRequest = request.PrepareApiCopy(configuration.Whitelist, configuration.Blacklist);
-
-                return await send(apiRequest);
+            {                
+                return await send(request);
             }
             catch (Exception e)
             {

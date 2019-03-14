@@ -8,6 +8,7 @@ using Castle.Messages;
 using Castle.Messages.Requests;
 using Castle.Messages.Responses;
 using FluentAssertions;
+using Newtonsoft.Json.Linq;
 using NSubstitute;
 using Tests.SetUp;
 using Xunit;
@@ -18,12 +19,12 @@ namespace Tests
     {
         [Theory, AutoFakeData]
         public async Task Should_return_response_if_successful(
-            ActionRequest request,
+            JObject request,
             CastleConfiguration configuration,
             Verdict response,
             IInternalLogger logger)
         {
-            Task<Verdict> Send(ActionRequest req) => Task.FromResult(response);
+            Task<Verdict> Send(JObject req) => Task.FromResult(response);
 
             var result = await Authenticate.Execute(Send, request, configuration, logger);
 
@@ -32,14 +33,14 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_return_failover_response_if_timeout(
-            ActionRequest request,
+            JObject request,
             string requestUri,
             CastleConfiguration configuration,
             IInternalLogger logger)
         {
             configuration.FailOverStrategy = ActionType.Allow;
 
-            Task<Verdict> Send(ActionRequest req) => throw new CastleTimeoutException(requestUri, configuration.Timeout);
+            Task<Verdict> Send(JObject req) => throw new CastleTimeoutException(requestUri, configuration.Timeout);
 
             var result = await Authenticate.Execute(Send, request, configuration, logger);
 
@@ -49,14 +50,14 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_return_failover_response_if_any_exception(
-            ActionRequest request,
+            JObject request,
             Exception exception,
             CastleConfiguration configuration,
             IInternalLogger logger)
         {
             configuration.FailOverStrategy = ActionType.Allow;
 
-            Task<Verdict> Send(ActionRequest req) => throw exception;
+            Task<Verdict> Send(JObject req) => throw exception;
 
             var result = await Authenticate.Execute(Send, request, configuration, logger);
 
@@ -66,14 +67,14 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_log_failover_exception_as_warning(
-            ActionRequest request,
+            JObject request,
             Exception exception,
             CastleConfiguration configuration,
             IInternalLogger logger)
         {
             configuration.FailOverStrategy = ActionType.Allow;
 
-            Task<Verdict> Send(ActionRequest req) => throw exception;
+            Task<Verdict> Send(JObject req) => throw exception;
 
             await Authenticate.Execute(Send, request, configuration, logger);
 
@@ -82,14 +83,14 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_throw_exception_if_failing_over_with_no_strategy(
-            ActionRequest request,
+            JObject request,
             Exception exception,
             CastleConfiguration configuration,
             IInternalLogger logger)
         {
             configuration.FailOverStrategy = ActionType.None;
 
-            Task<Verdict> Send(ActionRequest req) => throw exception;
+            Task<Verdict> Send(JObject req) => throw exception;
 
             Func<Task> act = async () => await Authenticate.Execute(Send, request, configuration, logger);
 
@@ -97,27 +98,8 @@ namespace Tests
         }
 
         [Theory, AutoFakeData]
-        public async Task Should_prepare_request_for_send(
-            ActionRequest request,
-            CastleConfiguration configuration,
-            Verdict response,
-            IInternalLogger logger)
-        {
-            ActionRequest requestArg = null;
-            Task<Verdict> Send(ActionRequest req)
-            {
-                requestArg = req;
-                return Task.FromResult(response);
-            }
-
-            await Authenticate.Execute(Send, request, configuration, logger);
-
-            requestArg.Should().NotBe(request); 
-        }
-
-        [Theory, AutoFakeData]
         public async Task Should_return_failover_response_if_do_not_track_is_set(
-            ActionRequest request,
+            JObject request,
             CastleConfiguration configuration,
             Verdict response,
             IInternalLogger logger)
@@ -125,7 +107,7 @@ namespace Tests
             configuration.DoNotTrack = true;
             configuration.FailOverStrategy = ActionType.Allow;
 
-            Task<Verdict> Send(ActionRequest req) => Task.FromResult(response);
+            Task<Verdict> Send(JObject req) => Task.FromResult(response);
 
             var result = await Authenticate.Execute(Send, request, configuration, logger);
 

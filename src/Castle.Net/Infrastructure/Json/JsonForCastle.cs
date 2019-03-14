@@ -5,7 +5,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace Castle.Infrastructure.Json
 {
-    internal static class JsonConvertForCastle
+    internal static class JsonForCastle
     {
         private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings()
         {
@@ -17,6 +17,8 @@ namespace Castle.Infrastructure.Json
             DateFormatHandling = DateFormatHandling.IsoDateFormat,
             DateTimeZoneHandling = DateTimeZoneHandling.Utc
         };
+
+        public static readonly JsonSerializer Serializer = JsonSerializer.Create(JsonSettings);
 
         public static string SerializeObject(object obj)
         {
@@ -33,6 +35,11 @@ namespace Castle.Infrastructure.Json
             }
 
             return obj;
+        }
+
+        public static JObject FromObject(object obj)
+        {
+            return JObject.FromObject(obj, Serializer);
         }
     }
 }

@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Castle.Config;
-using Castle.Messages.Requests;
 using Castle.Messages.Responses;
+using Newtonsoft.Json.Linq;
 
 namespace Castle.Actions
 {
     internal static class Track
     {
         public static async Task<VoidResponse> Execute(
-            Func<ActionRequest, Task<VoidResponse>> send,
-            ActionRequest request,
+            Func<JObject, Task<VoidResponse>> send,
+            JObject request,
             CastleConfiguration configuration)
         {
-            var apiRequest = request.PrepareApiCopy(configuration.Whitelist, configuration.Blacklist);
-
-            return await send(apiRequest);
+            return await send(request);
         }
     }
 }

@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using Castle.Config;
 using Castle.Infrastructure;
+using Castle.Infrastructure.Json;
 using Castle.Messages.Requests;
 using Castle.Messages.Responses;
+using Newtonsoft.Json.Linq;
 
 namespace Castle
 {
@@ -27,21 +29,47 @@ namespace Castle
                 : new HttpMessageSender(configuration, _logger);
         }
 
-        public async Task<Verdict> Authenticate(ActionRequest request)
+        public JObject BuildAuthenticateRequest(ActionRequest request)
+        {
+            var prepared = request.PrepareApiCopy(_configuration.Whitelist, _configuration.Blacklist);
+            return JsonForCastle.FromObject(prepared);
+        }
+
+        public async Task<Verdict> SendAuthenticateRequest(JObject request)
         {
             return await TryRequest(() => Actions.Authenticate.Execute(
-                req => _messageSender.Post<Verdict>("/v1/authenticate", req), 
-                request, 
+                req => _messageSender.Post<Verdict>("/v1/authenticate", req),
+                request,
                 _configuration,
                 _logger));
         }
 
-        public async Task Track(ActionRequest request)
+        public async Task<Verdict> Authenticate(ActionRequest request)
+        {
+            var jsonRequest = BuildAuthenticateRequest(request);
+
+            return await SendAuthenticateRequest(jsonRequest);
+        }
+
+        public JObject BuildTrackRequest(ActionRequest request)
+        {
+            var prepared = request.PrepareApiCopy(_configuration.Whitelist, _configuration.Blacklist);
+            return JsonForCastle.FromObject(prepared);
+        }
+
+        public async Task SendTrackRequest(JObject request)
         {
             await TryRequest(() => Actions.Track.Execute(
                 req => _messageSender.Post<VoidResponse>("/v1/track", req),
-                request, 
+                request,
                 _configuration));
+        }
+
+        public async Task Track(ActionRequest request)
+        {
+            var jsonRequest = BuildTrackRequest(request);
+
+            await SendTrackRequest(jsonRequest);
         }
 
         public async Task<DeviceList> GetDevicesForUser(string userId)
