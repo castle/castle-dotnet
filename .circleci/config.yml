@@ -5,5 +5,5 @@ jobs:
       - image: mcr.microsoft.com/dotnet/core/sdk:2.2
     steps:
       - checkout
-      - run: cd src && dotnet build
-      - run: cd src && dotnet test --no-build Tests
+      - run: cd src && dotnet build Castle.Net -c Release -f netstandard2.0
+      - run: cd src && dotnet test Tests

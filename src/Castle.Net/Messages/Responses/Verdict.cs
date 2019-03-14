@@ -1,6 +1,8 @@
-﻿namespace Castle.Messages.Responses
+﻿using Newtonsoft.Json.Linq;
+
+namespace Castle.Messages.Responses
 {
-    public class Verdict
+    public class Verdict : IHasJson
     {
         public ActionType Action { get; set; }
 
@@ -11,5 +13,7 @@
         public bool Failover { get; set; }
 
         public string FailoverReason { get; set; }
+
+        public JObject Internal { get; set; }
     }
 }

@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Castle.Messages.Responses;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace Castle.Infrastructure.Json
 {
-    internal static class JsonConvertForCastle
+    internal static class JsonForCastle
     {
         private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings()
         {
@@ -16,6 +18,8 @@ namespace Castle.Infrastructure.Json
             DateTimeZoneHandling = DateTimeZoneHandling.Utc
         };
 
+        public static readonly JsonSerializer Serializer = JsonSerializer.Create(JsonSettings);
+
         public static string SerializeObject(object obj)
         {
             return JsonConvert.SerializeObject(obj, JsonSettings);
@@ -24,7 +28,18 @@ namespace Castle.Infrastructure.Json
         public static T DeserializeObject<T>(string value)
             where T : class, new()
         {
-            return JsonConvert.DeserializeObject<T>(value, JsonSettings) ?? new T();
+            var obj = JsonConvert.DeserializeObject<T>(value, JsonSettings) ?? new T();
+            if (obj is IHasJson withJson)
+            {
+                withJson.Internal = JObject.Parse(value);
+            }
+
+            return obj;
+        }
+
+        public static JObject FromObject(object obj)
+        {
+            return JObject.FromObject(obj, Serializer);
         }
     }
 }

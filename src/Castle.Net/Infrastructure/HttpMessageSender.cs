@@ -80,7 +80,7 @@ namespace Castle.Infrastructure
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvertForCastle.DeserializeObject<TResponse>(content);
+                    return JsonForCastle.DeserializeObject<TResponse>(content);
                 }
 
                 throw await response.ToCastleException(requestMessage.RequestUri.AbsoluteUri);
@@ -96,7 +96,7 @@ namespace Castle.Infrastructure
         private static StringContent PayloadToJson(object payload)
         {
             return new StringContent(
-                JsonConvertForCastle.SerializeObject(payload), 
+                JsonForCastle.SerializeObject(payload), 
                 Encoding.UTF8, 
                 "application/json");
         }
