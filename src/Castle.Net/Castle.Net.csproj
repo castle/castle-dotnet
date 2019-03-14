@@ -13,6 +13,9 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>C:\Code\castle.net\src\Castle.Net\Castle.Net.xml</DocumentationFile>
+
+    <!-- Missing XML comment warning-->
+    <noWarn>1591</noWarn>
   </PropertyGroup>
 
   <ItemGroup>
