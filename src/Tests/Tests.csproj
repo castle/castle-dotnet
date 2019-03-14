@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Castle.Net\Castle.Net.csproj" />
+    <ProjectReference Include="..\Castle.Sdk\Castle.Sdk.csproj" />
   </ItemGroup>
 
 </Project>

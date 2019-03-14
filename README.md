@@ -12,21 +12,21 @@ Supporting .NET Standard 2.0, .NET Framework 4.6.1+
 
 ## Installation
 
-Install the `Castle.Net` nuget.
+Install the `Castle.Sdk` nuget.
 
 ### Command line
 
-    nuget install Castle.Net
+    nuget install Castle.Sdk
 
 ### Packet Manager Console
 
-    install-package Castle.Net
+    install-package Castle.Sdk
 
 ### Visual Studio
 
 1. Go to Tools -> Package Manager -> Manage NuGet Packages for Solution...
-2. Click the Browse tab and search for `Castle.Net`
-3. Click the `Castle.Net` package in the search results, select version and what projects to apply it to on the right side, and click Install
+2. Click the Browse tab and search for `Castle.Sdk`
+3. Click the `Castle.Sdk` package in the search results, select version and what projects to apply it to on the right side, and click Install
 
 ## Configuration
 

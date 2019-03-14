@@ -3,7 +3,7 @@ image: Visual Studio 2017
 install:
   - cmd: cd src
 build_script:  
-  - cmd: dotnet build Castle.Net -c Release -f netstandard2.0
-  - cmd: dotnet build Castle.Net -c Release -f net461
+  - cmd: dotnet build Castle.Sdk -c Release -f netstandard2.0
+  - cmd: dotnet build Castle.Sdk -c Release -f net461
 test_script:
   - cmd: dotnet test Tests
