@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Castle.Messages.Responses;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace Castle.Infrastructure.Json
@@ -24,7 +26,13 @@ namespace Castle.Infrastructure.Json
         public static T DeserializeObject<T>(string value)
             where T : class, new()
         {
-            return JsonConvert.DeserializeObject<T>(value, JsonSettings) ?? new T();
+            var obj = JsonConvert.DeserializeObject<T>(value, JsonSettings) ?? new T();
+            if (obj is IHasJson withJson)
+            {
+                withJson.Internal = JObject.Parse(value);
+            }
+
+            return obj;
         }
     }
 }

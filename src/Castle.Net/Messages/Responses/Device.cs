@@ -1,23 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
 
 namespace Castle.Messages.Responses
 {
-    public class Device
+    public class Device : DeviceItem, IHasJson
     {
-        public string Token { get; set; }
-
-        public float Risk { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime LastSeenAt { get; set; }
-
-        public DateTime? ApprovedAt { get; set; }
-
-        public DateTime? EscalatedAt { get; set; }
-
-        public DateTime? MitigatedAt { get; set; }
-
-        public DeviceContext Context { get; set; }
+        public JObject Internal { get; set; }
     }
 }
