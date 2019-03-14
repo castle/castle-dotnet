@@ -60,12 +60,15 @@ LogLevel | Error | The log level applied by the injected `ICastleLogger` impleme
 Whitelist | | List of headers that should be passed intact to the API. A list of recommended .headers can be retrieved from the static property `Castle.Headers.Whitelist` in the SDK
 Blacklist | "Cookie" | List of header that should *not* be passed intact to the API.
 DoNotTrack | false | If true, no requests are actually sent to the Caste Api, and Authenticate returns a failover response.
+Logger | | Your own logger implementation.
 
 ## Logging
-The SDK allows customized logging by way of implementing the `ICastleLogger` and passing it to the constructor when creating a `CastleClient` instance. Exactly what gets logged can be controlled by setting the `LogLevel` property of `CastleConfiguration`.
+The SDK allows customized logging by way of implementing the `ICastleLogger` interface and passing in an instance as part of the  `CastleConfiguration`. Exactly what gets logged can be controlled by setting the `LogLevel` property of `CastleConfiguration`.
 
 ```csharp
-var client = new CastleClient(new CastleConfiguration("secret"), new MyLogger());
+var client = new CastleClient(new CastleConfiguration("secret") {
+    Logger = new MyLogger()
+});
 ```
 
 ### Logger example

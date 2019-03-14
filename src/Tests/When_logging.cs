@@ -84,5 +84,18 @@ namespace Tests
 
             logger.DidNotReceive().Info(getMessage());
         }
+
+        [Theory, AutoFakeData]
+        public void Should_not_log_when_level_is_none(
+            Func<string> getMessage,
+            ICastleLogger castleLogger)
+        {
+            var logger = new LoggerWithLevels(castleLogger, LogLevel.None);
+            logger.Info(getMessage);
+            logger.Warn(getMessage);
+            logger.Error(getMessage);
+
+            castleLogger.DidNotReceive().Info(getMessage());
+        }
     }
 }
