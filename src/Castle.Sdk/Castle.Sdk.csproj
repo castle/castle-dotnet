@@ -6,10 +6,15 @@
     <PackageProjectUrl />
     <RootNamespace>Castle</RootNamespace>
     <Version>1.0.0</Version>
+    <Authors>Castle</Authors>
+    <Product>Castle .NET SDK</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Code\castle.net\src\Castle.Net\Castle.Net.xml</DocumentationFile>
+    <DocumentationFile>C:\Code\castle.net\src\Castle.Sdk\Castle.Sdk.xml</DocumentationFile>
+
+    <!-- Missing XML comment warning-->
+    <noWarn>1591</noWarn>
   </PropertyGroup>
 
   <ItemGroup>
