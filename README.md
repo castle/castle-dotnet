@@ -1,8 +1,7 @@
 # .NET SDK for Castle
+[![NuGet](https://img.shields.io/nuget/v/castle.sdk.svg)](https://www.nuget.org/packages/Castle.Sdk/)
 
-*TODO: nuget badge*
-
-Supporting .NET Standard 2.0, .NET Framework 4.6.1+
+Supporting **.NET Standard 2.0** and **.NET Framework 4.6.1+**. Refer to Microsoft's [documentation](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) for compatibility information.
 
 **[Castle](https://castle.io) analyzes device, location, and interaction patterns in your web and mobile apps and lets you stop account takeover attacks in real-time.**
 
