@@ -1,6 +1,5 @@
 # .NET SDK for Castle
-
-*TODO: nuget badge*
+[![NuGet](https://img.shields.io/nuget/v/castle.sdk.svg)](https://www.nuget.org/packages/Castle.Sdk/)
 
 Supporting .NET Standard 2.0, .NET Framework 4.6.1+
 
