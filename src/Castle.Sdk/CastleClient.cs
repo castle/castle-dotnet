@@ -70,9 +70,10 @@ namespace Castle
             await SendTrackRequest(jsonRequest);
         }
 
-        public async Task<DeviceList> GetDevicesForUser(string userId)
+        public async Task<DeviceList> GetDevicesForUser(string userId, string clientId = null)
         {
-            return await TryRequest(() => _messageSender.Get<DeviceList>($"/v1/users/{userId}/devices"));
+            var clientIdQuery = string.IsNullOrEmpty(clientId) ? "" : $"?client_id={clientId}";
+            return await TryRequest(() => _messageSender.Get<DeviceList>($"/v1/users/{userId}/devices{clientIdQuery}"));
         }
 
         public async Task<Device> GetDevice(string deviceToken)
