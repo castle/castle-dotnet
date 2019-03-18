@@ -5,7 +5,6 @@ using Castle.Config;
 using Castle.Infrastructure;
 using Castle.Infrastructure.Exceptions;
 using Castle.Messages;
-using Castle.Messages.Requests;
 using Castle.Messages.Responses;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;

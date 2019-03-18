@@ -1,4 +1,6 @@
-﻿using AutoFixture.Xunit2;
+﻿using System.Collections.Generic;
+using AutoFixture;
+using AutoFixture.Xunit2;
 using Castle.Infrastructure.Json;
 using Castle.Messages.Responses;
 using FluentAssertions;
@@ -26,8 +28,8 @@ namespace Tests.Json
             result.Should().NotBeNull();
         }
 
-        [Theory, AutoData]
-        public void Should_deserialize_with_json_property_if_appropriate_type(Device obj)
+        [Theory, MemberData(nameof(HasJsonTypes))]
+        public void Should_deserialize_with_json_property_if_appropriate_type(IHasJson obj)
         {
             var json = JsonForCastle.SerializeObject(obj);
             var result = JsonForCastle.DeserializeObject<Device>(json);
@@ -48,6 +50,20 @@ namespace Tests.Json
         {
             public string UserId { get; set; }
         }
-             
+
+        public static IEnumerable<object[]> HasJsonTypes
+        {
+            get
+            {
+                var fixture = new Fixture();
+
+                return new List<object[]>()
+                {
+                    new object[] {fixture.Create<Device>()},
+                    new object[] {fixture.Create<DeviceList>()},
+                    new object[] {fixture.Create<Verdict>()}
+                };
+            }
+        }
     }
 }

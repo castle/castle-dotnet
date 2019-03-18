@@ -2,7 +2,7 @@
 
 namespace Castle.Messages.Responses
 {
-    internal interface IHasJson
+    public interface IHasJson
     {
         JObject Internal { get; set; }
     }

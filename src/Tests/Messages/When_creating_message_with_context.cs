@@ -3,7 +3,7 @@ using Castle.Messages.Requests;
 using FluentAssertions;
 using Xunit;
 
-namespace Tests
+namespace Tests.Messages
 {
     public class When_creating_message_with_context
     {
@@ -22,6 +22,7 @@ namespace Tests
         {
             new object[] { new ActionRequest().Context },
             new object[] { new ImpersonateStartRequest().Context },
+            new object[] { new ImpersonateEndRequest().Context },
         };
     }
 }

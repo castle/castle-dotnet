@@ -22,7 +22,7 @@ namespace Castle.Infrastructure
             catch (Exception e)
             {
                 logger.Error(e.ToString);
-                return await Task.FromResult(new TResponse());
+                return new TResponse();
             }
         }
     }

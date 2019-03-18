@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoFixture.Xunit2;
 using Castle.Config;
 using Castle.Infrastructure;
@@ -11,16 +12,27 @@ namespace Tests
 {
     public class When_logging
     {
-        [Theory, AutoData]
-        public void Should_handle_receiving_null_logger(
-            LogLevel level,
-            Func<string> getMessage)
+        [Theory, MemberData(nameof(NullLoggerMethods))]
+        public void Should_handle_errors_without_supplied_logger(Action act)
         {
-            Action act = () => new LoggerWithLevels(null, level).Error(getMessage);
-
             act.Should().NotThrow();
         }
 
+        public static IEnumerable<object[]> NullLoggerMethods
+        {
+            get
+            {
+                string GetMessage() => "";
+
+                return new List<object[]>()
+                {
+                    new object[] { new Action(() => new LoggerWithLevels(null, LogLevel.Error).Error(GetMessage)) },
+                    new object[] { new Action(() => new LoggerWithLevels(null, LogLevel.Warn).Warn(GetMessage)) },
+                    new object[] { new Action(() => new LoggerWithLevels(null, LogLevel.Info).Info(GetMessage)) }
+                    };
+            }
+        }
+          
         [Theory]
         [InlineAutoFakeData(LogLevel.Error)]
         [InlineAutoFakeData(LogLevel.Warn)]

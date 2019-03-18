@@ -6,7 +6,7 @@ using Castle.Infrastructure;
 using FluentAssertions;
 using Xunit;
 
-namespace Tests
+namespace Tests.Messages
 {
     public class When_scrubbing_headers
     {

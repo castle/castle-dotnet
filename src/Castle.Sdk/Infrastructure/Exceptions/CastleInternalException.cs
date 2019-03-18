@@ -8,18 +8,6 @@ namespace Castle.Infrastructure.Exceptions
     /// </summary>
     internal class CastleInternalException : Exception
     {
-        protected CastleInternalException(string message)
-            : base(message)
-        {
-
-        }
-
-        protected CastleInternalException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-
-        }
-
         public CastleInternalException(string message, string requestUri, HttpStatusCode? httpStatusCode = null)
             : base(message)
         {
