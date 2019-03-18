@@ -24,9 +24,7 @@ namespace Castle
             
             _logger = new LoggerWithLevels(configuration.Logger, configuration.LogLevel);
 
-            _messageSender = configuration.DoNotTrack
-                ? (IMessageSender)new NoTrackMessageSender()
-                : new HttpMessageSender(configuration, _logger);
+            _messageSender = MessageSenderFactory.Create(configuration, _logger);
         }
 
         public JObject BuildAuthenticateRequest(ActionRequest request)

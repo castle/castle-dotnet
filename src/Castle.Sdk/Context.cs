@@ -33,16 +33,17 @@ namespace Castle
         public static RequestContext FromHttpRequest(Microsoft.AspNetCore.Http.HttpRequest request)
         {
             var clientId = request.Headers.TryGetValue("X-Castle-Client-ID", out var headerId)
-                ? headerId.FirstOrDefault()
+                ? headerId.First()
                 : request.Cookies["__cid"];
 
             return new RequestContext()
             {
-                ClientId = request.Cookies["__cid"],                
+                ClientId = clientId,                
                 Headers = request.Headers.ToDictionary(x => x.Key, y => y.Value.FirstOrDefault()),
                 Ip = request.HttpContext.Connection.RemoteIpAddress.ToString(),
             };
         }
+
 #endif
     }
 }
