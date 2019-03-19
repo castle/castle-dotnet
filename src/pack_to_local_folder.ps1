@@ -10,5 +10,5 @@ if (Test-Path $packagePath) {
 }
 
 dotnet pack (Join-Path $PSScriptRoot "Castle.Sdk")
-nuget add (Join-Path $PSScriptRoot Castle.Sdk\bin\Debug\Castle.Sdk.1.0.0.nupkg) -source $packages
+nuget add (Join-Path $PSScriptRoot Castle.Sdk\bin\Debug\Castle.Sdk.1.0.1.nupkg) -source $packages
 dotnet nuget locals all --clear
