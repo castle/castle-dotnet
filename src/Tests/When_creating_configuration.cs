@@ -14,5 +14,13 @@ namespace Tests
 
             configuration.Blacklist.Should().Contain("Cookie");
         }
+
+        [Fact]
+        public void Should_be_able_to_get_recommended_whitelist()
+        {
+            var result = Castle.Headers.Whitelist;
+
+            result.Should().NotBeEmpty();
+        }
     }
 }

@@ -1,4 +1,5 @@
 version: '{build}'
+skip_branch_with_pr: true
 image: Visual Studio 2017
 install:
   - cmd: cd src
@@ -6,4 +7,7 @@ build_script:
   - cmd: dotnet build Castle.Sdk -c Release -f netstandard2.0
   - cmd: dotnet build Castle.Sdk -c Release -f net461
 test_script:
-  - cmd: dotnet test Tests
+  - ps: nuget install OpenCover -OutputDirectory packages -Version 4.7.922
+  - ps: dotnet tool install coveralls.net --tool-path tools
+  - ps: .\packages\OpenCover.4.7.922\tools\OpenCover.Console.exe -register:user -target:dotnet.exe -targetargs:"test Tests\Tests.csproj" -filter:"+[Castle.Sdk*]*" -oldStyle -output:opencoverCoverage.xml
+  - ps: .\tools\csmacnz.coveralls.exe --opencover -i opencoverCoverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID
