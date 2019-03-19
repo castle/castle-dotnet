@@ -1,5 +1,6 @@
 param (
-    [Parameter(Mandatory=$true)][string]$packages
+    [Parameter(Mandatory=$true)][string]$packages,
+    [Parameter(Mandatory=$true)][string]$version
 )
 
 $packagePath = Join-Path $packages "Castle.Sdk"
@@ -10,5 +11,5 @@ if (Test-Path $packagePath) {
 }
 
 dotnet pack (Join-Path $PSScriptRoot "Castle.Sdk")
-nuget add (Join-Path $PSScriptRoot Castle.Sdk\bin\Debug\Castle.Sdk.1.0.1.nupkg) -source $packages
+nuget add (Join-Path $PSScriptRoot "Castle.Sdk\bin\Debug\Castle.Sdk.$($version).nupkg") -source $packages
 dotnet nuget locals all --clear
