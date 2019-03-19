@@ -5,7 +5,7 @@ using NSubstitute;
 using Tests.SetUp;
 using Xunit;
 
-namespace Tests
+namespace Tests.Sending
 {
     public class When_creating_message_sender
     {

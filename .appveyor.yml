@@ -2,11 +2,10 @@ version: '{build}'
 skip_branch_with_pr: true
 image: Visual Studio 2017
 install:
-  - ps: nuget install OpenCover -OutputDirectory packages -Version 4.7.922
   - ps: dotnet tool install coveralls.net --tool-path tools
 build_script:  
   - cmd: dotnet build src/Castle.Sdk -c Release -f netstandard2.0
   - cmd: dotnet build src/Castle.Sdk -c Release -f net461
-test_script:  
-  - ps: .\packages\OpenCover.4.7.922\tools\OpenCover.Console.exe -register:user -target:dotnet.exe -targetargs:"test src/Tests/Tests.csproj" -filter:"+[Castle.Sdk*]*" -oldStyle -output:opencoverCoverage.xml
-  - ps: .\tools\csmacnz.coveralls.exe --opencover -i opencoverCoverage.xml --useRelativePaths --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID
+test_script:    
+  - ps: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Include="[Castle.Sdk*]*" src/Tests/Tests.csproj
+  - ps: .\tools\csmacnz.coveralls.exe --opencover -i src/Tests/coverage.opencover.xml --useRelativePaths --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID  
