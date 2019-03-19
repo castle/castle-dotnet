@@ -32,7 +32,7 @@ namespace Castle.Infrastructure
         public async Task<TResponse> Post<TResponse>(string endpoint, object payload)
             where TResponse : class, new()
         {
-            var jsonContent = PayloadToJson(payload);
+            var jsonContent = payload.ToHttpContent();
             var message = new HttpRequestMessage(HttpMethod.Post, endpoint)
             {
                 Content = jsonContent
@@ -58,7 +58,7 @@ namespace Castle.Infrastructure
         public async Task<TResponse> Delete<TResponse>(string endpoint, object payload)
             where TResponse : class, new()
         {
-            var jsonContent = PayloadToJson(payload);
+            var jsonContent = payload.ToHttpContent();
             var message = new HttpRequestMessage(HttpMethod.Delete, endpoint)
             {
                 Content = jsonContent
@@ -91,14 +91,6 @@ namespace Castle.Infrastructure
                     requestMessage.RequestUri.AbsoluteUri, 
                     (int)_httpClient.Timeout.TotalMilliseconds);
             }
-        }
-
-        private static StringContent PayloadToJson(object payload)
-        {
-            return new StringContent(
-                JsonForCastle.SerializeObject(payload), 
-                Encoding.UTF8, 
-                "application/json");
-        }
+        }      
     }
 }
