@@ -13,9 +13,9 @@ namespace Tests
     {
         [Theory, AutoFakeData]
         public async Task Should_return_request_response_if_no_exception_is_thrown(
-            int response,
-            IInternalLogger logger)
+            int response)
         {
+            var logger = Substitute.For<IInternalLogger>();
             async Task<int> DoRequest()
             {
                 return await Task.FromResult(response);
@@ -28,9 +28,9 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_rethrow_external_castle_exceptions(
-            IInternalLogger logger,
             CastleExternalException exception)
         {
+            var logger = Substitute.For<IInternalLogger>();
             async Task<int> DoRequest()
             {
                 return await Task.FromException<int>(exception);
@@ -43,9 +43,9 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_not_rethrow_non_external_exceptions(
-            IInternalLogger logger,
             Exception exception)
         {
+            var logger = Substitute.For<IInternalLogger>();
             async Task<int> DoRequest()
             {
                 return await Task.FromException<int>(exception);
@@ -58,9 +58,9 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_log_exceptions_as_errors(
-            IInternalLogger logger,
             Exception exception)
         {
+            var logger = Substitute.For<IInternalLogger>();
             async Task<int> DoRequest()
             {
                 return await Task.FromException<int>(exception);
@@ -73,9 +73,9 @@ namespace Tests
 
         [Theory, AutoFakeData]
         public async Task Should_return_empty_response_object_if_exception_was_caught(
-            IInternalLogger logger,
             Exception exception)
         {
+            var logger = Substitute.For<IInternalLogger>();
             async Task<int> DoRequest()
             {
                 return await Task.FromException<int>(exception);

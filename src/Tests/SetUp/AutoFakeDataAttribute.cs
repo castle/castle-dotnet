@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System;
+using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using AutoFixture.Xunit2;
 
@@ -6,11 +7,23 @@ namespace Tests.SetUp
 {
     public class AutoFakeDataAttribute : AutoDataAttribute
     {
-        public AutoFakeDataAttribute()
-            : base(() => new Fixture().Customize(Customizations.Get()))
+        public AutoFakeDataAttribute(params Type[] customizationTypes)
+            : base(() =>
+            {
+                var standard = Customizations.Get();
+                var fixture = new  Fixture().Customize(standard);
+
+                foreach (var type in customizationTypes)
+                {
+                    var customization = Activator.CreateInstance(type) as ICustomization;
+                    fixture.Customize(customization);
+                }
+
+                return fixture;
+            })
         {
             
-        }        
+        }
     }
 
     public class InlineAutoFakeDataAttribute : InlineAutoDataAttribute

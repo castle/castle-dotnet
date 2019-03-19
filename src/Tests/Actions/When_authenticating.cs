@@ -20,10 +20,10 @@ namespace Tests
         public async Task Should_return_response_if_successful(
             JObject request,
             CastleConfiguration configuration,
-            Verdict response,
-            IInternalLogger logger)
+            Verdict response)
         {
             Task<Verdict> Send(JObject req) => Task.FromResult(response);
+            var logger = Substitute.For<IInternalLogger>();
 
             var result = await Authenticate.Execute(Send, request, configuration, logger);
 
@@ -34,10 +34,10 @@ namespace Tests
         public async Task Should_return_failover_response_if_timeout(
             JObject request,
             string requestUri,
-            CastleConfiguration configuration,
-            IInternalLogger logger)
+            CastleConfiguration configuration)
         {
             configuration.FailOverStrategy = ActionType.Allow;
+            var logger = Substitute.For<IInternalLogger>();
 
             Task<Verdict> Send(JObject req) => throw new CastleTimeoutException(requestUri, configuration.Timeout);
 
@@ -51,10 +51,10 @@ namespace Tests
         public async Task Should_return_failover_response_if_any_exception(
             JObject request,
             Exception exception,
-            CastleConfiguration configuration,
-            IInternalLogger logger)
+            CastleConfiguration configuration)
         {
             configuration.FailOverStrategy = ActionType.Allow;
+            var logger = Substitute.For<IInternalLogger>();
 
             Task<Verdict> Send(JObject req) => throw exception;
 
@@ -68,10 +68,10 @@ namespace Tests
         public async Task Should_log_failover_exception_as_warning(
             JObject request,
             Exception exception,
-            CastleConfiguration configuration,
-            IInternalLogger logger)
+            CastleConfiguration configuration)
         {
             configuration.FailOverStrategy = ActionType.Allow;
+            var logger = Substitute.For<IInternalLogger>();
 
             Task<Verdict> Send(JObject req) => throw exception;
 
@@ -84,10 +84,10 @@ namespace Tests
         public async Task Should_throw_exception_if_failing_over_with_no_strategy(
             JObject request,
             Exception exception,
-            CastleConfiguration configuration,
-            IInternalLogger logger)
+            CastleConfiguration configuration)
         {
             configuration.FailOverStrategy = ActionType.None;
+            var logger = Substitute.For<IInternalLogger>();
 
             Task<Verdict> Send(JObject req) => throw exception;
 
@@ -100,11 +100,11 @@ namespace Tests
         public async Task Should_return_failover_response_if_do_not_track_is_set(
             JObject request,
             CastleConfiguration configuration,
-            Verdict response,
-            IInternalLogger logger)
+            Verdict response)
         {
             configuration.DoNotTrack = true;
             configuration.FailOverStrategy = ActionType.Allow;
+            var logger = Substitute.For<IInternalLogger>();
 
             Task<Verdict> Send(JObject req) => Task.FromResult(response);
 

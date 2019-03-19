@@ -72,8 +72,8 @@ namespace Castle
 
         public async Task<DeviceList> GetDevicesForUser(string userId, string clientId = null)
         {
-            var clientIdQuery = string.IsNullOrEmpty(clientId) ? "" : $"?client_id={clientId}";
-            return await TryRequest(() => _messageSender.Get<DeviceList>($"/v1/users/{userId}/devices{clientIdQuery}"));
+            var endpoint = QueryStringBuilder.Append($"/v1/users/{userId}/devices", "client_id", clientId);
+            return await TryRequest(() => _messageSender.Get<DeviceList>(endpoint));
         }
 
         public async Task<Device> GetDevice(string deviceToken)

@@ -15,15 +15,25 @@ namespace Castle.Infrastructure
         private readonly IInternalLogger _logger;
         private readonly HttpClient _httpClient;
 
-        public HttpMessageSender(CastleConfiguration configuration, IInternalLogger logger)
+        public HttpMessageSender(
+            CastleConfiguration configuration, 
+            IInternalLogger logger) 
+            : this(configuration, logger, null)
+        {
+           
+        }
+
+        internal HttpMessageSender(            
+            CastleConfiguration configuration,
+            IInternalLogger logger,
+            HttpMessageHandler handler)
         {
             _logger = logger;
 
-            _httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri(configuration.BaseUrl), 
-                Timeout = TimeSpan.FromMilliseconds(configuration.Timeout)
-            };
+            _httpClient = handler != null ? new HttpClient(handler) : new HttpClient();
+
+            _httpClient.BaseAddress = new Uri(configuration.BaseUrl);
+            _httpClient.Timeout = TimeSpan.FromMilliseconds(configuration.Timeout);
 
             var authToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(":" + configuration.ApiSecret));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
