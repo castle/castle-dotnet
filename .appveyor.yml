@@ -7,5 +7,5 @@ build_script:
   - cmd: dotnet build src/Castle.Sdk -c Release -f netstandard2.0
   - cmd: dotnet build src/Castle.Sdk -c Release -f net461
 test_script:    
-  - ps: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Include="[Castle.Sdk*]*" src/Tests.csproj
+  - ps: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Include="[Castle.Sdk*]*" src/Tests/Tests.csproj
   - ps: .\tools\csmacnz.coveralls.exe --opencover -i src/Tests/coverage.opencover.xml --useRelativePaths --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID  

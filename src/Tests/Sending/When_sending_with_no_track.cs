@@ -4,7 +4,7 @@ using Castle.Infrastructure;
 using FluentAssertions;
 using Xunit;
 
-namespace Tests
+namespace Tests.Sending
 {
     public class When_sending_with_no_track
     {

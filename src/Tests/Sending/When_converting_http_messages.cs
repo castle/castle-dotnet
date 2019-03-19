@@ -6,7 +6,7 @@ using FluentAssertions;
 using Tests.SetUp;
 using Xunit;
 
-namespace Tests
+namespace Tests.Sending
 {
     public class When_converting_http_messages
     {
