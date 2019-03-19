@@ -32,18 +32,22 @@ namespace Castle
 #if NETSTANDARD2_0
         public static RequestContext FromHttpRequest(Microsoft.AspNetCore.Http.HttpRequest request)
         {
-            var clientId = request.Headers.TryGetValue("X-Castle-Client-ID", out var headerId)
-                ? headerId.First()
-                : request.Cookies["__cid"];
-
             return new RequestContext()
             {
-                ClientId = clientId,                
+                ClientId = GetClientId(request.Headers, request.Cookies),
                 Headers = request.Headers.ToDictionary(x => x.Key, y => y.Value.FirstOrDefault()),
                 Ip = request.HttpContext.Connection.RemoteIpAddress.ToString(),
             };
         }
 
+        internal static string GetClientId(
+            IDictionary<string, Microsoft.Extensions.Primitives.StringValues> headers,
+            Microsoft.AspNetCore.Http.IRequestCookieCollection cookies)
+        {
+            return headers.TryGetValue("X-Castle-Client-ID", out var headerId)
+                ? headerId.First()
+                : cookies["__cid"];
+        }
 #endif
     }
 }
