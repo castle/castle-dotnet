@@ -39,7 +39,7 @@ namespace Tests.SetUp
     {
         public static CompositeCustomization Get() => new CompositeCustomization(
             new AutoNSubstituteCustomization(),
-            new CastleConfigurationCustomization()
+            new CastleConfigurationDefaultCustomization()
         );
     }
 }
