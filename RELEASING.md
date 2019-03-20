@@ -1,7 +1,7 @@
 Releasing
 =========
 
-1. Create branch `release X.Y.Z`.
+1. Create branch `release-X.Y.Z`.
 2. Update package version for the `Castle.Sdk` project to the new version ("Version" in .csproj or Properties -> Package -> Package version in Visual Studio)
 3. Update `CHANGELOG.md` for the impending release
 4. `git commit -am "release X.Y.Z."` (where X.Y.Z is the new version)
