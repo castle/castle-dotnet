@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Primitives;
 using Xunit;
 
-namespace Tests
+namespace Tests.Messages
 {
-    public class When_creating_request_context
+    public class When_creating_request_context_for_Core
     {
         [Theory, AutoData]
         public void Should_get_client_id_from_castle_header_if_present(
@@ -25,7 +25,7 @@ namespace Tests
                 ["__cid"] = cookieValue
             });
 
-            var result = Context.GetClientId(headers, cookies);
+            var result = Context.GetClientIdForCore(headers, cookies);
 
             result.Should().Be(castleHeaderValue);
         }
@@ -46,7 +46,7 @@ namespace Tests
                 ["__cid"] = cookieValue
             });
 
-            var result = Context.GetClientId(headers, cookies);
+            var result = Context.GetClientIdForCore(headers, cookies);
 
             result.Should().Be(cookieValue);
         }
@@ -68,15 +68,17 @@ namespace Tests
                 [otherCookie] = otherCookieValue
             });
 
-            var result = Context.GetClientId(headers, cookies);
+            var result = Context.GetClientIdForCore(headers, cookies);
 
             result.Should().Be("");
         }
 
         [Theory, AutoData]
-        public void Should_get_ip_from_supplied_header(
+        public void Should_get_ip_from_supplied_headers_in_order(
             string ipHeader,
             string ip,
+            string secondaryIpHeader,
+            string secondaryIp,
             string otherHeader,
             string otherHeaderValue,
             string httpContextIp)
@@ -84,12 +86,33 @@ namespace Tests
             var headers = new Dictionary<string, StringValues>()
             {
                 [ipHeader] = ip,
+                [secondaryIpHeader] = secondaryIp,
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Context.GetIp(() => httpContextIp, headers, ipHeader);
+            var result = Context.GetIpForCore(headers, new [] {  ipHeader, secondaryIpHeader }, () => httpContextIp);
 
             result.Should().Be(ip);
+        }
+
+        [Theory, AutoData]
+        public void Should_get_ip_from_second_header_if_first_is_not_found(
+            string ipHeader,
+            string secondaryIpHeader,
+            string secondaryIp,
+            string otherHeader,
+            string otherHeaderValue,
+            string httpContextIp)
+        {
+            var headers = new Dictionary<string, StringValues>()
+            {
+                [secondaryIpHeader] = secondaryIp,
+                [otherHeader] = otherHeaderValue
+            };
+
+            var result = Context.GetIpForCore(headers, new[] { ipHeader, secondaryIpHeader }, () => httpContextIp);
+
+            result.Should().Be(secondaryIp);
         }
 
         [Theory, AutoData]
@@ -106,7 +129,7 @@ namespace Tests
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Context.GetIp(() => httpContextIp, headers, null);
+            var result = Context.GetIpForCore(headers, null, () => httpContextIp);
 
             result.Should().Be(httpContextIp);
         }
