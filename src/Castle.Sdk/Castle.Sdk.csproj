@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/castle/castle-dotnet</PackageProjectUrl>
     <RootNamespace>Castle</RootNamespace>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Castle</Authors>
     <Product>Castle .NET SDK</Product>
     <Description>Castle SDK for C# / .NET</Description>
