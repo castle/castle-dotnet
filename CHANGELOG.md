@@ -2,6 +2,11 @@
 
 ## master
 
+## 1.1.1 (2019-03-26)
+
+**Bug fixes:**
+- [#23](https://github.com/castle/castle-dotnet/pull/23) Include xml docs in all build configurations.
+
 ## 1.1.0 (2019-03-20)
 
 **Features:**
