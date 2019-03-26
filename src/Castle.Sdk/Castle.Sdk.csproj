@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DocumentationFile>C:\Code\castle.net\src\Castle.Sdk\Castle.Sdk.xml</DocumentationFile>
+    <DocumentationFile>Castle.Sdk.xml</DocumentationFile>
 
     <!-- Missing XML comment warning-->
     <noWarn>1591</noWarn>

@@ -61,5 +61,12 @@ namespace Tests
             Func<Task> act = async () => await sut.ImpersonateEnd(request);
             act.Should().NotThrow();
         }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_archive_devices(string userId, CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.ArchiveDevices(userId);
+            act.Should().NotThrow();
+        }
     }
 }
