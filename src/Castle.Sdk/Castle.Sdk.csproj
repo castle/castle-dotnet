@@ -16,7 +16,7 @@
     <PackageIconUrl>https://raw.github.com/castle/castle-dotnet/master/castle_icon.png</PackageIconUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup>
     <DocumentationFile>C:\Code\castle.net\src\Castle.Sdk\Castle.Sdk.xml</DocumentationFile>
 
     <!-- Missing XML comment warning-->
