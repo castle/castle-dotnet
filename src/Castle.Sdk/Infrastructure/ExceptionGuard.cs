@@ -7,9 +7,9 @@ namespace Castle.Infrastructure
     internal static class ExceptionGuard
     {
         public static async Task<TResponse> Try<TResponse>(
-            Func<Task<TResponse>> request, 
+            Func<Task<TResponse>> request,
             IInternalLogger logger)
-            where TResponse : new()
+            where TResponse : class
         {
             try
             {
@@ -22,7 +22,7 @@ namespace Castle.Infrastructure
             catch (Exception e)
             {
                 logger.Error(e.ToString);
-                return new TResponse();
+                return null;
             }
         }
     }
