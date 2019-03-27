@@ -30,6 +30,9 @@
         <member name="M:Castle.CastleClient.ArchiveDevices(System.String)">
             <exception cref="T:System.ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
         </member>
+        <member name="M:Castle.Config.CastleConfiguration.#ctor(System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="apiSecret"/> is null or empty</exception>>
+        </member>
         <member name="P:Castle.Config.CastleConfiguration.ApiSecret">
             <summary>
             Secret used to authenticate with the Castle Api (Required)

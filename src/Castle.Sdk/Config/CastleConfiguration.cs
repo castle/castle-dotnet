@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Castle.Infrastructure;
 using Castle.Messages;
 
@@ -6,8 +7,11 @@ namespace Castle.Config
 {
     public class CastleConfiguration
     {
+        /// <exception cref="ArgumentException">Thrown when <paramref name="apiSecret"/> is null or empty</exception>>
         public CastleConfiguration(string apiSecret)
         {
+            ArgumentGuard.NotNullOrEmpty(apiSecret, nameof(apiSecret));
+
             ApiSecret = apiSecret;
         }
 
