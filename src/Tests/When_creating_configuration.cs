@@ -1,4 +1,5 @@
-﻿using Castle.Config;
+﻿using System;
+using Castle.Config;
 using FluentAssertions;
 using Tests.SetUp;
 using Xunit;
@@ -29,6 +30,16 @@ namespace Tests
             var result = Castle.Headers.Whitelist;
 
             result.Should().NotBeEmpty();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void Should_throw_exception_if_null_or_empty_secret(string secret)
+        {
+            Action act = () => new CastleConfiguration(secret);
+
+            act.Should().Throw<ArgumentException>();
         }
     }
 }

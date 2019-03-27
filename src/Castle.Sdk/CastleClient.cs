@@ -21,7 +21,7 @@ namespace Castle
         public CastleClient(CastleConfiguration configuration)
         {
             _configuration = configuration;
-            
+
             _logger = new LoggerWithLevels(configuration.Logger, configuration.LogLevel);
 
             _messageSender = MessageSenderFactory.Create(configuration, _logger);
@@ -29,7 +29,7 @@ namespace Castle
 
         public JObject BuildAuthenticateRequest(ActionRequest request)
         {
-            var prepared = request.PrepareApiCopy(_configuration.Whitelist, _configuration.Blacklist);
+            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.Whitelist, _configuration.Blacklist);
             return JsonForCastle.FromObject(prepared);
         }
 
@@ -51,7 +51,7 @@ namespace Castle
 
         public JObject BuildTrackRequest(ActionRequest request)
         {
-            var prepared = request.PrepareApiCopy(_configuration.Whitelist, _configuration.Blacklist);
+            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.Whitelist, _configuration.Blacklist);
             return JsonForCastle.FromObject(prepared);
         }
 
@@ -70,41 +70,62 @@ namespace Castle
             await SendTrackRequest(jsonRequest);
         }
 
+        /// <exception cref="ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
         public async Task<DeviceList> GetDevicesForUser(string userId, string clientId = null)
         {
+            ArgumentGuard.NotNullOrEmpty(userId, nameof(userId));
+
             var endpoint = QueryStringBuilder.Append($"/v1/users/{userId}/devices", "client_id", clientId);
             return await TryRequest(() => _messageSender.Get<DeviceList>(endpoint));
         }
 
+        /// <exception cref="ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
         public async Task<Device> GetDevice(string deviceToken)
         {
+            ArgumentGuard.NotNullOrEmpty(deviceToken, nameof(deviceToken));
+
             return await TryRequest(() => _messageSender.Get<Device>($"/v1/devices/{deviceToken}"));
         }
 
+        /// <exception cref="ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
         public async Task ApproveDevice(string deviceToken)
         {
+            ArgumentGuard.NotNullOrEmpty(deviceToken, nameof(deviceToken));
+
             await TryRequest(() => _messageSender.Put<VoidResponse>($"/v1/devices/{deviceToken}/approve"));
         }
 
+        /// <exception cref="ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
         public async Task ReportDevice(string deviceToken)
         {
+            ArgumentGuard.NotNullOrEmpty(deviceToken, nameof(deviceToken));
+
             await TryRequest(() => _messageSender.Put<VoidResponse>($"/v1/devices/{deviceToken}/report"));
         }
 
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>>
         public async Task ImpersonateStart(ImpersonateStartRequest request)
         {
+            ArgumentGuard.NotNull(request, nameof(request));
+
             await TryRequest(() => _messageSender.Post<VoidResponse>("/v1/impersonate", request));
         }
 
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>>
         public async Task ImpersonateEnd(ImpersonateEndRequest request)
         {
+            ArgumentGuard.NotNull(request, nameof(request));
+
             await TryRequest(() => _messageSender.Delete<VoidResponse>("/v1/impersonate", request));
         }
 
+        /// <exception cref="ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
         public async Task<User> ArchiveDevices(string userId)
         {
+            ArgumentGuard.NotNullOrEmpty(userId, nameof(userId));
+
             return await TryRequest(() => _messageSender.Put<User>($"/v1/users/{userId}/archive_devices"));
-        }      
+        }
 
         private async Task<T> TryRequest<T>(Func<Task<T>> request)
             where T : new()
