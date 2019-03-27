@@ -2,6 +2,17 @@
 
 ## master
 
+## 1.2.0 (2019-03-27)
+**Features:**
+- [#25](https://github.com/castle/castle-dotnet/pull/25) Added client method for calling `archive devices` endpoint.
+
+**Enhancements:**
+- [#26](https://github.com/castle/castle-dotnet/pull/26) Guard against missing client method arguments and API secret 
+- [#27](https://github.com/castle/castle-dotnet/pull/27) Return null for requests that throw exceptions.
+
+**Bug fixes:**
+- [#28](https://github.com/castle/castle-dotnet/pull/28) Include request/response content in INFO-level logging.
+
 ## 1.1.1 (2019-03-26)
 
 **Bug fixes:**
