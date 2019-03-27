@@ -42,54 +42,60 @@ namespace Castle.Infrastructure
         public async Task<TResponse> Post<TResponse>(string endpoint, object payload)
             where TResponse : class, new()
         {
-            var jsonContent = payload.ToHttpContent();
-            var message = new HttpRequestMessage(HttpMethod.Post, endpoint)
-            {
-                Content = jsonContent
-            };
-
-            return await SendRequest<TResponse>(message);
+            return await SendRequest<TResponse>(HttpMethod.Post, endpoint, payload);
         }
 
         public async Task<TResponse> Get<TResponse>(string endpoint) 
             where TResponse : class, new()
         {
-            var message = new HttpRequestMessage(HttpMethod.Get, endpoint);
-            return await SendRequest<TResponse>(message);
+            return await SendRequest<TResponse>(HttpMethod.Get, endpoint);
         }
 
         public async Task<TResponse> Put<TResponse>(string endpoint)
             where TResponse : class, new()
         {
-            var message = new HttpRequestMessage(HttpMethod.Put, endpoint);
-            return await SendRequest<TResponse>(message);
+            return await SendRequest<TResponse>(HttpMethod.Put, endpoint);
         }
 
         public async Task<TResponse> Delete<TResponse>(string endpoint, object payload)
             where TResponse : class, new()
         {
-            var jsonContent = payload.ToHttpContent();
-            var message = new HttpRequestMessage(HttpMethod.Delete, endpoint)
+            return await SendRequest<TResponse>(HttpMethod.Delete, endpoint, payload);
+        }
+
+        private async Task<TResponse> SendRequest<TResponse>(HttpMethod method, string endpoint, object payload = null)
+            where TResponse : class, new()
+        {
+            var jsonContent = payload != null ? payload.ToHttpContent() : null;
+            var requestMessage = new HttpRequestMessage(method, endpoint)
             {
                 Content = jsonContent
             };
-            return await SendRequest<TResponse>(message);
-        }
 
-        private async Task<TResponse> SendRequest<TResponse>(HttpRequestMessage requestMessage)
-            where TResponse : class, new()
-        {
+            _logger.Info(() => string.Concat(
+                "Request",
+                Environment.NewLine,
+                requestMessage,
+                Environment.NewLine,
+                payload != null ? JsonForCastle.SerializeObject(payload) : ""
+            ));
+
             try
-            {
-                _logger.Info(() => "Sending, " + requestMessage);
-
+            {                
                 var response = await _httpClient.SendAsync(requestMessage);
 
-                _logger.Info(() => "Receiving, " + response);
+                var content = response.Content != null ? await response.Content.ReadAsStringAsync() : "";
+
+                _logger.Info(() => string.Concat(
+                    "Response",
+                    Environment.NewLine,
+                    response,
+                    Environment.NewLine,
+                    content
+                ));
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
                     return JsonForCastle.DeserializeObject<TResponse>(content);
                 }
 

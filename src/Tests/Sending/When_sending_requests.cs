@@ -28,7 +28,7 @@ namespace Tests.Sending
                 logger
                     .Received()
                     .Info(Arg.Is<Func<string>>(func => func()
-                        .StartsWith("Sending")));
+                        .StartsWith("Request")));
             }
         }
 
@@ -46,7 +46,7 @@ namespace Tests.Sending
                 logger
                     .Received()
                     .Info(Arg.Is<Func<string>>(func => func()
-                        .StartsWith("Receiving")));
+                        .StartsWith("Response")));
             }            
         }
 
