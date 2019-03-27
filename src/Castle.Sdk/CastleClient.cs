@@ -107,7 +107,7 @@ namespace Castle
         }      
 
         private async Task<T> TryRequest<T>(Func<Task<T>> request)
-            where T : new()
+            where T : class
         {
             return await ExceptionGuard.Try(request, _logger);
         }
