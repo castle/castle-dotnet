@@ -55,7 +55,7 @@ namespace Castle
             {
                 ClientId = GetClientIdForCore(request.Headers, request.Cookies),
                 Headers = request.Headers.ToDictionary(x => x.Key, y => y.Value.FirstOrDefault()),
-                Ip = GetIpForCore(request.Headers, ipHeaders, () => request.HttpContext.Connection.RemoteIpAddress.ToString())
+                Ip = GetIpForCore(request.Headers, ipHeaders, () => request.HttpContext.Connection.RemoteIpAddress?.ToString())
             };
         }
 

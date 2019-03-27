@@ -101,6 +101,11 @@ namespace Castle
             await TryRequest(() => _messageSender.Delete<VoidResponse>("/v1/impersonate", request));
         }
 
+        public async Task<User> ArchiveDevices(string userId)
+        {
+            return await TryRequest(() => _messageSender.Put<User>($"/v1/users/{userId}/archive_devices"));
+        }      
+
         private async Task<T> TryRequest<T>(Func<Task<T>> request)
             where T : new()
         {
