@@ -9,6 +9,27 @@
             Main SDK entry point
             </summary>
         </member>
+        <member name="M:Castle.CastleClient.GetDevicesForUser(System.String,System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
+        </member>
+        <member name="M:Castle.CastleClient.GetDevice(System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
+        </member>
+        <member name="M:Castle.CastleClient.ApproveDevice(System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
+        </member>
+        <member name="M:Castle.CastleClient.ReportDevice(System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
+        </member>
+        <member name="M:Castle.CastleClient.ImpersonateStart(Castle.Messages.Requests.ImpersonateStartRequest)">
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>>
+        </member>
+        <member name="M:Castle.CastleClient.ImpersonateEnd(Castle.Messages.Requests.ImpersonateEndRequest)">
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>>
+        </member>
+        <member name="M:Castle.CastleClient.ArchiveDevices(System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
+        </member>
         <member name="P:Castle.Config.CastleConfiguration.ApiSecret">
             <summary>
             Secret used to authenticate with the Castle Api (Required)

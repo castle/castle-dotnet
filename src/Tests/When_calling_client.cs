@@ -21,9 +21,23 @@ namespace Tests
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_not_throw_exception_if_calling_authenticate_with_null_request(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.Authenticate(null);
+            act.Should().NotThrow();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
         public void Should_track(ActionRequest request, CastleClient sut)
         {
             Func<Task> act = async () => await sut.Track(request);
+            act.Should().NotThrow();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_not_throw_exception_if_calling_track_with_null_request(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.Track(null);
             act.Should().NotThrow();
         }
 
@@ -35,10 +49,38 @@ namespace Tests
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_user_devices_with_empty_userId(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.GetDevicesForUser("");
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_user_devices_with_null_userId(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.GetDevicesForUser(null);
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
         public void Should_get_device(string deviceToken, CastleClient sut)
         {
             Func<Task> act = async () => await sut.GetDevice(deviceToken);
             act.Should().NotThrow();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_get_device_with_empty_token(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.GetDevice("");
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_get_device_with_null_token(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.GetDevice(null);
+            act.Should().Throw<ArgumentException>();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
@@ -49,10 +91,31 @@ namespace Tests
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_approve_device_with_empty_token(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.ApproveDevice("");
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_approve_device_with_null_token(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.ApproveDevice(null);
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
         public void Should_start_impersonation(ImpersonateStartRequest request, CastleClient sut)
         {
             Func<Task> act = async () => await sut.ImpersonateStart(request);
             act.Should().NotThrow();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_impersonate_start_with_null_request(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.ImpersonateStart(null);
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
@@ -63,10 +126,31 @@ namespace Tests
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_impersonate_end_with_null_request(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.ImpersonateEnd(null);
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
         public void Should_archive_devices(string userId, CastleClient sut)
         {
             Func<Task> act = async () => await sut.ArchiveDevices(userId);
             act.Should().NotThrow();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_archive_devices_with_empty_userId(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.ArchiveDevices("");
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_archive_devices_with_null_userId(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.ArchiveDevices(null);
+            act.Should().Throw<ArgumentException>();
         }
     }
 }
