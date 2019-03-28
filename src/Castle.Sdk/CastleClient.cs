@@ -18,8 +18,11 @@ namespace Castle
         private readonly IMessageSender _messageSender;
         private readonly IInternalLogger _logger;
 
+        /// <exception cref="ArgumentException">Thrown when <paramref name="configuration"/> is null</exception>
         public CastleClient(CastleConfiguration configuration)
         {
+            ArgumentGuard.NotNull(configuration, nameof(configuration));
+
             _configuration = configuration;
 
             _logger = new LoggerWithLevels(configuration.Logger, configuration.LogLevel);

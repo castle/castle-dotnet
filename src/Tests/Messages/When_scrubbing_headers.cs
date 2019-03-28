@@ -46,6 +46,12 @@ namespace Tests.Messages
                 .Equal(unallowed, (s1, s2) => string.Equals(s1, s2, StringComparison.OrdinalIgnoreCase));
         }
 
+        [Theory, AutoData]
+        public void Should_not_throw_exception_if_lists_are_null(Dictionary<string, string> headers)
+        {
+            var result = HeaderScrubber.Scrub(headers, null, null);
+        }
+
         private static KeyValuePair<string, string> ToDictionaryEntry(string header)
         {
             return new KeyValuePair<string, string>(header, $"{header}_value");
