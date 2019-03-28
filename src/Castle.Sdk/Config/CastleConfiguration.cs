@@ -18,7 +18,7 @@ namespace Castle.Config
         /// <summary>
         /// Secret used to authenticate with the Castle Api (Required)
         /// </summary>
-        public string ApiSecret { get; set; }
+        public string ApiSecret { get; }
 
         /// <summary>
         /// The response action to return in case of a failover in an Authenticate request
