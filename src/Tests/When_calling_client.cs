@@ -13,6 +13,14 @@ namespace Tests
         // We can test the Castle client by making use of the Do Not Track feature,
         // which makes the client not send any real requests.
 
+        [Fact]
+        public void Should_throw_exception_if_client_config_is_null()
+        {
+            Action act = () => new CastleClient(null);
+
+            act.Should().Throw<ArgumentException>();
+        }
+
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
         public void Should_authenticate(ActionRequest request, CastleClient sut)
         {
