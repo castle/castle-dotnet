@@ -24,12 +24,12 @@ namespace Castle.Infrastructure
             // Scrub to "true" so the custom JsonConverter can find it and convert to actual boolean
             const string scrubValue = "true";
 
-            if (blacklist.Contains(header.Key, StringComparer.OrdinalIgnoreCase))
+            if (blacklist != null && blacklist.Contains(header.Key, StringComparer.OrdinalIgnoreCase))
             {
                 return new KeyValuePair<string, string>(header.Key, scrubValue);
             }
 
-            if (whitelist.Length > 0 && !whitelist.Contains(header.Key, StringComparer.OrdinalIgnoreCase))
+            if (whitelist != null && whitelist.Length > 0 && !whitelist.Contains(header.Key, StringComparer.OrdinalIgnoreCase))
             {
                 return new KeyValuePair<string, string>(header.Key, scrubValue);
             }
