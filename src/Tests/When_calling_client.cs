@@ -113,6 +113,27 @@ namespace Tests
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_report_device(string deviceToken, CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.ReportDevice(deviceToken);
+            act.Should().NotThrow();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_report_device_with_empty_token(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.ReportDevice("");
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_throw_exception_if_calling_report_device_with_null_token(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.ReportDevice(null);
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
         public void Should_start_impersonation(ImpersonateStartRequest request, CastleClient sut)
         {
             Func<Task> act = async () => await sut.ImpersonateStart(request);
