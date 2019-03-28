@@ -39,8 +39,7 @@ namespace Castle
         public async Task<Verdict> SendAuthenticateRequest(JObject request)
         {
             return await TryRequest(() => Actions.Authenticate.Execute(
-                req => _messageSender.Post<Verdict>("/v1/authenticate", req),
-                request,
+                () => _messageSender.Post<Verdict>("/v1/authenticate", request),
                 _configuration,
                 _logger));
         }
@@ -61,8 +60,7 @@ namespace Castle
         public async Task SendTrackRequest(JObject request)
         {
             await TryRequest(() => Actions.Track.Execute(
-                req => _messageSender.Post<VoidResponse>("/v1/track", req),
-                request,
+                () => _messageSender.Post<VoidResponse>("/v1/track", request),
                 _configuration));
         }
 

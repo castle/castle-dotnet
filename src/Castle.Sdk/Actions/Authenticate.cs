@@ -12,8 +12,7 @@ namespace Castle.Actions
     internal static class Authenticate
     {
         public static async Task<Verdict> Execute(
-            Func<JObject, Task<Verdict>> send,
-            JObject request,
+            Func<Task<Verdict>> send,
             CastleConfiguration configuration,
             IInternalLogger logger)
         {
@@ -22,7 +21,7 @@ namespace Castle.Actions
 
             try
             {                
-                return await send(request);
+                return await send();
             }
             catch (Exception e)
             {
