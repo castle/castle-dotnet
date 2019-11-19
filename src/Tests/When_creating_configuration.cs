@@ -14,6 +14,7 @@ namespace Tests
             configuration.Blacklist = newList;
 
             configuration.Blacklist.Should().Contain("Cookie");
+            configuration.Blacklist.Should().Contain("Authorization");
         }
 
         [Theory, AutoFakeData]
@@ -22,6 +23,7 @@ namespace Tests
             configuration.Blacklist = null;
 
             configuration.Blacklist.Should().Contain("Cookie");
+            configuration.Blacklist.Should().Contain("Authorization");
         }
 
         [Fact]

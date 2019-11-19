@@ -45,14 +45,14 @@ namespace Castle.Config
         /// </summary>
         public string[] Whitelist { get; set; } = { };
 
-        private string[] _blacklist = { "Cookie" };
+        private string[] _blacklist = { "Cookie", "Authorization" };
         /// <summary>
         /// Blacklist for headers in request context object
         /// </summary>
         public string[] Blacklist
         {
             get => _blacklist;
-            set => _blacklist = new [] { "Cookie" }.Concat(value ?? new string[] { }).ToArray();
+            set => _blacklist = new [] { "Cookie", "Authorization" }.Concat(value ?? new string[] { }).ToArray();
         }
 
         /// <summary>
