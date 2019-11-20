@@ -70,15 +70,18 @@ namespace Tests.Messages
                 },
                 {
                     "Cookie", "secret"
+                },
+                {
+                    "Other", "secret"
                 }
             };
 
-            var result = HeaderScrubber.Scrub(headers, new string[] { }, new string[] { });
+            var result = HeaderScrubber.Scrub(headers, new string[] { }, new string[] { "Other" });
 
             result
                 .Select(x => x.Value)
                 .Should()
-                .Equal(new string[] { "true", "true" });
+                .Equal(new string[] { "true", "true", "true" });
         }
 
         [Theory, AutoData]
