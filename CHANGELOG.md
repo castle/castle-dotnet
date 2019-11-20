@@ -2,6 +2,12 @@
 
 ## master
 
+## 1.2.1 (2019-11-20)
+
+**Enhancement**
+
+- [#34](https://github.com/castle/castle-dotnet/pull/34) Update recommended whitelist, add auto blacklist header (`Authorization`)
+
 ## 1.2.0 (2019-03-28)
 
 **Features:**
