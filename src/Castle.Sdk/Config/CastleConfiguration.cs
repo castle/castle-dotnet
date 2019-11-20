@@ -45,15 +45,10 @@ namespace Castle.Config
         /// </summary>
         public string[] Whitelist { get; set; } = { };
 
-        private string[] _blacklist = { "Cookie", "Authorization" };
         /// <summary>
         /// Blacklist for headers in request context object
         /// </summary>
-        public string[] Blacklist
-        {
-            get => _blacklist;
-            set => _blacklist = new [] { "Cookie", "Authorization" }.Concat(value ?? new string[] { }).ToArray();
-        }
+        public string[] Blacklist { get; set; } = { };
 
         /// <summary>
         /// If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response

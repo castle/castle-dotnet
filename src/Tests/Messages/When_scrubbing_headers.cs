@@ -46,6 +46,41 @@ namespace Tests.Messages
                 .Equal(unallowed, (s1, s2) => string.Equals(s1, s2, StringComparison.OrdinalIgnoreCase));
         }
 
+        [Fact]
+        public void Should_always_allow_default_whitelist()
+        {
+            var whitelist = new string[] { "Only-This" };
+            var headers = new Dictionary<string, string> {
+                {
+                    "User-Agent", "something"
+                }
+            };
+
+            var result = HeaderScrubber.Scrub(headers, whitelist, new string[] { });
+
+            result.Should().Equal(headers);
+        }
+
+        [Fact]
+        public void Should_always_apply_default_blacklist()
+        {
+            var headers = new Dictionary<string, string> {
+                {
+                    "Authorization", "secret"
+                },
+                {
+                    "Cookie", "secret"
+                }
+            };
+
+            var result = HeaderScrubber.Scrub(headers, new string[] { }, new string[] { });
+
+            result
+                .Select(x => x.Value)
+                .Should()
+                .Equal(new string[] { "true", "true" });
+        }
+
         [Theory, AutoData]
         public void Should_not_throw_exception_if_lists_are_null(Dictionary<string, string> headers)
         {

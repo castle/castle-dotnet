@@ -8,24 +8,6 @@ namespace Tests
 {
     public class When_creating_configuration
     {
-        [Theory, AutoFakeData]
-        public void Should_always_add_Cookie_when_setting_blacklist(CastleConfiguration configuration, string[] newList)
-        {
-            configuration.Blacklist = newList;
-
-            configuration.Blacklist.Should().Contain("Cookie");
-            configuration.Blacklist.Should().Contain("Authorization");
-        }
-
-        [Theory, AutoFakeData]
-        public void Should_preserve_Cookie_when_setting_blacklist_to_null(CastleConfiguration configuration)
-        {
-            configuration.Blacklist = null;
-
-            configuration.Blacklist.Should().Contain("Cookie");
-            configuration.Blacklist.Should().Contain("Authorization");
-        }
-
         [Fact]
         public void Should_be_able_to_get_recommended_whitelist()
         {
