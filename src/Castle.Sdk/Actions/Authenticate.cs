@@ -20,7 +20,7 @@ namespace Castle.Actions
                 return CreateFailoverResponse(configuration.FailOverStrategy, "do not track");
 
             try
-            {                
+            {
                 return await send();
             }
             catch (Exception e)
