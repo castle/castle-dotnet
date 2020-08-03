@@ -8,7 +8,7 @@ namespace Castle
 {
     public static class Context
     {
-#if NET461
+#if NET461 || NET48
         public static RequestContext FromHttpRequest(System.Web.HttpRequestBase request, string[] ipHeaders = null)
         {
             var headers = new Dictionary<string, string>();
@@ -48,7 +48,7 @@ namespace Castle
             return getIpFromHttpContext();
         }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP
         public static RequestContext FromHttpRequest(Microsoft.AspNetCore.Http.HttpRequest request, string[] ipHeaders = null)
         {
             return new RequestContext()
@@ -68,7 +68,7 @@ namespace Castle
                 : cookies["__cid"] ?? "";
         }
 
-        internal static string GetIpForCore(            
+        internal static string GetIpForCore(
             IDictionary<string, Microsoft.Extensions.Primitives.StringValues> headers,
             string[] ipHeaders,
             Func<string> getIpFromHttpContext)
