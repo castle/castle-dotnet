@@ -13,6 +13,7 @@ namespace Castle.Config
             ArgumentGuard.NotNullOrEmpty(apiSecret, nameof(apiSecret));
 
             ApiSecret = apiSecret;
+            AllowList = Headers.AllowList;
         }
 
         /// <summary>
@@ -41,14 +42,14 @@ namespace Castle.Config
         public LogLevel LogLevel { get; set; } = LogLevel.Error;
 
         /// <summary>
-        /// Whitelist for headers in request context object
+        /// AllowList for headers in request context object
         /// </summary>
-        public string[] Whitelist { get; set; } = { };
+        public string[] AllowList { get; set; } = { };
 
         /// <summary>
-        /// Blacklist for headers in request context object
+        /// DenyList for headers in request context object
         /// </summary>
-        public string[] Blacklist { get; set; } = { };
+        public string[] DenyList { get; set; } = { };
 
         /// <summary>
         /// If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response

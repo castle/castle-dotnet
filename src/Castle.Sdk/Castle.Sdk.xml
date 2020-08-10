@@ -61,14 +61,14 @@
             Log level applied by the injected <see cref="T:Castle.Infrastructure.ICastleLogger"/> implementation
             </summary>
         </member>
-        <member name="P:Castle.Config.CastleConfiguration.Whitelist">
+        <member name="P:Castle.Config.CastleConfiguration.AllowList">
             <summary>
-            Whitelist for headers in request context object
+            AllowList for headers in request context object
             </summary>
         </member>
-        <member name="P:Castle.Config.CastleConfiguration.Blacklist">
+        <member name="P:Castle.Config.CastleConfiguration.DenyList">
             <summary>
-            Blacklist for headers in request context object
+            DenyList for headers in request context object
             </summary>
         </member>
         <member name="P:Castle.Config.CastleConfiguration.DoNotTrack">

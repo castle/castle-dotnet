@@ -2,6 +2,19 @@
 
 ## master
 
+## 1.3.2 (2020-08-10)
+
+**Features:**
+
+- [#40](https://github.com/castle/castle-dotnet/pull/40) Support the correct basic list of allowed headers
+
+## 1.3.1 (2020-08-03)
+
+**Enhancement**
+
+- [#39](https://github.com/castle/castle-dotnet/pull/39) Tests project references upgraded as well as the target itself
+- [#38](https://github.com/castle/castle-dotnet/pull/38) Targets list updated (.NET 48 and .NET Core 3.1)
+
 ## 1.3.0 (2019-11-20)
 
 **Enhancement**

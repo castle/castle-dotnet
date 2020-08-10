@@ -58,8 +58,8 @@ FailoverStrategy | Allow | The response action to return in case of a failover i
 Timeout | 1000 | Timeout for requests, in milliseconds.
 BaseUrl | https://api.castle.io | Base Castle Api url.
 LogLevel | Error | The log level applied by the injected `ICastleLogger` implementation.
-Whitelist | | List of headers that should be passed intact to the API. A list of recommended .headers can be retrieved from the static property `Castle.Headers.Whitelist` in the SDK
-Blacklist | | List of header that should *not* be passed intact to the API.
+AllowList | | List of headers that should be passed intact to the API. A list of recommended .headers can be retrieved from the static property `Castle.Headers.AllowList` in the SDK
+DenyList | | List of header that should *not* be passed intact to the API.
 DoNotTrack | false | If true, no requests are actually sent to the Caste Api, and Authenticate returns a failover response.
 Logger | | Your own logger implementation.
 

@@ -32,7 +32,7 @@ namespace Castle
 
         public JObject BuildAuthenticateRequest(ActionRequest request)
         {
-            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.Whitelist, _configuration.Blacklist);
+            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
             return JsonForCastle.FromObject(prepared);
         }
 
@@ -53,7 +53,7 @@ namespace Castle
 
         public JObject BuildTrackRequest(ActionRequest request)
         {
-            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.Whitelist, _configuration.Blacklist);
+            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
             return JsonForCastle.FromObject(prepared);
         }
 

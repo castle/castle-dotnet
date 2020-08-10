@@ -24,10 +24,10 @@ namespace Castle.Messages.Requests
 
         public RequestContext Context { get; set; } = new RequestContext();
 
-        internal ActionRequest PrepareApiCopy(string[] whitelist, string[] blacklist)
+        internal ActionRequest PrepareApiCopy(string[] allowList, string[] denyList)
         {
             var copy = (ActionRequest) MemberwiseClone();
-            var scrubbed = HeaderScrubber.Scrub(Context.Headers, whitelist, blacklist);
+            var scrubbed = HeaderScrubber.Scrub(Context.Headers, allowList, denyList);
             copy.Context = Context.WithHeaders(scrubbed);
 
             copy.SentAt = DateTime.Now;
