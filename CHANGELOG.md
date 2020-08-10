@@ -2,13 +2,9 @@
 
 ## master
 
-## 1.3.2 (2020-08-10)
-
 **Features:**
 
 - [#40](https://github.com/castle/castle-dotnet/pull/40) Support the correct basic list of allowed headers
-
-## 1.3.1 (2020-08-03)
 
 **Enhancement**
 
