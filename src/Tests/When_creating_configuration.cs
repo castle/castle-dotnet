@@ -9,9 +9,9 @@ namespace Tests
     public class When_creating_configuration
     {
         [Fact]
-        public void Should_be_able_to_get_recommended_whitelist()
+        public void Should_be_able_to_get_recommended_allowlist()
         {
-            var result = Castle.Headers.Whitelist;
+            var result = Castle.Headers.AllowList;
 
             result.Should().NotBeEmpty();
         }

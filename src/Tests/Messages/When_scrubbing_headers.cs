@@ -11,33 +11,33 @@ namespace Tests.Messages
     public class When_scrubbing_headers
     {
         [Theory, AutoData]
-        public void Should_scrub_all_in_blacklist_to_truestring_regardless_of_casing(
-            string[] allowed, 
-            string[] blacklist)
+        public void Should_scrub_all_in_denylist_to_truestring_regardless_of_casing(
+            string[] allowed,
+            string[] denyList)
         {
             var headers = new Dictionary<string, string>(
                 allowed.Select(ToDictionaryEntry)
-                    .Union(blacklist.Select(x => ToDictionaryEntry(x.ToUpper()))));
+                    .Union(denyList.Select(x => ToDictionaryEntry(x.ToUpper()))));
 
-            var result = HeaderScrubber.Scrub(headers, new string[] { }, blacklist);
+            var result = HeaderScrubber.Scrub(headers, new string[] { }, denyList);
 
             result
                 .Where(x => x.Value == "true")
                 .Select(x => x.Key)
                 .Should()
-                .Equal(blacklist, (s1, s2) => string.Equals(s1, s2, StringComparison.OrdinalIgnoreCase));
+                .Equal(denyList, (s1, s2) => string.Equals(s1, s2, StringComparison.OrdinalIgnoreCase));
         }
 
         [Theory, AutoData]
-        public void Should_scrub_all_not_in_whitelist_to_truestring_regardless_of_casing(
+        public void Should_scrub_all_not_in_allowlist_to_truestring_regardless_of_casing(
             string[] unallowed,
-            string[] whitelist)
+            string[] allowList)
         {
             var headers = new Dictionary<string, string>(
                 unallowed.Select(ToDictionaryEntry)
-                    .Union(whitelist.Select(x => ToDictionaryEntry(x.ToUpper()))));
+                    .Union(allowList.Select(x => ToDictionaryEntry(x.ToUpper()))));
 
-            var result = HeaderScrubber.Scrub(headers, whitelist, new string[] { });
+            var result = HeaderScrubber.Scrub(headers, allowList, new string[] { });
 
             result
                 .Where(x => x.Value == "true")
@@ -47,22 +47,22 @@ namespace Tests.Messages
         }
 
         [Fact]
-        public void Should_always_allow_default_whitelist()
+        public void Should_always_allow_default_allowlist()
         {
-            var whitelist = new string[] { "Only-This" };
+            var allowList = new string[] { "Only-This" };
             var headers = new Dictionary<string, string> {
                 {
                     "User-Agent", "something"
                 }
             };
 
-            var result = HeaderScrubber.Scrub(headers, whitelist, new string[] { });
+            var result = HeaderScrubber.Scrub(headers, allowList, new string[] { });
 
             result.Should().Equal(headers);
         }
 
         [Fact]
-        public void Should_always_apply_default_blacklist()
+        public void Should_always_apply_default_denylist()
         {
             var headers = new Dictionary<string, string> {
                 {
@@ -82,6 +82,67 @@ namespace Tests.Messages
                 .Select(x => x.Value)
                 .Should()
                 .Equal(new string[] { "true", "true", "true" });
+        }
+
+        [Fact]
+        public void Should_scrub_http_from_header()
+        {
+            var headers = new Dictionary<string, string> {
+                {
+                    "HTTP_Authorization", "secret"
+                },
+                {
+                    "Cookie", "secret"
+                },
+                {
+                    "HTTP_OK", "test"
+                },
+                {
+                    "http_Another", "test"
+                }
+            };
+
+            var result = HeaderScrubber.Scrub(headers, new string[] { }, new string[] { });
+
+            result
+                .Select(x => x.Value)
+                .Should()
+                .Equal(new string[] { "true", "true", "test", "test" });
+        }
+
+        [Fact]
+        public void Should_apply_allow_and_deny_list_when_passed()
+        {
+            var headers = new Dictionary<string, string> {
+                {
+                    "Accept", "test"
+                },
+                {
+                    "Authorization", "secret"
+                },
+                {
+                    "Cookie", "secret"
+                },
+                {
+                    "Content-Length", "0"
+                },
+                {
+                    "Ok", "OK"
+                },
+                {
+                    "User-Agent", "Mozilla 1234"
+                },
+                {
+                    "X-Forwarded-For", "1.2.3.4"
+                }
+            };
+
+            var result = HeaderScrubber.Scrub(headers, new [] { "Content-Length" }, new [] { "Ok" });
+
+            result
+                .Select(x => x.Value)
+                .Should()
+                .Equal(new string[] { "true", "true", "true", "0", "true", "Mozilla 1234", "true" });
         }
 
         [Theory, AutoData]

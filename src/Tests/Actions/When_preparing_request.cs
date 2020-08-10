@@ -12,7 +12,7 @@ namespace Tests.Actions
         [Theory, AutoFakeData]
         public void Should_scrub_headers(ActionRequest request, CastleConfiguration options)
         {
-            var result = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
+            var result = request.PrepareApiCopy(options.AllowList, options.DenyList);
 
             result.Context.Headers.Should().NotBeSameAs(request.Context.Headers);
         }
@@ -20,7 +20,7 @@ namespace Tests.Actions
         [Theory, AutoFakeData]
         public void Should_set_sent_date(ActionRequest request, CastleConfiguration options)
         {
-            var result = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
+            var result = request.PrepareApiCopy(options.AllowList, options.DenyList);
 
             result.SentAt.Should().BeAfter(DateTime.MinValue);
         }
@@ -30,7 +30,7 @@ namespace Tests.Actions
         {
             request.Context.ClientId = null;
 
-            var result = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
+            var result = request.PrepareApiCopy(options.AllowList, options.DenyList);
 
             result.Context.ClientId.Should().Be("");
         }
@@ -38,7 +38,7 @@ namespace Tests.Actions
         [Theory, AutoFakeData]
         public void Should_preserve_valid_clientid(ActionRequest request, CastleConfiguration options)
         {
-            var result = request.PrepareApiCopy(options.Whitelist, options.Blacklist);
+            var result = request.PrepareApiCopy(options.AllowList, options.DenyList);
 
             result.Context.ClientId.Should().Be(request.Context.ClientId);
         }
