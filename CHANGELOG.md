@@ -1,6 +1,8 @@
-# Change Log
+# Changelog
 
 ## master
+
+## 1.4.0 (2020-08-21)
 
 **Features:**
 
