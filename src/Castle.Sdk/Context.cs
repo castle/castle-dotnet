@@ -39,6 +39,18 @@ namespace Castle
 
         internal static string GetIpForFramework(NameValueCollection headers, string[] ipHeaders, Func<string> getIpFromHttpContext)
         {
+            var xForwardedFor = headers.AllKeys.Contains("X-Forwarded-For", StringComparer.OrdinalIgnoreCase)
+                ? headers["X-Forwarded-For"]
+                : "";
+            var remoteAddr = headers.AllKeys.Contains("Remote-Addr", StringComparer.OrdinalIgnoreCase)
+                ? headers["Remote-Addr"]
+                : "";
+
+            var gatheredIp = string.IsNullOrEmpty(xForwardedFor) ? remoteAddr : xForwardedFor;
+            var addresses = gatheredIp.Split(',');
+            if (addresses.Any())
+                return addresses.First();
+
             foreach (var header in ipHeaders ?? new string[] { })
             {
                 if (headers.AllKeys.Contains(header, StringComparer.OrdinalIgnoreCase))
@@ -73,6 +85,22 @@ namespace Castle
             string[] ipHeaders,
             Func<string> getIpFromHttpContext)
         {
+            var gatheredIp = new Microsoft.Extensions.Primitives.StringValues();
+            headers.TryGetValue("X-Forwarded-For", out var xForwardedForValues);
+            headers.TryGetValue("Remote-Addr", out var remoteAdrValues);
+            if (xForwardedForValues.Any())
+            {
+                gatheredIp = xForwardedForValues;
+            }
+            else
+            {
+                gatheredIp = remoteAdrValues;
+            }
+
+            var addresses = gatheredIp.FirstOrDefault()?.Split(',');
+            if (null != addresses)
+                return addresses.FirstOrDefault();
+
             foreach (var header in ipHeaders ?? new string[] {})
             {
                 if (headers.TryGetValue(header, out var headerValues))

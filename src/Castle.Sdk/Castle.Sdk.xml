@@ -71,6 +71,26 @@
             DenyList for headers in request context object
             </summary>
         </member>
+        <member name="P:Castle.Config.CastleConfiguration.IpHeaders">
+            <summary>
+            IP Headers to look for a client IP address
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.TrustedProxies">
+            <summary>
+            Trusted public proxies list
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.TrustedProxyDepth">
+            <summary>
+            Number of trusted proxies used in the chain
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.TrustProxyChain">
+            <summary>
+            Is trusting all of the proxy IPs in X-Forwarded-For enabled
+            </summary>
+        </member>
         <member name="P:Castle.Config.CastleConfiguration.DoNotTrack">
             <summary>
             If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response
