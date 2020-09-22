@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Net;
+using Castle.Config;
 using Castle.Messages.Requests;
 
 namespace Castle
@@ -39,7 +42,70 @@ namespace Castle
 
         internal static string GetIpForFramework(NameValueCollection headers, string[] ipHeaders, Func<string> getIpFromHttpContext)
         {
-            foreach (var header in ipHeaders ?? new string[] { })
+            var cfg = CastleConfiguration.Configuration;
+
+            if (null == ipHeaders || !ipHeaders.Any())
+            {
+                ipHeaders = cfg.IpHeaders ?? new[] {"X-Forwarded-For", "Remote-Addr"};
+            }
+
+            var trustProxyChain = cfg.TrustProxyChain;
+            var trustedProxyDepth = cfg.TrustedProxyDepth;
+            var trustedProxies = cfg.TrustedProxies;
+
+            string[] LimitProxyDepth(string[] ips, string ipHeader)
+            {
+                if (new[] {"X-Forwarded-For"}.Contains(ipHeader))
+                {
+                    return ips.Take(Math.Max(0, ips.Length - trustedProxyDepth)).ToArray();
+                }
+
+                return ips;
+            }
+
+            string[] IpsFrom(string ipHeader)
+            {
+                if (!headers.AllKeys.Contains(ipHeader))
+                    return new string[] {}.ToArray();
+
+                var value = headers[ipHeader];
+                if (0 == value.Length)
+                    return new string[] {}.ToArray();
+
+                var ips = value.Split(new[] {",", " "}, StringSplitOptions.RemoveEmptyEntries);
+
+                ips = LimitProxyDepth(ips, ipHeader);
+                return ips;
+            }
+
+            string RemoveProxies(string[] ips)
+            {
+                if (trustProxyChain) return ips.FirstOrDefault();
+                return ips.LastOrDefault(ip => !IsInternalIpAddress(ip) && !trustedProxies.Contains(ip));
+            }
+
+            var ipv = "";
+            var allIps = new List<string>();
+            foreach (var header in ipHeaders)
+            {
+                var ipf = IpsFrom(header);
+                ipv = RemoveProxies(ipf);
+
+                if (!string.IsNullOrEmpty(ipv))
+                {
+                    return ipv;
+                }
+                allIps.AddRange(ipf);
+            }
+
+            ipv = allIps.FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(ipv))
+            {
+                return ipv;
+            }
+
+            foreach (var header in ipHeaders)
             {
                 if (headers.AllKeys.Contains(header, StringComparer.OrdinalIgnoreCase))
                     return headers[header];
@@ -73,7 +139,70 @@ namespace Castle
             string[] ipHeaders,
             Func<string> getIpFromHttpContext)
         {
-            foreach (var header in ipHeaders ?? new string[] {})
+            var cfg = CastleConfiguration.Configuration;
+
+            if (null == ipHeaders || !ipHeaders.Any())
+            {
+                ipHeaders = cfg.IpHeaders ?? new[] {"X-Forwarded-For", "Remote-Addr"};
+            }
+
+            var trustProxyChain = cfg.TrustProxyChain;
+            var trustedProxyDepth = cfg.TrustedProxyDepth;
+            var trustedProxies = cfg.TrustedProxies;
+
+            string[] LimitProxyDepth(string[] ips, string ipHeader)
+            {
+                if (new[] {"X-Forwarded-For"}.Contains(ipHeader))
+                {
+                    return ips.Take(Math.Max(0, ips.Length - trustedProxyDepth)).ToArray();
+                }
+
+                return ips;
+            }
+
+            string[] IpsFrom(string ipHeader)
+            {
+                if (!headers.ContainsKey(ipHeader))
+                    return new string[] {}.ToArray();
+
+                var value = headers[ipHeader];
+                if (0 == value.Count)
+                    return new string[] {}.ToArray();
+
+                var ips = value.First().Split(new[] {",", " "}, StringSplitOptions.RemoveEmptyEntries);
+
+                ips = LimitProxyDepth(ips, ipHeader);
+                return ips;
+            }
+
+            string RemoveProxies(string[] ips)
+            {
+                if (trustProxyChain) return ips.FirstOrDefault();
+                return ips.LastOrDefault(ip => !IsInternalIpAddress(ip) && !trustedProxies.Contains(ip));
+            }
+
+            var ipv = "";
+            var allIps = new List<string>();
+            foreach (var header in ipHeaders)
+            {
+                var ipf = IpsFrom(header);
+                ipv = RemoveProxies(ipf);
+
+                if (!string.IsNullOrEmpty(ipv))
+                {
+                    return ipv;
+                }
+                allIps.AddRange(ipf);
+            }
+
+            ipv = allIps.FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(ipv))
+            {
+                return ipv;
+            }
+
+            foreach (var header in ipHeaders)
             {
                 if (headers.TryGetValue(header, out var headerValues))
                     return headerValues.First();
@@ -82,5 +211,41 @@ namespace Castle
             return getIpFromHttpContext();
         }
 #endif
+
+        private static int IpAddressToUint(string ip)
+        {
+            var bytes = IPAddress.Parse(ip).GetAddressBytes();
+            return IPAddress.HostToNetworkOrder(BitConverter.ToInt32(bytes,0));
+        }
+
+        private static bool IsInternalIpAddress(string ip)
+        {
+            if (new[] {"localhost", "127.0.0.1", "::1"}.Contains(ip?.ToLower()))
+                return true;
+
+            try
+            {
+                var address = IpAddressToUint(ip);
+
+                if (address >= IpAddressToUint("10.0.0.0") && address <= IpAddressToUint("10.255.255.255"))
+                    return true;
+
+                if (address >= IpAddressToUint("192.168.0.0") && address <= IpAddressToUint("192.168.255.255"))
+                    return true;
+
+                if (address >= IpAddressToUint("172.16.0.0") && address <= IpAddressToUint("172.31.255.255"))
+                    return true;
+
+                return false;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Linq;
 using Castle.Infrastructure;
 using Castle.Messages;
 
 namespace Castle.Config
 {
+    /// <summary>
+    /// Castle intrinsic configuration attributes/values
+    /// </summary>
     public class CastleConfiguration
     {
         /// <exception cref="ArgumentException">Thrown when <paramref name="apiSecret"/> is null or empty</exception>>
@@ -52,6 +54,26 @@ namespace Castle.Config
         public string[] DenyList { get; set; } = { };
 
         /// <summary>
+        /// IP Headers to look for a client IP address
+        /// </summary>
+        public string[] IpHeaders { get; set; }
+
+        /// <summary>
+        /// Trusted public proxies list
+        /// </summary>
+        public string[] TrustedProxies { get; set; } = { };
+
+        /// <summary>
+        /// Number of trusted proxies used in the chain
+        /// </summary>
+        public int TrustedProxyDepth { get; set; }
+
+        /// <summary>
+        /// Is trusting all of the proxy IPs in X-Forwarded-For enabled
+        /// </summary>
+        public bool TrustProxyChain { get; set; }
+
+        /// <summary>
         /// If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response
         /// </summary>
         public bool DoNotTrack { get; set; } = false;
@@ -60,5 +82,15 @@ namespace Castle.Config
         /// Your own logger implementation, for internal SDK logging
         /// </summary>
         public ICastleLogger Logger { get; set; }
+
+        /// <summary>
+        /// Configuration access from within the SDK
+        /// </summary>
+        internal static CastleConfiguration Configuration { get; private set; }
+
+        internal static void SetConfiguration(CastleConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
     }
 }
