@@ -39,11 +39,11 @@ namespace Tests
         [Theory, AutoFakeData]
         public void Should_be_able_to_set_timeout(CastleConfiguration configuration, int timeout)
         {
-            configuration.LogLevel = LogLevel.None;
+            configuration.Timeout = timeout;
             CastleConfiguration.SetConfiguration(configuration);
 
-            var result = configuration.LogLevel;
-            result.Should().Be(LogLevel.None);
+            var result = configuration.Timeout;
+            result.Should().Be(timeout);
         }
 
         [Theory, AutoFakeData]

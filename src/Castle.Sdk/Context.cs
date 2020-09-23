@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using Castle.Config;
 using Castle.Messages.Requests;
 
@@ -212,40 +213,12 @@ namespace Castle
         }
 #endif
 
-        private static int IpAddressToUint(string ip)
-        {
-            var bytes = IPAddress.Parse(ip).GetAddressBytes();
-            return IPAddress.HostToNetworkOrder(BitConverter.ToInt32(bytes,0));
-        }
-
         private static bool IsInternalIpAddress(string ip)
         {
-            if (new[] {"localhost", "127.0.0.1", "::1"}.Contains(ip?.ToLower()))
-                return true;
+            var regex = new Regex(
+                @"(^127\.0\.0\.1)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)|(^::1)|localhost");
 
-            try
-            {
-                var address = IpAddressToUint(ip);
-
-                if (address >= IpAddressToUint("10.0.0.0") && address <= IpAddressToUint("10.255.255.255"))
-                    return true;
-
-                if (address >= IpAddressToUint("192.168.0.0") && address <= IpAddressToUint("192.168.255.255"))
-                    return true;
-
-                if (address >= IpAddressToUint("172.16.0.0") && address <= IpAddressToUint("172.31.255.255"))
-                    return true;
-
-                return false;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
-            catch (ArgumentException)
-            {
-                return false;
-            }
+            return regex.Match(ip).Success;
         }
     }
 }
