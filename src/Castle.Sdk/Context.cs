@@ -216,7 +216,13 @@ namespace Castle
         private static bool IsInternalIpAddress(string ip)
         {
             var regex = new Regex(
-                @"(^127\.0\.0\.1)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)|(^::1)|localhost");
+                @"(^127\.0\.0\.1)|" +
+                @"(10|172\.(1[6-9]|2[0-9]|30|31)|192\.168)\.|" +
+                @"::1|fd[0-9a-f]{2}:.+|" +
+                @"localhost|" +
+                @"unix|" +
+                @"unix:"
+            );
 
             return regex.Match(ip).Success;
         }
