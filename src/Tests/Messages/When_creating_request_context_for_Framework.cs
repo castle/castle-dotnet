@@ -187,6 +187,21 @@ namespace Tests.Messages
         }
 
         [Theory, AutoFakeData]
+        public void Should_get_remote_addr_if_others_internal(CastleConfiguration configuration, string defaultIp)
+        {
+            var headers = new NameValueCollection
+            {
+                ["Remote-Addr"] = "6.5.4.3",
+                ["X-Forwarded-For"] = "127.0.0.1,10.0.0.1,172.31.0.1,192.168.0.1"
+            };
+
+            CastleConfiguration.SetConfiguration(configuration);
+
+            var result = Context.GetIpForFramework(headers, null, () => defaultIp);
+            result.Should().Be("6.5.4.3");
+        }
+
+        [Theory, AutoFakeData]
         public void Should_get_equivalent_to_trusted_proxy_depth_1(CastleConfiguration configuration, string defaultIp)
         {
             var headers = new NameValueCollection
