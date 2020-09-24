@@ -65,6 +65,7 @@ namespace Tests.Messages
 
         [Theory, AutoFakeData]
         public void Should_get_ip_from_supplied_headers_in_order(
+            CastleConfiguration cfg,
             string ipHeader,
             string ip,
             string secondaryIpHeader,
@@ -80,13 +81,14 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Context.GetIpForFramework(headers, new [] {  ipHeader, secondaryIpHeader }, () => httpContextIp, null);
+            var result = Context.GetIpForFramework(headers, new [] {  ipHeader, secondaryIpHeader }, () => httpContextIp, () => cfg);
 
             result.Should().Be(ip);
         }
 
         [Theory, AutoFakeData]
         public void Should_get_ip_from_second_header_if_first_is_not_found(
+            CastleConfiguration cfg,
             string ipHeader,
             string secondaryIpHeader,
             string secondaryIp,
@@ -100,13 +102,14 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Context.GetIpForFramework(headers, new[] { ipHeader, secondaryIpHeader }, () => httpContextIp, null);
+            var result = Context.GetIpForFramework(headers, new[] { ipHeader, secondaryIpHeader }, () => httpContextIp, () => cfg);
 
             result.Should().Be(secondaryIp);
         }
 
         [Theory, AutoFakeData]
         public void Should_get_ip_from_httpcontext_if_no_header_supplied(
+            CastleConfiguration cfg,
             string ipHeader,
             string ip,
             string otherHeader,
@@ -119,13 +122,14 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Context.GetIpForFramework(headers, null, () => httpContextIp, null);
+            var result = Context.GetIpForFramework(headers, null, () => httpContextIp, () => cfg);
 
             result.Should().Be(httpContextIp);
         }
 
         [Theory, AutoFakeData]
         public void Should_get_regular_ip(
+            CastleConfiguration cfg,
             string ipHeader,
             string ip
         )
@@ -135,13 +139,13 @@ namespace Tests.Messages
                 [ipHeader] = ip,
             };
 
-            var result = Context.GetIpForFramework(headers, null, () => ip, null);
+            var result = Context.GetIpForFramework(headers, null, () => ip, () => cfg);
 
             result.Should().Be(ip);
         }
 
         [Theory, AutoFakeData]
-        public void Should_get_other_ip_header(string cfConnectiongIp)
+        public void Should_get_other_ip_header(CastleConfiguration cfg, string cfConnectiongIp)
         {
             var headers = new NameValueCollection
             {
@@ -151,13 +155,13 @@ namespace Tests.Messages
 
             var ipHeaders = new[] {"Cf-Connecting-Ip", "X-Forwarded-For"};
 
-            var result = Context.GetIpForFramework(headers, ipHeaders, () => cfConnectiongIp, null);
+            var result = Context.GetIpForFramework(headers, ipHeaders, () => cfConnectiongIp, () => cfg);
 
             result.Should().Be(cfConnectiongIp);
         }
 
         [Theory, AutoFakeData]
-        public void Should_get_first_available_with_all_trusted_proxies(string defaultIp)
+        public void Should_get_first_available_with_all_trusted_proxies(CastleConfiguration cfg, string defaultIp)
         {
             var headers = new NameValueCollection
             {
@@ -165,7 +169,7 @@ namespace Tests.Messages
                 ["X-Forwarded-For"] = "127.0.0.1,10.0.0.1,172.31.0.1,192.168.0.1"
             };
 
-            var result = Context.GetIpForFramework(headers, null, () => defaultIp, null);
+            var result = Context.GetIpForFramework(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("127.0.0.1");
         }
 
@@ -185,7 +189,7 @@ namespace Tests.Messages
         }
 
         [Theory, AutoFakeData]
-        public void Should_get_remote_addr_if_others_internal(string defaultIp)
+        public void Should_get_remote_addr_if_others_internal(CastleConfiguration cfg, string defaultIp)
         {
             var headers = new NameValueCollection
             {
@@ -193,7 +197,7 @@ namespace Tests.Messages
                 ["X-Forwarded-For"] = "127.0.0.1,10.0.0.1,172.31.0.1,192.168.0.1"
             };
 
-            var result = Context.GetIpForFramework(headers, null, () => defaultIp, null);
+            var result = Context.GetIpForFramework(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("6.5.4.3");
         }
 
