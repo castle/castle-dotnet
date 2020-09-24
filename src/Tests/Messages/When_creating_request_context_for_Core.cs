@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AutoFixture.Xunit2;
 using Castle;
 using Castle.Config;
 using FluentAssertions;
@@ -12,7 +11,7 @@ namespace Tests.Messages
 {
     public class When_creating_request_context_for_Core
     {
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public void Should_get_client_id_from_castle_header_if_present(
             string castleHeaderValue,
             string cookieValue)
@@ -32,7 +31,7 @@ namespace Tests.Messages
             result.Should().Be(castleHeaderValue);
         }
 
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public void Should_get_client_id_from_cookie_if_castle_header_not_present(
             string otherHeader,
             string otherHeaderValue,
@@ -53,7 +52,7 @@ namespace Tests.Messages
             result.Should().Be(cookieValue);
         }
 
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public void Should_use_empty_string_if_unable_to_get_client_id(
             string otherHeader,
             string otherHeaderValue,
@@ -75,7 +74,7 @@ namespace Tests.Messages
             result.Should().Be("");
         }
 
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public void Should_get_ip_from_supplied_headers_in_order(
             string ipHeader,
             string ip,
@@ -92,12 +91,12 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Context.GetIpForCore(headers, new [] {  ipHeader, secondaryIpHeader }, () => httpContextIp);
+            var result = Context.GetIpForCore(headers, new[] {ipHeader, secondaryIpHeader}, () => httpContextIp, null);
 
             result.Should().Be(ip);
         }
 
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public void Should_get_ip_from_second_header_if_first_is_not_found(
             string ipHeader,
             string secondaryIpHeader,
@@ -112,12 +111,12 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Context.GetIpForCore(headers, new[] { ipHeader, secondaryIpHeader }, () => httpContextIp);
+            var result = Context.GetIpForCore(headers, new[] { ipHeader, secondaryIpHeader }, () => httpContextIp, null);
 
             result.Should().Be(secondaryIp);
         }
 
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public void Should_get_ip_from_httpcontext_if_no_header_supplied(
             string ipHeader,
             string ip,
@@ -131,12 +130,12 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Context.GetIpForCore(headers, null, () => httpContextIp);
+            var result = Context.GetIpForCore(headers, null, () => httpContextIp, null);
 
             result.Should().Be(httpContextIp);
         }
 
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public void Should_get_regular_ip(
             string ipHeader,
             string ip
@@ -147,12 +146,12 @@ namespace Tests.Messages
                 [ipHeader] = ip,
             };
 
-            var result = Context.GetIpForCore(headers, null, () => ip);
+            var result = Context.GetIpForCore(headers, null, () => ip, null);
 
             result.Should().Be(ip);
         }
 
-        [Theory, AutoData]
+        [Theory, AutoFakeData]
         public void Should_get_other_ip_header(string cfConnectiongIp)
         {
             var headers = new Dictionary<string, StringValues>()
@@ -163,7 +162,7 @@ namespace Tests.Messages
 
             var ipHeaders = new[] {"Cf-Connecting-Ip", "X-Forwarded-For"};
 
-            var result = Context.GetIpForCore(headers, ipHeaders, () => cfConnectiongIp);
+            var result = Context.GetIpForCore(headers, ipHeaders, () => cfConnectiongIp, null);
 
             result.Should().Be(cfConnectiongIp);
         }
@@ -177,12 +176,12 @@ namespace Tests.Messages
                 ["X-Forwarded-For"] = "127.0.0.1,10.0.0.1,172.31.0.1,192.168.0.1"
             };
 
-            var result = Context.GetIpForCore(headers, null, () => defaultIp);
+            var result = Context.GetIpForCore(headers, null, () => defaultIp, null);
             result.Should().Be("127.0.0.1");
         }
 
         [Theory, AutoFakeData]
-        public void Should_get_first_available_with_trust_proxy_chain(CastleConfiguration configuration, string defaultIp)
+        public void Should_get_first_available_with_trust_proxy_chain(CastleConfiguration cfg, string defaultIp)
         {
             var headers = new Dictionary<string, StringValues>
             {
@@ -190,15 +189,14 @@ namespace Tests.Messages
                 ["X-Forwarded-For"] = "6.6.6.6, 2.2.2.3, 6.6.6.5"
             };
 
-            configuration.TrustProxyChain = true;
-            CastleConfiguration.SetConfiguration(configuration);
+            cfg.TrustProxyChain = true;
 
-            var result = Context.GetIpForCore(headers, null, () => defaultIp);
+            var result = Context.GetIpForCore(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("6.6.6.6");
         }
 
         [Theory, AutoFakeData]
-        public void Should_get_remote_addr_if_others_internal(CastleConfiguration configuration, string defaultIp)
+        public void Should_get_remote_addr_if_others_internal(string defaultIp)
         {
             var headers = new Dictionary<string, StringValues>
             {
@@ -206,14 +204,12 @@ namespace Tests.Messages
                 ["X-Forwarded-For"] = "127.0.0.1,10.0.0.1,172.31.0.1,192.168.0.1"
             };
 
-            CastleConfiguration.SetConfiguration(configuration);
-
-            var result = Context.GetIpForCore(headers, null, () => defaultIp);
+            var result = Context.GetIpForCore(headers, null, () => defaultIp, null);
             result.Should().Be("6.5.4.3");
         }
 
         [Theory, AutoFakeData]
-        public void Should_get_equivalent_to_trusted_proxy_depth_1(CastleConfiguration configuration, string defaultIp)
+        public void Should_get_equivalent_to_trusted_proxy_depth_1(CastleConfiguration cfg, string defaultIp)
         {
             var headers = new Dictionary<string, StringValues>
             {
@@ -221,15 +217,14 @@ namespace Tests.Messages
                 ["X-Forwarded-For"] = "6.6.6.6, 2.2.2.3, 6.6.6.5"
             };
 
-            configuration.TrustedProxyDepth = 1;
-            CastleConfiguration.SetConfiguration(configuration);
+            cfg.TrustedProxyDepth = 1;
 
-            var result = Context.GetIpForCore(headers, null, () => defaultIp);
+            var result = Context.GetIpForCore(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("2.2.2.3");
         }
 
         [Theory, AutoFakeData]
-        public void Should_get_equivalent_to_trusted_proxy_depth_2(CastleConfiguration configuration, string defaultIp)
+        public void Should_get_equivalent_to_trusted_proxy_depth_2_ip_headers(CastleConfiguration cfg, string defaultIp)
         {
             var headers = new Dictionary<string, StringValues>
             {
@@ -237,11 +232,10 @@ namespace Tests.Messages
                 ["X-Forwarded-For"] = "6.6.6.6, 2.2.2.3, 6.6.6.5, 6.6.6.7"
             };
 
-            configuration.TrustedProxyDepth = 2;
-            configuration.IpHeaders = new[] {"X-Forwarded-For", "Remote-Addr"};
-            CastleConfiguration.SetConfiguration(configuration);
+            cfg.TrustedProxyDepth = 2;
+            cfg.IpHeaders = new[] {"X-Forwarded-For", "Remote-Addr"};
 
-            var result = Context.GetIpForCore(headers, null, () => defaultIp);
+            var result = Context.GetIpForCore(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("2.2.2.3");
         }
     }
