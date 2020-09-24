@@ -27,6 +27,15 @@ namespace Tests
         }
 
         [Theory, AutoFakeData]
+        public void Should_not_be_null_when_set(CastleConfiguration configuration)
+        {
+            CastleConfiguration.SetConfiguration(configuration);
+
+            var result = CastleConfiguration.Configuration;
+            result.Should().NotBe(null);
+        }
+
+        [Theory, AutoFakeData]
         public void Should_be_able_to_set_loglevel(CastleConfiguration configuration)
         {
             configuration.LogLevel = LogLevel.None;
