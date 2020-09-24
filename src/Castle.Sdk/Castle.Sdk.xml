@@ -33,6 +33,11 @@
         <member name="M:Castle.CastleClient.ArchiveDevices(System.String)">
             <exception cref="T:System.ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
         </member>
+        <member name="T:Castle.Config.CastleConfiguration">
+            <summary>
+            Castle intrinsic configuration attributes/values
+            </summary>
+        </member>
         <member name="M:Castle.Config.CastleConfiguration.#ctor(System.String)">
             <exception cref="T:System.ArgumentException">Thrown when <paramref name="apiSecret"/> is null or empty</exception>>
         </member>
@@ -71,6 +76,26 @@
             DenyList for headers in request context object
             </summary>
         </member>
+        <member name="P:Castle.Config.CastleConfiguration.IpHeaders">
+            <summary>
+            IP Headers to look for a client IP address
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.TrustedProxies">
+            <summary>
+            Trusted public proxies list
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.TrustedProxyDepth">
+            <summary>
+            Number of trusted proxies used in the chain
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.TrustProxyChain">
+            <summary>
+            Is trusting all of the proxy IPs in X-Forwarded-For enabled
+            </summary>
+        </member>
         <member name="P:Castle.Config.CastleConfiguration.DoNotTrack">
             <summary>
             If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response
@@ -79,6 +104,11 @@
         <member name="P:Castle.Config.CastleConfiguration.Logger">
             <summary>
             Your own logger implementation, for internal SDK logging
+            </summary>
+        </member>
+        <member name="P:Castle.Config.CastleConfiguration.Configuration">
+            <summary>
+            Configuration access from within the SDK
             </summary>
         </member>
         <member name="T:Castle.Events">

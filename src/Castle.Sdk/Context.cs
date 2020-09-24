@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
+using Castle.Config;
 using Castle.Messages.Requests;
 
 namespace Castle
@@ -39,7 +43,70 @@ namespace Castle
 
         internal static string GetIpForFramework(NameValueCollection headers, string[] ipHeaders, Func<string> getIpFromHttpContext)
         {
-            foreach (var header in ipHeaders ?? new string[] { })
+            var cfg = CastleConfiguration.Configuration;
+
+            if (null == ipHeaders || !ipHeaders.Any())
+            {
+                ipHeaders = cfg.IpHeaders ?? new[] {"X-Forwarded-For", "Remote-Addr"};
+            }
+
+            var trustProxyChain = cfg.TrustProxyChain;
+            var trustedProxyDepth = cfg.TrustedProxyDepth;
+            var trustedProxies = cfg.TrustedProxies;
+
+            string[] LimitProxyDepth(string[] ips, string ipHeader)
+            {
+                if (new[] {"X-Forwarded-For"}.Contains(ipHeader))
+                {
+                    return ips.Take(Math.Max(0, ips.Length - trustedProxyDepth)).ToArray();
+                }
+
+                return ips;
+            }
+
+            string[] IpsFrom(string ipHeader)
+            {
+                if (!headers.AllKeys.Contains(ipHeader))
+                    return new string[] {}.ToArray();
+
+                var value = headers[ipHeader];
+                if (0 == value.Length)
+                    return new string[] {}.ToArray();
+
+                var ips = value.Split(new[] {",", " "}, StringSplitOptions.RemoveEmptyEntries);
+
+                ips = LimitProxyDepth(ips, ipHeader);
+                return ips;
+            }
+
+            string RemoveProxies(string[] ips)
+            {
+                if (trustProxyChain) return ips.FirstOrDefault();
+                return ips.LastOrDefault(ip => !IsInternalIpAddress(ip) && !trustedProxies.Contains(ip));
+            }
+
+            var ipv = "";
+            var allIps = new List<string>();
+            foreach (var header in ipHeaders)
+            {
+                var ipf = IpsFrom(header);
+                ipv = RemoveProxies(ipf);
+
+                if (!string.IsNullOrEmpty(ipv))
+                {
+                    return ipv;
+                }
+                allIps.AddRange(ipf);
+            }
+
+            ipv = allIps.FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(ipv))
+            {
+                return ipv;
+            }
+
+            foreach (var header in ipHeaders)
             {
                 if (headers.AllKeys.Contains(header, StringComparer.OrdinalIgnoreCase))
                     return headers[header];
@@ -73,7 +140,70 @@ namespace Castle
             string[] ipHeaders,
             Func<string> getIpFromHttpContext)
         {
-            foreach (var header in ipHeaders ?? new string[] {})
+            var cfg = CastleConfiguration.Configuration;
+
+            if (null == ipHeaders || !ipHeaders.Any())
+            {
+                ipHeaders = cfg.IpHeaders ?? new[] {"X-Forwarded-For", "Remote-Addr"};
+            }
+
+            var trustProxyChain = cfg.TrustProxyChain;
+            var trustedProxyDepth = cfg.TrustedProxyDepth;
+            var trustedProxies = cfg.TrustedProxies;
+
+            string[] LimitProxyDepth(string[] ips, string ipHeader)
+            {
+                if (new[] {"X-Forwarded-For"}.Contains(ipHeader))
+                {
+                    return ips.Take(Math.Max(0, ips.Length - trustedProxyDepth)).ToArray();
+                }
+
+                return ips;
+            }
+
+            string[] IpsFrom(string ipHeader)
+            {
+                if (!headers.ContainsKey(ipHeader))
+                    return new string[] {}.ToArray();
+
+                var value = headers[ipHeader];
+                if (0 == value.Count)
+                    return new string[] {}.ToArray();
+
+                var ips = value.First().Split(new[] {",", " "}, StringSplitOptions.RemoveEmptyEntries);
+
+                ips = LimitProxyDepth(ips, ipHeader);
+                return ips;
+            }
+
+            string RemoveProxies(string[] ips)
+            {
+                if (trustProxyChain) return ips.FirstOrDefault();
+                return ips.LastOrDefault(ip => !IsInternalIpAddress(ip) && !trustedProxies.Contains(ip));
+            }
+
+            var ipv = "";
+            var allIps = new List<string>();
+            foreach (var header in ipHeaders)
+            {
+                var ipf = IpsFrom(header);
+                ipv = RemoveProxies(ipf);
+
+                if (!string.IsNullOrEmpty(ipv))
+                {
+                    return ipv;
+                }
+                allIps.AddRange(ipf);
+            }
+
+            ipv = allIps.FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(ipv))
+            {
+                return ipv;
+            }
+
+            foreach (var header in ipHeaders)
             {
                 if (headers.TryGetValue(header, out var headerValues))
                     return headerValues.First();
@@ -82,5 +212,19 @@ namespace Castle
             return getIpFromHttpContext();
         }
 #endif
+
+        private static bool IsInternalIpAddress(string ip)
+        {
+            var regex = new Regex(
+                @"(^127\.0\.0\.1)|" +
+                @"(10|172\.(1[6-9]|2[0-9]|30|31)|192\.168)\.|" +
+                @"::1|fd[0-9a-f]{2}:.+|" +
+                @"localhost|" +
+                @"unix|" +
+                @"unix:"
+            );
+
+            return regex.Match(ip).Success;
+        }
     }
 }
