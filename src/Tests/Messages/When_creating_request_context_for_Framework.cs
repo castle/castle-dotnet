@@ -1,7 +1,10 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using Castle;
 using Castle.Config;
+using Castle.Messages.Requests;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Tests.SetUp;
 using Xunit;
 
@@ -230,6 +233,16 @@ namespace Tests.Messages
 
             var result = Context.GetIpForFramework(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("2.2.2.3");
+        }
+
+        [Theory, AutoFakeData]
+        public void Should_get_default_from_http_request(HttpRequest request, CastleConfiguration cfg)
+        {
+            CastleConfiguration.SetConfiguration(cfg);
+
+            var result = Context.FromHttpRequest(request);
+
+            result.Should().NotBe(null);
         }
     }
 }
