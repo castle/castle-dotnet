@@ -23,7 +23,9 @@ namespace Castle
 
             var clientId = GetClientIdForFramework(request.Headers, name => request.Cookies[name]?.Value);
 
-            var ip = GetIpForFramework(request.Headers, ipHeaders, () => request.UserHostAddress);
+            var ip = GetIpForFramework(request.Headers, ipHeaders,
+                () => request.UserHostAddress,
+                () => CastleConfiguration.Configuration);
 
             return new RequestContext()
             {
@@ -41,9 +43,9 @@ namespace Castle
                 : getCookieValue("__cid") ?? "";
         }
 
-        internal static string GetIpForFramework(NameValueCollection headers, string[] ipHeaders, Func<string> getIpFromHttpContext)
+        internal static string GetIpForFramework(NameValueCollection headers, string[] ipHeaders, Func<string> getIpFromHttpContext, Func<CastleConfiguration> getCastleConfiguration)
         {
-            var cfg = CastleConfiguration.Configuration;
+            var cfg = null != getCastleConfiguration ? getCastleConfiguration() : CastleConfiguration.Configuration;
 
             if (null == ipHeaders || !ipHeaders.Any())
             {
@@ -122,7 +124,9 @@ namespace Castle
             {
                 ClientId = GetClientIdForCore(request.Headers, request.Cookies),
                 Headers = request.Headers.ToDictionary(x => x.Key, y => y.Value.FirstOrDefault()),
-                Ip = GetIpForCore(request.Headers, ipHeaders, () => request.HttpContext.Connection.RemoteIpAddress?.ToString())
+                Ip = GetIpForCore(request.Headers, ipHeaders,
+                    () => request.HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    () => CastleConfiguration.Configuration)
             };
         }
 
@@ -138,9 +142,10 @@ namespace Castle
         internal static string GetIpForCore(
             IDictionary<string, Microsoft.Extensions.Primitives.StringValues> headers,
             string[] ipHeaders,
-            Func<string> getIpFromHttpContext)
+            Func<string> getIpFromHttpContext,
+            Func<CastleConfiguration> getCastleConfiguration)
         {
-            var cfg = CastleConfiguration.Configuration;
+            var cfg = null != getCastleConfiguration ? getCastleConfiguration() : CastleConfiguration.Configuration;
 
             if (null == ipHeaders || !ipHeaders.Any())
             {
