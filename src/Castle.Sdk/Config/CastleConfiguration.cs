@@ -66,12 +66,12 @@ namespace Castle.Config
         /// <summary>
         /// Number of trusted proxies used in the chain
         /// </summary>
-        public int TrustedProxyDepth { get; set; }
+        public int TrustedProxyDepth { get; set; } = 0;
 
         /// <summary>
         /// Is trusting all of the proxy IPs in X-Forwarded-For enabled
         /// </summary>
-        public bool TrustProxyChain { get; set; }
+        public bool TrustProxyChain { get; set; } = false;
 
         /// <summary>
         /// If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response
