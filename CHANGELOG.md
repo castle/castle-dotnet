@@ -2,6 +2,18 @@
 
 ## master
 
+## 1.5.0 (2020-09-30)
+
+**Features:**
+
+- [#43](https://github.com/castle/castle-dotnet/pull/43) Add `IpHeaders`, `TrustedProxies`, `TrustedProxyDepth` and `TrustProxyChain` configuration options
+
+
+**Enhancement**
+
+- [#48](https://github.com/castle/castle-dotnet/pull/48) Update the readme with new config options
+- [#47](https://github.com/castle/castle-dotnet/pull/47) Add more tests for the context section
+
 ## 1.4.0 (2020-08-21)
 
 **Features:**
