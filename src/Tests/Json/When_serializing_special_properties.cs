@@ -14,9 +14,9 @@ namespace Tests.Json
         [Theory]
         [InlineData("non-empty", "\"client_id\":\"non-empty\"")]
         [InlineData("", "\"client_id\":false")]
-        public void Should_serialize_client_id_to_false_if_empty(string value, string expected)
+        public void Should_serialize_fingerprint_to_false_if_empty(string value, string expected)
         {
-            var obj = new RequestContext() { ClientId = value };
+            var obj = new RequestOptions() { Fingerprint = value };
 
             var result = JsonForCastle.SerializeObject(obj);
 
@@ -51,7 +51,7 @@ namespace Tests.Json
             string value, 
             string expected)
         {
-            var obj = new RequestContext()
+            var obj = new RequestOptions()
             {
                 Headers = new Dictionary<string, string>()
                 {
