@@ -47,6 +47,8 @@ namespace Castle.Messages.Requests
             var scrubbed = HeaderScrubber.Scrub(Options.Headers, allowList, denyList);
             var opts = Options.WithHeaders(scrubbed);
 
+            copy.Options = null;
+
             // Assign Fingerprint, IP and Headers from options
             // Newtonsoft.Json doesn't apply custom converter to null values, so this must be empty instead
             var newFingerprint = opts.Fingerprint ?? "";
