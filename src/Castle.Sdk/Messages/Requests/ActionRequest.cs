@@ -39,6 +39,7 @@ namespace Castle.Messages.Requests
 
         public RequestContext Context { get; set; } = new RequestContext();
 
+        [JsonIgnore]
         private RequestOptions Options { get; set; } = new RequestOptions();
 
         internal ActionRequest PrepareApiCopy(string[] allowList, string[] denyList)
@@ -46,8 +47,6 @@ namespace Castle.Messages.Requests
             var copy = (ActionRequest) MemberwiseClone();
             var scrubbed = HeaderScrubber.Scrub(Options.Headers, allowList, denyList);
             var opts = Options.WithHeaders(scrubbed);
-
-            copy.Options = null;
 
             // Assign Fingerprint, IP and Headers from options
             // Newtonsoft.Json doesn't apply custom converter to null values, so this must be empty instead
