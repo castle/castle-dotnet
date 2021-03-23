@@ -139,9 +139,7 @@ var verdict = await castleClient.Authenticate(new ActionRequest()
         ["email"] = user.Email,
         ["registered_at"] = user.RegisteredAt
     },
-    Ip = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
-    Fingerprint = Request.Cookies["__cid"],
-    Headers = Request.Headers.ToDictionary(x => x.Key, y => y.Value.FirstOrDefault())
+    Fingerprint = Request.Cookies["__cid"]
 });
 ```
 

@@ -52,8 +52,8 @@ namespace Castle.Messages.Requests
             // Newtonsoft.Json doesn't apply custom converter to null values, so this must be empty instead
             var newFingerprint = opts.Fingerprint ?? "";
             copy.Fingerprint = copy.Fingerprint ?? newFingerprint;
-            copy.Ip = copy.Ip ?? opts.Ip;
-            copy.Headers = copy.Headers ?? opts.Headers;
+            copy.Ip = opts.Ip;
+            copy.Headers = opts.Headers;
 
             copy.Context = Context.WithLibrary();
 
