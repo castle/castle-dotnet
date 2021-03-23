@@ -14,16 +14,12 @@ namespace Castle.Messages.Requests
         [JsonProperty(ItemConverterType = typeof(StringScrubConverter))]
         public IDictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
-        [JsonProperty]
-        internal LibraryInfo Library { get; set; } = new LibraryInfo();
-
         internal RequestOptions WithHeaders(IDictionary<string, string> headers)
         {
             return new RequestOptions()
             {
                 Fingerprint = Fingerprint,
                 Ip = Ip,
-                Library = Library,
                 Headers = headers
             };
         }
