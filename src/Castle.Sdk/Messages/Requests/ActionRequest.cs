@@ -49,7 +49,8 @@ namespace Castle.Messages.Requests
 
             // Assign Fingerprint, IP and Headers from options
             // Newtonsoft.Json doesn't apply custom converter to null values, so this must be empty instead
-            copy.Fingerprint = opts.Fingerprint ?? "";
+            var newFingerprint = opts.Fingerprint ?? "";
+            copy.Fingerprint = copy.Fingerprint ?? newFingerprint;
             copy.Ip = opts.Ip;
             copy.Headers = opts.Headers;
 

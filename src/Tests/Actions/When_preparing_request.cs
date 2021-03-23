@@ -26,13 +26,13 @@ namespace Tests.Actions
         }
 
         [Theory, AutoFakeData]
-        public void Should_set_null_fingerprint_to_empty(ActionRequest request, CastleConfiguration options)
+        public void Should_set_null_fingerprint_to_default(ActionRequest request, CastleConfiguration options)
         {
             request.Fingerprint = null;
 
             var result = request.PrepareApiCopy(options.AllowList, options.DenyList);
 
-            result.Fingerprint.Should().Be("");
+            result.Fingerprint.Should().NotBe(null);
         }
 
         [Theory, AutoFakeData]
