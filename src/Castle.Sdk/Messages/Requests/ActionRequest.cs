@@ -39,7 +39,7 @@ namespace Castle.Messages.Requests
 
         public RequestContext Context { get; set; } = new RequestContext();
 
-        public RequestOptions Options { get; set; } = new RequestOptions();
+        private RequestOptions Options { get; set; } = new RequestOptions();
 
         internal ActionRequest PrepareApiCopy(string[] allowList, string[] denyList)
         {
