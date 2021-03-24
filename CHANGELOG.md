@@ -2,6 +2,20 @@
 
 ## master
 
+## 2.0.0 (2021-03-24)
+
+**BREAKING CHANGES:**
+
+- [#50](https://github.com/castle/castle-dotnet/pull/50)
+  * remove `Castle.Events` - please use [recognized events](https://docs.castle.io/api_reference/#list-of-recognized-events) instead
+  * remove `Ip`, `Headers`, `ClientId` fields from context - no action required
+
+**Enhancements:**
+
+- [#50](https://github.com/castle/castle-dotnet/pull/50)
+  * add new supported top-level fields to the commands (`Fingerprint`, `Status`, `Headers`, `Ip`)
+  * update Readme to reflect the changes
+
 ## 1.5.0 (2020-09-30)
 
 **Features:**
