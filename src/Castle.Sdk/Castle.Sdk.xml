@@ -111,11 +111,6 @@
             Configuration access from within the SDK
             </summary>
         </member>
-        <member name="T:Castle.Events">
-            <summary>
-            Castle tracking event constants
-            </summary>
-        </member>
         <member name="T:Castle.Headers">
             <summary>
             Recommended request context headers
