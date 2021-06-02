@@ -14,7 +14,7 @@ namespace Tests.Actions
         {
             var result = request.PrepareApiCopy(options.AllowList, options.DenyList);
 
-            result.Headers.Should().NotBeSameAs(request.Headers);
+            result.Context.Headers.Should().NotBeSameAs(request.Context.Headers);
         }
 
         [Theory, AutoFakeData]
@@ -26,21 +26,21 @@ namespace Tests.Actions
         }
 
         [Theory, AutoFakeData]
-        public void Should_set_null_fingerprint_to_default(ActionRequest request, CastleConfiguration options)
+        public void Should_set_null_clientid_to_empty(ActionRequest request, CastleConfiguration options)
         {
-            request.Fingerprint = null;
+            request.Context.ClientId = null;
 
             var result = request.PrepareApiCopy(options.AllowList, options.DenyList);
 
-            result.Fingerprint.Should().NotBe(null);
+            result.Context.ClientId.Should().Be("");
         }
 
         [Theory, AutoFakeData]
-        public void Should_preserve_valid_fingerprint(ActionRequest request, CastleConfiguration options)
+        public void Should_preserve_valid_clientid(ActionRequest request, CastleConfiguration options)
         {
             var result = request.PrepareApiCopy(options.AllowList, options.DenyList);
 
-            result.Fingerprint.Should().Be(request.Fingerprint);
+            result.Context.ClientId.Should().Be(request.Context.ClientId);
         }
     }
 }

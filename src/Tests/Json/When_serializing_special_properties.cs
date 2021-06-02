@@ -12,11 +12,11 @@ namespace Tests.Json
     {
         // Null values are skipped by Newtonsoft.Json, so we don't test those
         [Theory]
-        [InlineData("non-empty", "\"fingerprint\":\"non-empty\"")]
-        [InlineData("", "\"fingerprint\":false")]
-        public void Should_serialize_fingerprint_to_false_if_empty(string value, string expected)
+        [InlineData("non-empty", "\"client_id\":\"non-empty\"")]
+        [InlineData("", "\"client_id\":false")]
+        public void Should_serialize_client_id_to_false_if_empty(string value, string expected)
         {
-            var obj = new RequestOptions() { Fingerprint = value };
+            var obj = new RequestContext() { ClientId = value };
 
             var result = JsonForCastle.SerializeObject(obj);
 
@@ -51,7 +51,7 @@ namespace Tests.Json
             string value, 
             string expected)
         {
-            var obj = new RequestOptions()
+            var obj = new RequestContext()
             {
                 Headers = new Dictionary<string, string>()
                 {
