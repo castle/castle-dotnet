@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Castle;
 using Castle.Config;
+using Castle.Messages.Requests;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
@@ -10,7 +12,7 @@ using Xunit;
 
 namespace Tests.Messages
 {
-    public class When_creating_request_object_for_Core
+    public class When_creating_request_context_for_Core
     {
         [Theory, AutoFakeData]
         public void Should_get_client_id_from_castle_header_if_present(
@@ -27,7 +29,7 @@ namespace Tests.Messages
                 ["__cid"] = cookieValue
             });
 
-            var result = Options.GetFingerprintForCore(headers, cookies);
+            var result = Context.GetClientIdForCore(headers, cookies);
 
             result.Should().Be(castleHeaderValue);
         }
@@ -48,7 +50,7 @@ namespace Tests.Messages
                 ["__cid"] = cookieValue
             });
 
-            var result = Options.GetFingerprintForCore(headers, cookies);
+            var result = Context.GetClientIdForCore(headers, cookies);
 
             result.Should().Be(cookieValue);
         }
@@ -70,7 +72,7 @@ namespace Tests.Messages
                 [otherCookie] = otherCookieValue
             });
 
-            var result = Options.GetFingerprintForCore(headers, cookies);
+            var result = Context.GetClientIdForCore(headers, cookies);
 
             result.Should().Be("");
         }
@@ -93,7 +95,7 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Options.GetIpForCore(headers, new[] {ipHeader, secondaryIpHeader}, () => httpContextIp, () => cfg);
+            var result = Context.GetIpForCore(headers, new[] {ipHeader, secondaryIpHeader}, () => httpContextIp, () => cfg);
 
             result.Should().Be(ip);
         }
@@ -114,7 +116,7 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Options.GetIpForCore(headers, new[] { ipHeader, secondaryIpHeader }, () => httpContextIp, () => cfg);
+            var result = Context.GetIpForCore(headers, new[] { ipHeader, secondaryIpHeader }, () => httpContextIp, () => cfg);
 
             result.Should().Be(secondaryIp);
         }
@@ -134,7 +136,7 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var result = Options.GetIpForCore(headers, null, () => httpContextIp, () => cfg);
+            var result = Context.GetIpForCore(headers, null, () => httpContextIp, () => cfg);
 
             result.Should().Be(httpContextIp);
         }
@@ -151,7 +153,7 @@ namespace Tests.Messages
                 [ipHeader] = ip,
             };
 
-            var result = Options.GetIpForCore(headers, null, () => ip, () => cfg);
+            var result = Context.GetIpForCore(headers, null, () => ip, () => cfg);
 
             result.Should().Be(ip);
         }
@@ -167,7 +169,7 @@ namespace Tests.Messages
 
             var ipHeaders = new[] {"Cf-Connecting-Ip", "X-Forwarded-For"};
 
-            var result = Options.GetIpForCore(headers, ipHeaders, () => cfConnectiongIp, () => cfg);
+            var result = Context.GetIpForCore(headers, ipHeaders, () => cfConnectiongIp, () => cfg);
 
             result.Should().Be(cfConnectiongIp);
         }
@@ -181,7 +183,7 @@ namespace Tests.Messages
                 ["X-Forwarded-For"] = "127.0.0.1,10.0.0.1,172.31.0.1,192.168.0.1"
             };
 
-            var result = Options.GetIpForCore(headers, null, () => defaultIp, () => cfg);
+            var result = Context.GetIpForCore(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("127.0.0.1");
         }
 
@@ -196,7 +198,7 @@ namespace Tests.Messages
 
             cfg.TrustProxyChain = true;
 
-            var result = Options.GetIpForCore(headers, null, () => defaultIp, () => cfg);
+            var result = Context.GetIpForCore(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("6.6.6.6");
         }
 
@@ -209,7 +211,7 @@ namespace Tests.Messages
                 ["X-Forwarded-For"] = "127.0.0.1,10.0.0.1,172.31.0.1,192.168.0.1"
             };
 
-            var result = Options.GetIpForCore(headers, null, () => defaultIp, () => cfg);
+            var result = Context.GetIpForCore(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("6.5.4.3");
         }
 
@@ -224,7 +226,7 @@ namespace Tests.Messages
 
             cfg.TrustedProxyDepth = 1;
 
-            var result = Options.GetIpForCore(headers, null, () => defaultIp, () => cfg);
+            var result = Context.GetIpForCore(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("2.2.2.3");
         }
 
@@ -240,7 +242,7 @@ namespace Tests.Messages
             cfg.TrustedProxyDepth = 2;
             cfg.IpHeaders = new[] {"X-Forwarded-For", "Remote-Addr"};
 
-            var result = Options.GetIpForCore(headers, null, () => defaultIp, () => cfg);
+            var result = Context.GetIpForCore(headers, null, () => defaultIp, () => cfg);
             result.Should().Be("2.2.2.3");
         }
 
@@ -249,7 +251,7 @@ namespace Tests.Messages
         {
             CastleConfiguration.SetConfiguration(cfg);
 
-            var result = Options.FromHttpRequest(request);
+            var result = Context.FromHttpRequest(request);
 
             result.Should().NotBe(null);
         }

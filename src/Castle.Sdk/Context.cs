@@ -10,10 +10,10 @@ using Castle.Messages.Requests;
 
 namespace Castle
 {
-    public static class Options
+    public static class Context
     {
 #if NET461 || NET48
-        public static RequestOptions FromHttpRequest(System.Web.HttpRequestBase request, string[] ipHeaders = null)
+        public static RequestContext FromHttpRequest(System.Web.HttpRequestBase request, string[] ipHeaders = null)
         {
             var headers = new Dictionary<string, string>();
             foreach (string key in request.Headers.Keys)
@@ -21,22 +21,22 @@ namespace Castle
                 headers.Add(key, request.Headers[key]);
             }
 
-            var fingerprint = GetFingerprintForFramework(request.Headers, name => request.Cookies[name]?.Value);
+            var clientId = GetClientIdForFramework(request.Headers, name => request.Cookies[name]?.Value);
 
             var ip = GetIpForFramework(request.Headers, ipHeaders,
                 () => request.UserHostAddress,
                 () => CastleConfiguration.Configuration);
 
-            return new RequestOptions()
+            return new RequestContext()
             {
-                Fingerprint = fingerprint,
+                ClientId = clientId,
                 Headers = headers,
                 Ip = ip
             };
         }
 #endif
 
-        internal static string GetFingerprintForFramework(NameValueCollection headers, Func<string, string> getCookieValue)
+        internal static string GetClientIdForFramework(NameValueCollection headers, Func<string, string> getCookieValue)
         {
             return headers.AllKeys.Contains("X-Castle-Client-ID", StringComparer.OrdinalIgnoreCase)
                 ? headers["X-Castle-Client-ID"]
@@ -118,11 +118,11 @@ namespace Castle
         }
 
 #if NETSTANDARD2_0 || NETCOREAPP
-        public static RequestOptions FromHttpRequest(Microsoft.AspNetCore.Http.HttpRequest request, string[] ipHeaders = null)
+        public static RequestContext FromHttpRequest(Microsoft.AspNetCore.Http.HttpRequest request, string[] ipHeaders = null)
         {
-            return new RequestOptions()
+            return new RequestContext()
             {
-                Fingerprint = GetFingerprintForCore(request.Headers, request.Cookies),
+                ClientId = GetClientIdForCore(request.Headers, request.Cookies),
                 Headers = request.Headers.ToDictionary(x => x.Key, y => y.Value.FirstOrDefault()),
                 Ip = GetIpForCore(request.Headers, ipHeaders,
                     () => request.HttpContext.Connection.RemoteIpAddress?.ToString(),
@@ -130,7 +130,7 @@ namespace Castle
             };
         }
 
-        internal static string GetFingerprintForCore(
+        internal static string GetClientIdForCore(
             IDictionary<string, Microsoft.Extensions.Primitives.StringValues> headers,
             Microsoft.AspNetCore.Http.IRequestCookieCollection cookies)
         {
