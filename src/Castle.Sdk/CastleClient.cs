@@ -31,6 +31,69 @@ namespace Castle
             _messageSender = MessageSenderFactory.Create(configuration, _logger);
         }
 
+        public JObject BuildRiskRequest(ActionRequest request)
+        {
+            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
+            return JsonForCastle.FromObject(prepared);
+        }
+
+        public async Task<JObject> SendRiskRequest(JObject request)
+        {
+            return await TryRequest(() => Actions.Risk.Execute(
+                () => _messageSender.Post<JObject>("/v1/risk", request),
+                _configuration,
+                _logger));
+        }
+
+        public async Task<JObject> Risk(ActionRequest request)
+        {
+            var jsonRequest = BuildRiskRequest(request);
+
+            return await SendRiskRequest(jsonRequest);
+        }
+
+        public JObject BuildLogRequest(ActionRequest request)
+        {
+            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
+            return JsonForCastle.FromObject(prepared);
+        }
+
+        public async Task<JObject> SendLogRequest(JObject request)
+        {
+            return await TryRequest(() => Actions.Log.Execute(
+                () => _messageSender.Post<JObject>("/v1/log", request),
+                _configuration,
+                _logger));
+        }
+
+        public async Task<JObject> Log(ActionRequest request)
+        {
+            var jsonRequest = BuildLogRequest(request);
+
+            return await SendLogRequest(jsonRequest);
+        }
+
+        public JObject BuildFilterRequest(ActionRequest request)
+        {
+            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
+            return JsonForCastle.FromObject(prepared);
+        }
+
+        public async Task<JObject> SendFilterRequest(JObject request)
+        {
+            return await TryRequest(() => Actions.Filter.Execute(
+                () => _messageSender.Post<JObject>("/v1/filter", request),
+                _configuration,
+                _logger));
+        }
+
+        public async Task<JObject> Filter(ActionRequest request)
+        {
+            var jsonRequest = BuildFilterRequest(request);
+
+            return await SendFilterRequest(jsonRequest);
+        }
+
         public JObject BuildAuthenticateRequest(ActionRequest request)
         {
             var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
