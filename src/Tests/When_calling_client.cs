@@ -36,6 +36,37 @@ namespace Tests
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_send_risk(ActionRequest request, CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.Risk(request);
+            act.Should().NotThrow();
+        }
+
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_not_throw_exception_if_calling_risk_with_null_request(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.Risk(null);
+            act.Should().NotThrow();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_send_filter(ActionRequest request, CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.Filter(request);
+            act.Should().NotThrow();
+        }
+
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_not_throw_exception_if_calling_filter_with_null_request(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.Filter(null);
+            act.Should().NotThrow();
+        }
+
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
         public void Should_track(ActionRequest request, CastleClient sut)
         {
             Func<Task> act = async () => await sut.Track(request);
