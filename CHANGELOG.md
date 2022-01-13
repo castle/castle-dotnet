@@ -6,6 +6,10 @@
 
 - [#56](https://github.com/castle/castle-dotnet/pull/56) Support for Log action
 
+**BREAKING CHANGES:**
+
+- [#57](https://github.com/castle/castle-dotnet/pull/57) Dropped Events list - please use [recognized events](https://docs.castle.io/docs/events) instead
+
 ## 1.6.0 (2022-01-13)
 
 **Features:**
