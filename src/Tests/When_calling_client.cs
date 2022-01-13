@@ -57,7 +57,6 @@ namespace Tests
             act.Should().NotThrow();
         }
 
-
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
         public void Should_not_throw_exception_if_calling_filter_with_null_request(CastleClient sut)
         {
