@@ -72,6 +72,48 @@ namespace Castle
             await SendTrackRequest(jsonRequest);
         }
 
+        public JObject BuildFilterRequest(ActionRequest request)
+        {
+            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
+            return JsonForCastle.FromObject(prepared);
+        }
+
+        public async Task<RiskResponse> SendFilterRequest(JObject request)
+        {
+            return await TryRequest(() => Actions.Filter.Execute(
+                 () => _messageSender.Post<RiskResponse>("/v1/filter", request),
+                 _configuration, _logger));
+        }
+
+        public async Task<RiskResponse> Filter(ActionRequest request)
+        {
+            var jsonRequest = BuildFilterRequest(request);
+
+            return await SendFilterRequest(jsonRequest);
+        }
+
+        public async Task<RiskResponse> Risk(ActionRequest request)
+        {
+            var jsonRequest = BuildRiskRequest(request);
+
+            return await SendRiskRequest(jsonRequest);
+        }
+
+
+        public JObject BuildRiskRequest(ActionRequest request)
+        {
+            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
+            return JsonForCastle.FromObject(prepared);
+        }
+
+        public async Task<RiskResponse> SendRiskRequest(JObject request)
+        {
+            return await TryRequest(() => Actions.Risk.Execute(
+                () => _messageSender.Post<RiskResponse>("/v1/risk", request),
+                _configuration, _logger));
+        }
+
+
         /// <exception cref="ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
         public async Task<DeviceList> GetDevicesForUser(string userId, string clientId = null)
         {

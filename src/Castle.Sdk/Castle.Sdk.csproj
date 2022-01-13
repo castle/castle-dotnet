@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/castle/castle-dotnet</PackageProjectUrl>
     <RootNamespace>Castle</RootNamespace>
-    <Version>1.5.0</Version>
+    <Version>1.6.0</Version>
     <Authors>Castle</Authors>
     <Product>Castle .NET SDK</Product>
     <Description>Castle SDK for C# / .NET</Description>
@@ -24,8 +24,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="Sentry.PlatformAbstractions" Version="1.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Sentry" Version="3.12.3" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netcoreapp3.1' ">
