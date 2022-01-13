@@ -5,7 +5,7 @@
 
 Supporting **.NET Standard 2.0** and **.NET Framework 4.6.1+**. Refer to Microsoft's [documentation](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) for compatibility information.
 
-**[Castle](https://castle.io) analyzes device, location, and interaction patterns in your web and mobile apps and lets you stop account takeover attacks in real-time.**
+**[Castle](https://castle.io) analyzes user behavior in web and mobile apps to stop fraud before it happens.**
 
 ## Usage
 
