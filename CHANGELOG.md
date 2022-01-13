@@ -1,8 +1,6 @@
 # Changelog
 
-## master
-
-## 1.7.0 (2022-01-13)
+## master/develop
 
 **Features:**
 
