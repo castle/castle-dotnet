@@ -1,6 +1,10 @@
 # Changelog
 
-## master
+## master/develop
+
+**Features:**
+
+- [#56](https://github.com/castle/castle-dotnet/pull/56) Support for Log action
 
 ## 1.6.0 (2022-01-13)
 

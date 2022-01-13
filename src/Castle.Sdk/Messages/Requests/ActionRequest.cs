@@ -12,6 +12,8 @@ namespace Castle.Messages.Requests
 
         public DateTime? Timestamp { get; set; }
 
+        public DateTime? CreatedAt { get; set; }
+
         public string DeviceToken { get; set; }
 
         public string RequestToken { get; set; }

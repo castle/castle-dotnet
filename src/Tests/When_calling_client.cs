@@ -80,6 +80,20 @@ namespace Tests
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_log(ActionRequest request, CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.Log(request);
+            act.Should().NotThrow();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public void Should_not_throw_exception_if_calling_log_with_null_request(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.Log(null);
+            act.Should().NotThrow();
+        }
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
         public void Should_get_user_devices(string userId, CastleClient sut)
         {
             Func<Task> act = async () => await sut.GetDevicesForUser(userId);

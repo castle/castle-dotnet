@@ -72,6 +72,8 @@ namespace Castle
             await SendTrackRequest(jsonRequest);
         }
 
+        #region filter
+
         public JObject BuildFilterRequest(ActionRequest request)
         {
             var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
@@ -91,7 +93,10 @@ namespace Castle
 
             return await SendFilterRequest(jsonRequest);
         }
+        #endregion
 
+
+        #region risk
         public async Task<RiskResponse> Risk(ActionRequest request)
         {
             var jsonRequest = BuildRiskRequest(request);
@@ -112,6 +117,32 @@ namespace Castle
                 () => _messageSender.Post<RiskResponse>("/v1/risk", request),
                 _configuration, _logger));
         }
+
+        #endregion
+
+        #region log
+
+        public JObject BuildLogRequest(ActionRequest request)
+        {
+            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
+            return JsonForCastle.FromObject(prepared);
+        }
+
+        public async Task SendLogRequest(JObject request)
+        {
+            await TryRequest(() => Actions.Log.Execute(
+                () => _messageSender.Post<VoidResponse>("/v1/log", request),
+                _configuration));
+        }
+
+        public async Task Log(ActionRequest request)
+        {
+            var jsonRequest = BuildLogRequest(request);
+
+            await SendLogRequest(jsonRequest);
+        }
+
+        #endregion
 
 
         /// <exception cref="ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
