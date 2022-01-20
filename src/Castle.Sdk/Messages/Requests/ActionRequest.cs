@@ -25,6 +25,8 @@ namespace Castle.Messages.Requests
         public string Status { get; set; }
         public string UserId { get; set; }
 
+        public string Name { get; set; }
+
         public IDictionary<string, string> UserTraits { get; set; } = new Dictionary<string, string>();
 
         public IDictionary<string, object> Properties { get; set; }
