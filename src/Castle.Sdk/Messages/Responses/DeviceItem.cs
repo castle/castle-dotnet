@@ -6,6 +6,8 @@ namespace Castle.Messages.Responses
     {
         public string Token { get; set; }
 
+        public string Fingerprint { get; set; }
+
         public float Risk { get; set; }
 
         public DateTime CreatedAt { get; set; }
