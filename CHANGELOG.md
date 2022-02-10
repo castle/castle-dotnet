@@ -2,10 +2,6 @@
 
 ## master/develop
 
-## 2.0.2 (2022-02-10)
-
-Added device fingerprint to risk and filter response
-
 ## 2.0.1 (2022-01-21)
 
 Added support for name property
