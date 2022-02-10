@@ -2,6 +2,10 @@
 
 ## master/develop
 
+## 2.0.1 (2022-01-21)
+
+Added support for name property
+
 ## 2.0.0 (2022-01-13)
 
 **Features:**
