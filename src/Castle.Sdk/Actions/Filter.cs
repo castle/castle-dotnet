@@ -19,7 +19,7 @@ namespace Castle.Actions
             {
                 return await send();
             }
-            catch (CastleNotFoundException e)
+            catch (Exception e) when (e is CastleNotFoundException || e is CastleInvalidTokenException || e is CastleInvalidParametersException)
             {
                 throw e;
             }
@@ -47,14 +47,6 @@ namespace Castle.Actions
 
         private static RiskResponse CreateFailoverResponse(ActionType strategy, Exception exception)
         {
-            if (exception is CastleInvalidTokenException)
-            {
-                return CreateFailoverResponse(ActionType.Deny, exception.Message);
-            }
-            if (exception is CastleInvalidParametersException)
-            {
-                return CreateFailoverResponse(strategy, exception.Message);
-            }
             return CreateFailoverResponse(strategy, exception is CastleTimeoutException ? "timeout" : "server error");
         }
     }

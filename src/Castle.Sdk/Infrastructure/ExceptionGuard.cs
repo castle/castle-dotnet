@@ -19,7 +19,7 @@ namespace Castle.Infrastructure
             {
                 throw;
             }
-            catch (CastleNotFoundException e)
+            catch (Exception e) when (e is CastleNotFoundException || e is CastleInvalidTokenException || e is CastleInvalidParametersException)
             {
                 throw e;
             }

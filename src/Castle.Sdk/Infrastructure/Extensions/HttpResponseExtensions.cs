@@ -26,9 +26,9 @@ namespace Castle.Infrastructure.Extensions
                 {
                     if (parsedContent["type"] == "invalid_request_token")
                     {
-                        return new CastleInvalidTokenException(parsedContent["message"], requestUri, message.StatusCode);
+                        throw new CastleInvalidTokenException(parsedContent["message"], requestUri, message.StatusCode);
                     }
-                    return new CastleInvalidParametersException(parsedContent["message"], requestUri, message.StatusCode);
+                    throw new CastleInvalidParametersException(parsedContent["message"], requestUri, message.StatusCode);
                 }
             }
             catch (JsonException)
@@ -37,7 +37,7 @@ namespace Castle.Infrastructure.Extensions
             }
             catch (Exception)
             {
-                return new CastleInvalidParametersException(content, requestUri, message.StatusCode);
+                throw new CastleInvalidParametersException(content, requestUri, message.StatusCode);
             }
 
 
