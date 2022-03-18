@@ -4,7 +4,7 @@ using System.Net;
 namespace Castle.Infrastructure.Exceptions
 {
     /// <summary>
-    /// Exception for internal SDK errors, which must not escape to the outside
+    /// Exception for Unprocessable Entity
     /// </summary>
     internal class CastleInvalidParametersException : Exception
     {

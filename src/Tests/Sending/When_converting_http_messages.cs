@@ -24,9 +24,6 @@ namespace Tests.Sending
         public async Task Should_create_exception_from_httpresponse(HttpResponseMessage response, string uri)
         {
             var result = await response.ToCastleException(uri);
-
-            result.HttpStatusCode.Should().Be(response.StatusCode);
-            result.RequestUri.Should().Be(uri);
             result.Message.Should().Be(await response.Content.ReadAsStringAsync());
         }
     }
