@@ -75,5 +75,19 @@ namespace Tests
             await act.Should().ThrowAsync<CastleExternalException>();
         }
 
+        [Theory, AutoFakeData]
+        public async Task Should_throw_exception_if_route_not_found(
+            CastleConfiguration configuration)
+        {
+            configuration.FailOverStrategy = ActionType.None;
+            var logger = Substitute.For<IInternalLogger>();
+
+            Task<RiskResponse> Send() => throw new CastleNotFoundException("Not Found", "someurl", System.Net.HttpStatusCode.NotFound);
+
+            Func<Task> act = async () => await Filter.Execute(Send, configuration, logger);
+
+            await act.Should().ThrowAsync<CastleNotFoundException>();
+        }
+
     }
 }
