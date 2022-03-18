@@ -47,7 +47,7 @@ namespace Tests.Sending
                     .Received()
                     .Info(Arg.Is<Func<string>>(func => func()
                         .StartsWith("Response")));
-            }            
+            }
         }
 
         [Theory, AutoFakeData(typeof(HttpMessageHandlerSuccessCustomization))]
@@ -62,7 +62,7 @@ namespace Tests.Sending
             {
                 var result = await testMethod(sut);
                 result.Should().BeOfType<VoidResponse>();
-            }            
+            }
         }
 
         [Theory, AutoFakeData(typeof(HttpMessageHandlerFailureCustomization))]
@@ -76,8 +76,8 @@ namespace Tests.Sending
             foreach (var testMethod in TestMethods)
             {
                 Func<Task> act = async () => await testMethod(sut);
-                act.Should().Throw<CastleInternalException>();
-            }            
+                act.Should().Throw<CastleInvalidParametersException>();
+            }
         }
 
         [Theory, AutoFakeData(typeof(HttpMessageHandlerCancelledCustomization))]
@@ -92,7 +92,7 @@ namespace Tests.Sending
             {
                 Func<Task> act = async () => await testMethod(sut);
                 act.Should().Throw<CastleTimeoutException>();
-            }            
+            }
         }
 
         private static readonly Func<HttpMessageSender, Task<VoidResponse>>[] TestMethods =

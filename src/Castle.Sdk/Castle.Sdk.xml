@@ -133,7 +133,7 @@
         </member>
         <member name="T:Castle.Infrastructure.Exceptions.CastleInvalidTokenException">
             <summary>
-            Exception for invalid request token
+             Exception for Invalid request token
             </summary>
         </member>
         <member name="T:Castle.Infrastructure.Exceptions.CastleNotFoundException">
