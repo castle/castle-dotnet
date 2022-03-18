@@ -19,6 +19,10 @@ namespace Castle.Infrastructure
             {
                 throw;
             }
+            catch (CastleNotFoundException e)
+            {
+                throw e;
+            }
             catch (Exception e)
             {
                 logger.Error(e.ToString);

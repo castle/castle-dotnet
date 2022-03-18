@@ -126,6 +126,21 @@
             Exception for internal SDK errors, which must not escape to the outside
             </summary>
         </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastleInvalidParametersException">
+            <summary>
+            Exception for Unprocessable Entity
+            </summary>
+        </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastleInvalidTokenException">
+            <summary>
+            Exception for invalid request token
+            </summary>
+        </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastleNotFoundException">
+            <summary>
+            Exception for route not found
+            </summary>
+        </member>
         <member name="T:Castle.Messages.Responses.VoidResponse">
             <summary>
             Provides consistent internal interfaces for requests with no response

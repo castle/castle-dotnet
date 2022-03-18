@@ -23,6 +23,10 @@ namespace Castle.Actions
             {
                 return await send();
             }
+            catch (CastleNotFoundException e)
+            {
+                throw e;
+            }
             catch (Exception e)
             {
                 logger.Warn(() => "Failover, " + e);
@@ -47,6 +51,14 @@ namespace Castle.Actions
 
         private static Verdict CreateFailoverResponse(ActionType strategy, Exception exception)
         {
+            if (exception is CastleInvalidTokenException)
+            {
+                return CreateFailoverResponse(ActionType.Deny, exception.Message);
+            }
+            if (exception is CastleInvalidParametersException)
+            {
+                return CreateFailoverResponse(strategy, exception.Message);
+            }
             return CreateFailoverResponse(strategy, exception is CastleTimeoutException ? "timeout" : "server error");
         }
     }
