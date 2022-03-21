@@ -14,33 +14,31 @@ namespace Castle.Infrastructure.Extensions
         public static async Task<Exception> ToCastleException(this HttpResponseMessage message, string requestUri)
         {
 
-            if (message.StatusCode == HttpStatusCode.NotFound)
+            if (message.StatusCode == HttpStatusCode.NotFound || message.StatusCode == HttpStatusCode.BadRequest || message.StatusCode == HttpStatusCode.Unauthorized || message.StatusCode == HttpStatusCode.Forbidden || (int)message.StatusCode == 419)
             {
-                throw new CastleNotFoundException("Not Found", requestUri, message.StatusCode);
+                throw new CastleClientErrorException("Invalid response from Castle API", requestUri, message.StatusCode);
             }
             var content = await message.Content.ReadAsStringAsync();
-            try
+            if ((int)message.StatusCode == 422)
             {
-                var parsedContent = JsonForCastle.DeserializeObject<Dictionary<string, string>>(content);
-                if (parsedContent["type"] != null)
+                try
                 {
-                    if (parsedContent["type"] == "invalid_request_token")
+                    var parsedContent = JsonForCastle.DeserializeObject<Dictionary<string, string>>(content);
+                    if (parsedContent.ContainsKey("type"))
                     {
-                        throw new CastleInvalidTokenException(parsedContent["message"], requestUri, message.StatusCode);
+                        if (parsedContent["type"] == "invalid_request_token")
+                        {
+                            throw new CastleInvalidTokenException(parsedContent["message"], requestUri, message.StatusCode);
+                        }
+                        throw new CastleInvalidParametersException(parsedContent["message"], requestUri, message.StatusCode);
                     }
-                    throw new CastleInvalidParametersException(parsedContent["message"], requestUri, message.StatusCode);
                 }
-            }
-            catch (JsonException)
-            {
-                return new CastleInternalException(content, requestUri, message.StatusCode);
-            }
-            catch (Exception)
-            {
+                catch (JsonException)
+                {
+                    return new CastleInternalException(content, requestUri, message.StatusCode);
+                }
                 throw new CastleInvalidParametersException(content, requestUri, message.StatusCode);
             }
-
-
 
             return new CastleInternalException(content, requestUri, message.StatusCode);
         }

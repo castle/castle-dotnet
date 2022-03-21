@@ -116,6 +116,11 @@
             Recommended request context headers
             </summary>
         </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastleClientErrorException">
+            <summary>
+            Exception for Castle client errors
+            </summary>
+        </member>
         <member name="T:Castle.Infrastructure.Exceptions.CastleExternalException">
             <summary>
             Exception that will be allowed to escape the SDK
@@ -134,11 +139,6 @@
         <member name="T:Castle.Infrastructure.Exceptions.CastleInvalidTokenException">
             <summary>
              Exception for Invalid request token
-            </summary>
-        </member>
-        <member name="T:Castle.Infrastructure.Exceptions.CastleNotFoundException">
-            <summary>
-            Exception for route not found
             </summary>
         </member>
         <member name="T:Castle.Messages.Responses.VoidResponse">

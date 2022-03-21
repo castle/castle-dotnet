@@ -23,7 +23,7 @@ namespace Castle.Actions
             {
                 return await send();
             }
-            catch (Exception e) when (e is CastleNotFoundException || e is CastleInvalidTokenException || e is CastleInvalidParametersException)
+            catch (Exception e) when (e is CastleClientErrorException || e is CastleInvalidTokenException || e is CastleInvalidParametersException)
             {
                 throw e;
             }
@@ -44,6 +44,10 @@ namespace Castle.Actions
             return new Verdict()
             {
                 Action = strategy,
+                Policy = new Policy
+                {
+                    Action = strategy
+                },
                 Failover = true,
                 FailoverReason = reason
             };

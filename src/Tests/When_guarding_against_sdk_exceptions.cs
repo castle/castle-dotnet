@@ -86,5 +86,37 @@ namespace Tests
 
             result.Should().BeNull();
         }
+
+        [Theory, AutoFakeData]
+        public Task Should_throw_if_exception_of_type_not_found(CastleClientErrorException exception)
+        {
+            var logger = Substitute.For<IInternalLogger>();
+
+            Func<Task<Verdict>> request = async () => await Task.FromException<Verdict>(exception);
+            Func<Task<Verdict>> res = async() => await ExceptionGuard.Try(request, logger);
+            res.Should().Throw<CastleClientErrorException>();
+            return Task.CompletedTask;
+        }
+
+                [Theory, AutoFakeData]
+        public Task Should_throw_if_exception_of_type_invalid_parameters(CastleInvalidParametersException exception)
+        {
+            var logger = Substitute.For<IInternalLogger>();
+
+            Func<Task<Verdict>> request = async () => await Task.FromException<Verdict>(exception);
+            Func<Task<Verdict>> res = async() => await ExceptionGuard.Try(request, logger);
+            res.Should().Throw<CastleInvalidParametersException>();
+            return Task.CompletedTask;
+        }
+
+              public Task Should_throw_if_exception_of_type_invalid_token(CastleInvalidTokenException exception)
+        {
+            var logger = Substitute.For<IInternalLogger>();
+
+            Func<Task<Verdict>> request = async () => await Task.FromException<Verdict>(exception);
+            Func<Task<Verdict>> res = async() => await ExceptionGuard.Try(request, logger);
+            res.Should().Throw<CastleInvalidTokenException>();
+            return Task.CompletedTask;
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace Castle.Infrastructure.Exceptions
     /// <summary>
     ///  Exception for Invalid request token
     /// </summary>
-    internal class CastleInvalidTokenException : Exception
+    public class CastleInvalidTokenException : Exception
     {
         public CastleInvalidTokenException(string message, string requestUri, HttpStatusCode? httpStatusCode = null)
             : base(message)

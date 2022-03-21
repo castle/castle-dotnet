@@ -82,11 +82,11 @@ namespace Tests
             configuration.FailOverStrategy = ActionType.None;
             var logger = Substitute.For<IInternalLogger>();
 
-            Task<RiskResponse> Send() => throw new CastleNotFoundException("Not Found", "someurl", System.Net.HttpStatusCode.NotFound);
+            Task<RiskResponse> Send() => throw new CastleClientErrorException("Not Found", "someurl", System.Net.HttpStatusCode.NotFound);
 
             Func<Task> act = async () => await Filter.Execute(Send, configuration, logger);
 
-            await act.Should().ThrowAsync<CastleNotFoundException>();
+            await act.Should().ThrowAsync<CastleClientErrorException>();
         }
 
     }

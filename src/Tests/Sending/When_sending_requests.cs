@@ -76,7 +76,7 @@ namespace Tests.Sending
             foreach (var testMethod in TestMethods)
             {
                 Func<Task> act = async () => await testMethod(sut);
-                act.Should().Throw<CastleInvalidParametersException>();
+                act.Should().Throw<CastleInternalException>();
             }
         }
 
@@ -102,6 +102,7 @@ namespace Tests.Sending
             async sender => await sender.Put<VoidResponse>(""),
             async sender => await sender.Delete<VoidResponse>("", new { })
         };
+
 
     }
 }

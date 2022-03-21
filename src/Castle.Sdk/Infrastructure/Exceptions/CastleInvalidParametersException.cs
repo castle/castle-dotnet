@@ -6,7 +6,7 @@ namespace Castle.Infrastructure.Exceptions
     /// <summary>
     /// Exception for Unprocessable Entity
     /// </summary>
-    internal class CastleInvalidParametersException : Exception
+    public class CastleInvalidParametersException : Exception
     {
         public CastleInvalidParametersException(string message, string requestUri, HttpStatusCode? httpStatusCode = null)
             : base(message)

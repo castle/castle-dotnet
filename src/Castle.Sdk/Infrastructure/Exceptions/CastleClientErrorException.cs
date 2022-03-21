@@ -4,11 +4,11 @@ using System.Net;
 namespace Castle.Infrastructure.Exceptions
 {
     /// <summary>
-    /// Exception for route not found
+    /// Exception for Castle client errors
     /// </summary>
-    internal class CastleNotFoundException : Exception
+    public class CastleClientErrorException : Exception
     {
-        public CastleNotFoundException(string message, string requestUri, HttpStatusCode? httpStatusCode = null)
+        public CastleClientErrorException(string message, string requestUri, HttpStatusCode? httpStatusCode = null)
             : base(message)
         {
             HttpStatusCode = httpStatusCode;
