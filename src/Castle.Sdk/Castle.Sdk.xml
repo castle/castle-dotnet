@@ -116,6 +116,11 @@
             Recommended request context headers
             </summary>
         </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastleClientErrorException">
+            <summary>
+            Exception for Castle client errors
+            </summary>
+        </member>
         <member name="T:Castle.Infrastructure.Exceptions.CastleExternalException">
             <summary>
             Exception that will be allowed to escape the SDK
@@ -124,6 +129,16 @@
         <member name="T:Castle.Infrastructure.Exceptions.CastleInternalException">
             <summary>
             Exception for internal SDK errors, which must not escape to the outside
+            </summary>
+        </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastleInvalidParametersException">
+            <summary>
+            Exception for Unprocessable Entity
+            </summary>
+        </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastleInvalidTokenException">
+            <summary>
+             Exception for Invalid request token
             </summary>
         </member>
         <member name="T:Castle.Messages.Responses.VoidResponse">

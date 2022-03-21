@@ -19,6 +19,10 @@ namespace Castle.Infrastructure
             {
                 throw;
             }
+            catch (Exception e) when (e is CastleClientErrorException || e is CastleInvalidTokenException || e is CastleInvalidParametersException)
+            {
+                throw e;
+            }
             catch (Exception e)
             {
                 logger.Error(e.ToString);

@@ -5,7 +5,7 @@ namespace Castle.Messages.Responses
     public class Verdict : IHasJson
     {
         public ActionType Action { get; set; }
-
+        public Policy Policy { get; set; }
         public string UserId { get; set; }
 
         public string DeviceToken { get; set; }

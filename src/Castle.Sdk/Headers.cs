@@ -28,7 +28,6 @@
             "TE",
             "Upgrade-Insecure-Requests",
             "User-Agent",
-            "X-Castle-Client-Id",
             "X-Requested-With"
         };
     }
