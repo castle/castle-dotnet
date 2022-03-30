@@ -13,7 +13,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/castle/castle-dotnet.git</RepositoryUrl>
     <PackageTags>castle</PackageTags>
-    <PackageIconUrl>https://raw.github.com/castle/castle-dotnet/master/castle_icon.png</PackageIconUrl>
+    <PackageIcon>https://raw.github.com/castle/castle-dotnet/master/castle_icon.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup>
