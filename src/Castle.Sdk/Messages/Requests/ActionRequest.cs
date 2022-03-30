@@ -36,6 +36,7 @@ namespace Castle.Messages.Requests
         public IDictionary<string, object> Transaction { get; set; }
 
         public IDictionary<string, object> Changeset { get; set; }
+
         public IDictionary<string, string> Product { get; set; }
 
         public IDictionary<string, string> AuthenticationMethod { get; set; }
