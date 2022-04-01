@@ -13,7 +13,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/castle/castle-dotnet.git</RepositoryUrl>
     <PackageTags>castle</PackageTags>
-    <PackageIconUrl>https://raw.github.com/castle/castle-dotnet/master/castle_icon.png</PackageIconUrl>
+    <PackageIcon>castle_icon.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -26,15 +26,18 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Sentry" Version="3.12.3" />
+    <None Include="castle_icon.png" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netcoreapp3.1' ">
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <None Include="castle_icon.png" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' Or '$(TargetFramework)' == 'net48' ">
     <Reference Include="System.Web" />
     <Reference Include="System.Net.Http" />
+    <None Include="castle_icon.png" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
 
 </Project>
