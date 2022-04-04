@@ -2,9 +2,13 @@
 
 ## master/develop
 
+## 2.1.1 (2022-04-01)
+
+Added support for transaction and changeset objects
+
 ## 2.1.0 (2022-03-21)
 
-Better error handling, removed X-Castle-* headers from allowlist, added policy to the failover for risk and filter
+Better error handling, removed X-Castle-\* headers from allowlist, added policy to the failover for risk and filter
 
 ## 2.0.2 (2022-02-10)
 
