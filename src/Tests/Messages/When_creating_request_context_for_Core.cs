@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Castle;
 using Castle.Config;
-using Castle.Messages.Requests;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
+// using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Primitives;
 using Tests.SetUp;
 using Xunit;
@@ -24,10 +22,10 @@ namespace Tests.Messages
                 ["X-Castle-Client-ID"] = castleHeaderValue,
             };
 
-            var cookies = new RequestCookieCollection(new Dictionary<string, string>()
+            var cookies = new RequestCookieCollection
             {
                 ["__cid"] = cookieValue
-            });
+            };
 
             var result = Context.GetClientIdForCore(headers, cookies);
 
@@ -45,10 +43,10 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var cookies = new RequestCookieCollection(new Dictionary<string, string>()
+            var cookies = new RequestCookieCollection
             {
                 ["__cid"] = cookieValue
-            });
+            };
 
             var result = Context.GetClientIdForCore(headers, cookies);
 
@@ -67,10 +65,10 @@ namespace Tests.Messages
                 [otherHeader] = otherHeaderValue
             };
 
-            var cookies = new RequestCookieCollection(new Dictionary<string, string>()
+            var cookies = new RequestCookieCollection
             {
                 [otherCookie] = otherCookieValue
-            });
+            };
 
             var result = Context.GetClientIdForCore(headers, cookies);
 
