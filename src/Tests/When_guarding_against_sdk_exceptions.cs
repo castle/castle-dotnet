@@ -98,7 +98,7 @@ namespace Tests
             return Task.CompletedTask;
         }
 
-                [Theory, AutoFakeData]
+        [Theory, AutoFakeData]
         public Task Should_throw_if_exception_of_type_invalid_parameters(CastleInvalidParametersException exception)
         {
             var logger = Substitute.For<IInternalLogger>();
@@ -109,7 +109,8 @@ namespace Tests
             return Task.CompletedTask;
         }
 
-              public Task Should_throw_if_exception_of_type_invalid_token(CastleInvalidTokenException exception)
+        [Theory, AutoFakeData]
+        public Task Should_throw_if_exception_of_type_invalid_token(CastleInvalidTokenException exception)
         {
             var logger = Substitute.For<IInternalLogger>();
 

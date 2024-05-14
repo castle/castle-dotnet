@@ -117,7 +117,7 @@ namespace Castle
             return getIpFromHttpContext();
         }
 
-#if NETSTANDARD2_0 || NETCOREAPP
+#if NETSTANDARD2_0_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
         public static RequestContext FromHttpRequest(Microsoft.AspNetCore.Http.HttpRequest request, string[] ipHeaders = null)
         {
             return new RequestContext()
@@ -129,7 +129,7 @@ namespace Castle
                     () => CastleConfiguration.Configuration)
             };
         }
-
+        
         internal static string GetClientIdForCore(
             IDictionary<string, Microsoft.Extensions.Primitives.StringValues> headers,
             Microsoft.AspNetCore.Http.IRequestCookieCollection cookies)
@@ -138,7 +138,7 @@ namespace Castle
                 ? headerId.First()
                 : cookies["__cid"] ?? "";
         }
-
+        
         internal static string GetIpForCore(
             IDictionary<string, Microsoft.Extensions.Primitives.StringValues> headers,
             string[] ipHeaders,
@@ -146,74 +146,74 @@ namespace Castle
             Func<CastleConfiguration> getCastleConfiguration)
         {
             var cfg = null != getCastleConfiguration ? getCastleConfiguration() : CastleConfiguration.Configuration;
-
+        
             if (null == ipHeaders || !ipHeaders.Any())
             {
                 ipHeaders = cfg.IpHeaders ?? new[] {"X-Forwarded-For", "Remote-Addr"};
             }
-
+        
             var trustProxyChain = cfg.TrustProxyChain;
             var trustedProxyDepth = cfg.TrustedProxyDepth;
             var trustedProxies = cfg.TrustedProxies;
-
+        
             string[] LimitProxyDepth(string[] ips, string ipHeader)
             {
                 if (new[] {"X-Forwarded-For"}.Contains(ipHeader))
                 {
                     return ips.Take(Math.Max(0, ips.Length - trustedProxyDepth)).ToArray();
                 }
-
+        
                 return ips;
             }
-
+        
             string[] IpsFrom(string ipHeader)
             {
                 if (!headers.ContainsKey(ipHeader))
                     return new string[] {}.ToArray();
-
+        
                 var value = headers[ipHeader];
                 if (0 == value.Count)
                     return new string[] {}.ToArray();
-
+        
                 var ips = value.First().Split(new[] {",", " "}, StringSplitOptions.RemoveEmptyEntries);
-
+        
                 ips = LimitProxyDepth(ips, ipHeader);
                 return ips;
             }
-
+        
             string RemoveProxies(string[] ips)
             {
                 if (trustProxyChain) return ips.FirstOrDefault();
                 return ips.LastOrDefault(ip => !IsInternalIpAddress(ip) && !trustedProxies.Contains(ip));
             }
-
+        
             var ipv = "";
             var allIps = new List<string>();
             foreach (var header in ipHeaders)
             {
                 var ipf = IpsFrom(header);
                 ipv = RemoveProxies(ipf);
-
+        
                 if (!string.IsNullOrEmpty(ipv))
                 {
                     return ipv;
                 }
                 allIps.AddRange(ipf);
             }
-
+        
             ipv = allIps.FirstOrDefault();
-
+        
             if (!string.IsNullOrEmpty(ipv))
             {
                 return ipv;
             }
-
+        
             foreach (var header in ipHeaders)
             {
                 if (headers.TryGetValue(header, out var headerValues))
                     return headerValues.First();
             }
-
+        
             return getIpFromHttpContext();
         }
 #endif

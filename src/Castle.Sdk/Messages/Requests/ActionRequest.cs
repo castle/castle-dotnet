@@ -41,6 +41,12 @@ namespace Castle.Messages.Requests
 
         public IDictionary<string, string> AuthenticationMethod { get; set; }
 
+        [JsonProperty("skip_request_token_validation")]
+        public bool SkipRequestTokenValidation { get; set; }
+
+        [JsonProperty("skip_context_validation")]
+        public bool SkipContextValidation { get; set; }
+
         public RequestContext Context { get; set; } = new RequestContext();
 
         internal ActionRequest PrepareApiCopy(string[] allowList, string[] denyList)
