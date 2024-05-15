@@ -1,15 +1,15 @@
 version: '{build}'
 skip_branch_with_pr: true
-image: Visual Studio 2019
+image: Visual Studio 2022
 install:
   - dotnet tool install coveralls.net --tool-path tools
-build_script:  
+build_script:
   - dotnet build src/Castle.Sdk
   - dotnet build src/Tests -c Debug
 after_build:
   - dotnet pack -c Release src/Castle.Sdk
-test_script:    
+test_script: 
   - dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Include="[Castle.Sdk*]*" src/Tests/Tests.csproj
-  - ps: .\tools\csmacnz.coveralls.exe --opencover -i src/Tests/coverage.opencover.xml --useRelativePaths --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID  
+  - ps: .\tools\csmacnz.coveralls.exe --opencover -i src/Tests/coverage.opencover.xml --useRelativePaths --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID
 artifacts:
   - path: 'src\Castle.Sdk\bin\Release\*.nupkg'
