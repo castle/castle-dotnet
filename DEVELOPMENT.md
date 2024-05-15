@@ -9,7 +9,7 @@
 ## Build
 Build using your IDE, or with the `dotnet` command. Without .NET Framework, you won't be able to build for all target frameworks, so for `Castle.Sdk` you must specifically build for .NET Standard using the `-f` switch
 
-`dotnet build src/Castle.Sdk/Castle.Sdk.csproj -f netstandard2.0`  
+`dotnet build src/Castle.Sdk/Castle.Sdk.csproj -f netstandard2.1`
 
 ## Test
 ### Everything

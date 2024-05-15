@@ -2,6 +2,11 @@
 
 ## master/develop
 
+## 2.2.0 (2024-05-15)
+
+Added support for `skip_request_token_validation` and `skip_context_validation` options,
+Added .net8 support
+
 ## 2.1.1 (2022-04-01)
 
 Added support for transaction and changeset objects
