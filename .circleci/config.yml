@@ -4,6 +4,7 @@ jobs:
     docker:
       - image: mcr.microsoft.com/dotnet/sdk:8.0
     steps:
+      - run: apt-get update && apt-get install -y ssh git
       - checkout
       - run: cd src && dotnet build Castle.Sdk -c Release -f netstandard2.1
       - run: cd src && dotnet test Tests
