@@ -2,6 +2,10 @@
 
 ## master/develop
 
+## 2.3.0 (2026-04-02)
+
+Added `scores` property to `RiskResponse`, exposing individual score breakdowns (e.g. `account_abuse`, `account_takeover`, `bot`) from the Risk API.
+
 ## 2.2.0 (2024-05-15)
 
 Added support for `skip_request_token_validation` and `skip_context_validation` options,
