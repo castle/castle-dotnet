@@ -1,9 +1,14 @@
 using System;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace Castle.Messages.Responses
 {
 
+    public class ScoreItem
+    {
+        public float Score { get; set; }
+    }
     public class RiskResponse
     {
         public DeviceItem Device { get; set; }
@@ -11,6 +16,8 @@ namespace Castle.Messages.Responses
 
         public Policy Policy { get; set; }
         public JObject Signals { get; set; }
+
+       public Dictionary<string, ScoreItem> Scores { get; set; }
 
         // FailOver
         public ActionType Action { get; set; }
