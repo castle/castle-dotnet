@@ -153,20 +153,6 @@ public class IndexModel : PageModel
 }
 ```
 
-## Devices and Users
-
-```csharp
-var devices = await client.GetDevicesForUser("user-123");
-
-var device = await client.GetDevice("device-token");
-
-await client.ApproveDevice("device-token");
-
-await client.ReportDevice("device-token");
-
-var user = await client.ArchiveDevices("user-123");
-```
-
 ## Logging
 
 The SDK allows customized logging by way of implementing the `ICastleLogger` interface and passing in an instance as part of the `CastleConfiguration`. Exactly what gets logged can be controlled by setting the `LogLevel` property of `CastleConfiguration`.
