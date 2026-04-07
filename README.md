@@ -102,32 +102,6 @@ var response = await client.Filter(new ActionRequest()
 });
 ```
 
-### Authenticate
-
-```csharp
-var verdict = await client.Authenticate(new ActionRequest()
-{
-    Event = "$login",
-    UserId = "user-123",
-    RequestToken = "token-from-castle-js",
-    Context = Castle.Context.FromHttpRequest(Request)
-});
-
-// verdict.Action   - allow, deny, or challenge
-// verdict.Failover - whether the response is a failover
-```
-
-### Track
-
-```csharp
-await client.Track(new ActionRequest()
-{
-    Event = "$logout",
-    UserId = "user-123",
-    Context = Castle.Context.FromHttpRequest(Request)
-});
-```
-
 ### Log
 
 ```csharp
@@ -156,7 +130,7 @@ var jsonRequest = client.BuildRiskRequest(new ActionRequest()
 var response = await client.SendRiskRequest(jsonRequest);
 ```
 
-This pattern is available for all actions: `BuildAuthenticateRequest` / `SendAuthenticateRequest`, `BuildTrackRequest` / `SendTrackRequest`, `BuildFilterRequest` / `SendFilterRequest`, `BuildRiskRequest` / `SendRiskRequest`, `BuildLogRequest` / `SendLogRequest`.
+This pattern is available for all actions: `BuildRiskRequest` / `SendRiskRequest`, `BuildFilterRequest` / `SendFilterRequest`, `BuildLogRequest` / `SendLogRequest`.
 
 ## Request Context
 
@@ -177,34 +151,6 @@ public class IndexModel : PageModel
         };
     }
 }
-```
-
-## Devices and Users
-
-```csharp
-var devices = await client.GetDevicesForUser("user-123");
-
-var device = await client.GetDevice("device-token");
-
-await client.ApproveDevice("device-token");
-
-await client.ReportDevice("device-token");
-
-var user = await client.ArchiveDevices("user-123");
-```
-
-## Impersonation
-
-```csharp
-await client.ImpersonateStart(new ImpersonateStartRequest()
-{
-    UserId = "user-123"
-});
-
-await client.ImpersonateEnd(new ImpersonateEndRequest()
-{
-    UserId = "user-123"
-});
 ```
 
 ## Logging
