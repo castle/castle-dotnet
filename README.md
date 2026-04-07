@@ -4,25 +4,25 @@
 [![NuGet](https://img.shields.io/nuget/v/castle.sdk.svg)](https://www.nuget.org/packages/Castle.Sdk/)
 [![Coverage Status](https://coveralls.io/repos/github/castle/castle-dotnet/badge.svg?branch=master)](https://coveralls.io/github/castle/castle-dotnet?branch=master)
 
-Supporting **.NET 6.0**, **.NET 5.0**, **.NET Core 3.0**, **.NET Standard 2.0** and **.NET Framework 4.6.1+**. Refer to Microsoft's [documentation](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) for compatibility information.
+Supporting **.NET 8.0** and **.NET Standard 2.1**. Refer to Microsoft's [documentation](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) for compatibility information.
 
 **[Castle](https://castle.io) analyzes user behavior in web and mobile apps to stop fraud before it happens.**
 
 ## Usage
 
-See the [documentation](https://docs.castle.io) for how to use this SDK with the Castle APIs
+See the [documentation](https://docs.castle.io) for how to use this SDK with the Castle APIs.
 
 ## Installation
 
-Install the `Castle.Sdk` nuget.
+Install the `Castle.Sdk` NuGet package.
 
-### Command line
+### .NET CLI
 
-    nuget install Castle.Sdk
+    dotnet add package Castle.Sdk
 
-### Packet Manager Console
+### Package Manager Console
 
-    install-package Castle.Sdk
+    Install-Package Castle.Sdk
 
 ### Visual Studio
 
@@ -35,18 +35,16 @@ Install the `Castle.Sdk` nuget.
 Go to the settings page of your Castle account and find your **API Secret**. Use it to create a new instance of the `CastleClient` class.
 
 ```csharp
-var client = new CastleClient("YOUR SECRET");
+var client = new CastleClient(new CastleConfiguration("YOUR SECRET"));
 ```
 
 It's a good idea to set up your `CastleClient` instance using an IoC container.
 
-### asp&#46;net core
+### ASP&#46;NET Core
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
-    ...
-
     services.AddSingleton(new CastleClient(new CastleConfiguration("YOUR SECRET")));
 }
 ```
@@ -56,18 +54,158 @@ The `CastleConfiguration` object has a number of properties that control the SDK
 | Property          | Default               | Description                                                                                                                                                             |
 | ----------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ApiSecret         |                       | Secret used to authenticate with the Castle Api. **_Required_**                                                                                                         |
-| FailoverStrategy  | Allow                 | The response action to return in case of a failover in an Authenticate request.                                                                                         |
+| FailOverStrategy  | Allow                 | The response action to return in case of a failover in an Authenticate request.                                                                                         |
 | Timeout           | 1000                  | Timeout for requests, in milliseconds.                                                                                                                                  |
 | BaseUrl           | https://api.castle.io | Base Castle Api url.                                                                                                                                                    |
 | LogLevel          | Error                 | The log level applied by the injected `ICastleLogger` implementation.                                                                                                   |
-| AllowList         |                       | List of headers that should be passed intact to the API. A list of recommended .headers can be retrieved from the static property `Castle.Headers.AllowList` in the SDK |
-| DenyList          |                       | List of header that should _not_ be passed intact to the API.                                                                                                           |
-| DoNotTrack        | false                 | If true, no requests are actually sent to the Caste Api, and Authenticate returns a failover response.                                                                  |
+| AllowList         |                       | List of headers that should be passed intact to the API. A list of recommended headers can be retrieved from the static property `Castle.Headers.AllowList` in the SDK. |
+| DenyList          |                       | List of headers that should _not_ be passed intact to the API.                                                                                                          |
+| DoNotTrack        | false                 | If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response.                                                                 |
 | Logger            |                       | Your own logger implementation.                                                                                                                                         |
-| IpHeaders         |                       | IP Headers to look for a client IP address                                                                                                                              |
-| TrustedProxies    |                       | Trusted public proxies list                                                                                                                                             |
-| TrustedProxyDepth | 0                     | Number of trusted proxies used in the chain                                                                                                                             |
-| TrustProxyChain   | false                 | Is trusting all of the proxy IPs in X-Forwarded-For enabled                                                                                                             |
+| IpHeaders         |                       | IP Headers to look for a client IP address.                                                                                                                             |
+| TrustedProxies    |                       | Trusted public proxies list.                                                                                                                                            |
+| TrustedProxyDepth | 0                     | Number of trusted proxies used in the chain.                                                                                                                            |
+| TrustProxyChain   | false                 | Is trusting all of the proxy IPs in X-Forwarded-For enabled.                                                                                                            |
+
+## API Actions
+
+All API action methods accept an `ActionRequest` object and are async.
+
+### Risk
+
+```csharp
+var response = await client.Risk(new ActionRequest()
+{
+    Event = "$login",
+    Status = "$succeeded",
+    UserId = "user-123",
+    RequestToken = "token-from-castle-js",
+    Context = Castle.Context.FromHttpRequest(Request)
+});
+
+// response.Risk       - risk score (float)
+// response.Policy     - policy evaluation result
+// response.Signals    - signal details
+// response.Device     - device information
+```
+
+### Filter
+
+```csharp
+var response = await client.Filter(new ActionRequest()
+{
+    Event = "$registration",
+    Status = "$attempted",
+    UserId = "user-123",
+    RequestToken = "token-from-castle-js",
+    Context = Castle.Context.FromHttpRequest(Request)
+});
+```
+
+### Authenticate
+
+```csharp
+var verdict = await client.Authenticate(new ActionRequest()
+{
+    Event = "$login",
+    UserId = "user-123",
+    RequestToken = "token-from-castle-js",
+    Context = Castle.Context.FromHttpRequest(Request)
+});
+
+// verdict.Action   - allow, deny, or challenge
+// verdict.Failover - whether the response is a failover
+```
+
+### Track
+
+```csharp
+await client.Track(new ActionRequest()
+{
+    Event = "$logout",
+    UserId = "user-123",
+    Context = Castle.Context.FromHttpRequest(Request)
+});
+```
+
+### Log
+
+```csharp
+await client.Log(new ActionRequest()
+{
+    Event = "$profile_update",
+    UserId = "user-123",
+    Context = Castle.Context.FromHttpRequest(Request)
+});
+```
+
+### Advanced: Build and Send
+
+Each action supports a two-step pattern where you build the JSON request, optionally modify it, and then send it separately.
+
+```csharp
+var jsonRequest = client.BuildRiskRequest(new ActionRequest()
+{
+    Event = "$login",
+    UserId = "user-123",
+    Context = Castle.Context.FromHttpRequest(Request)
+});
+
+// Inspect or modify jsonRequest (JObject) if needed
+
+var response = await client.SendRiskRequest(jsonRequest);
+```
+
+This pattern is available for all actions: `BuildAuthenticateRequest` / `SendAuthenticateRequest`, `BuildTrackRequest` / `SendTrackRequest`, `BuildFilterRequest` / `SendFilterRequest`, `BuildRiskRequest` / `SendRiskRequest`, `BuildLogRequest` / `SendLogRequest`.
+
+## Request Context
+
+Use `Castle.Context.FromHttpRequest()` to extract client context (IP, headers, client ID) from the current HTTP request.
+
+### ASP&#46;NET Core
+
+```csharp
+public class IndexModel : PageModel
+{
+    public void OnGet()
+    {
+        var actionRequest = new ActionRequest()
+        {
+            Context = Castle.Context.FromHttpRequest(Request),
+            Event = "$login",
+            UserId = "user-123"
+        };
+    }
+}
+```
+
+## Devices and Users
+
+```csharp
+var devices = await client.GetDevicesForUser("user-123");
+
+var device = await client.GetDevice("device-token");
+
+await client.ApproveDevice("device-token");
+
+await client.ReportDevice("device-token");
+
+var user = await client.ArchiveDevices("user-123");
+```
+
+## Impersonation
+
+```csharp
+await client.ImpersonateStart(new ImpersonateStartRequest()
+{
+    UserId = "user-123"
+});
+
+await client.ImpersonateEnd(new ImpersonateEndRequest()
+{
+    UserId = "user-123"
+});
+```
 
 ## Logging
 
@@ -101,46 +239,6 @@ public class DebugLogger : ICastleLogger
 }
 ```
 
-##### ASP&#46;NET MVC 5
-
-```csharp
-public class HomeController : Controller
-{
-    public ActionResult Index()
-    {
-        var actionRequest = new ActionRequest()
-        {
-            Context = Castle.Context.FromHttpRequest(Request)
-            ...
-```
-
-##### ASP&#46;NET Core
-
-```csharp
-public class IndexModel : PageModel
-{
-    public void OnGet()
-    {
-        var actionRequest = new ActionRequest()
-        {
-            Context = Castle.Context.FromHttpRequest(Request)
-            ...
-```
-
-## Troubleshooting
-
-### Can't find System.Runtime.InteropServices.RuntimeInformation
-
-You target .NET Framework and get an exception on startup.
-
-`System.IO.FileNotFoundException: 'Could not load file or assembly 'System.Runtime.InteropServices.RuntimeInformation, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' or one of its dependencies. The system cannot find the file specified.`
-
-The Castle SDK has a dependency on [Sentry.PlatformAbstractions](https://www.nuget.org/packages/Sentry.PlatformAbstractions/), which in turn uses `System.Runtime.InteropServices.RuntimeInformation`, version 4.3.0.
-
-#### Solution
-
-Find the binding redirect for `System.Runtime.InteropServices.RuntimeInformation` in `web.config` and either remove the entire `dependentAssembly` element, or update `newVersion` to 4.3.0.
-
-# Demo application
+## Demo application
 
 There is a sample application using ASP&#46;NET Core Razor Pages and this SDK [here](https://github.com/castle/dotnet-example).
