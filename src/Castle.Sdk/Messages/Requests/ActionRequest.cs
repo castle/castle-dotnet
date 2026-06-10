@@ -57,9 +57,6 @@ namespace Castle.Messages.Requests
 
             copy.SentAt = DateTime.Now;
 
-            // Newtonsoft.Json doesn't apply custom converter to null values, so this must be empty instead
-            copy.Context.ClientId = copy.Context.ClientId ?? "";
-
             return copy;
         }
     }

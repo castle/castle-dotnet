@@ -24,23 +24,5 @@ namespace Tests.Actions
 
             result.SentAt.Should().BeAfter(DateTime.MinValue);
         }
-
-        [Theory, AutoFakeData]
-        public void Should_set_null_clientid_to_empty(ActionRequest request, CastleConfiguration options)
-        {
-            request.Context.ClientId = null;
-
-            var result = request.PrepareApiCopy(options.AllowList, options.DenyList);
-
-            result.Context.ClientId.Should().Be("");
-        }
-
-        [Theory, AutoFakeData]
-        public void Should_preserve_valid_clientid(ActionRequest request, CastleConfiguration options)
-        {
-            var result = request.PrepareApiCopy(options.AllowList, options.DenyList);
-
-            result.Context.ClientId.Should().Be(request.Context.ClientId);
-        }
     }
 }

@@ -2,12 +2,29 @@
 
 ## master/develop
 
-## 2.4.0
+## 3.0.0
+
+**Features:**
+
+- Add Lists API: `CreateList`, `GetAllLists`, `GetList`, `UpdateList`, `DeleteList`, `QueryLists`.
+- Add List items API: `CreateListItem`, `GetListItem`, `UpdateListItem`, `QueryListItems`, `CountListItems`, `ArchiveListItem`, `UnarchiveListItem`, `CreateBatchListItems`.
+- Add Privacy API: `RequestUserData`, `DeleteUserData` (`POST` / `DELETE /v1/privacy/users`).
+- Add Events API (enterprise): `EventsSchema`, `QueryEvents`, `GroupEvents`.
+- Add webhook signature verification: `Castle.Webhook.Verify(body, signature)` and `Castle.Webhook.Verify(body, signature, apiSecret)`, validating the `X-Castle-Signature` header (HMAC-SHA256, Base64). Adds `CastleWebhookVerificationException`.
+
+**Maintenance:**
 
 - Target `net10.0`, `net8.0`, `netstandard2.0` and `net48`; drop the `net461` and `netcoreapp3.1` build configurations.
 - Remove the `Sentry` dependency; runtime/platform information is now resolved via `System.Runtime.InteropServices.RuntimeInformation`.
 - Bump `Newtonsoft.Json` to `13.0.3`.
 - Build, test (across all target frameworks, including `net48`) and pack on GitHub Actions; add an `.editorconfig`.
+
+**BREAKING CHANGES:**
+
+- Remove the legacy `Authenticate` and `Track` endpoints (`CastleClient.Authenticate` / `Track` and the matching `Build*Request` / `Send*Request` methods) and the `Verdict` response. Use `Risk`, `Filter` and `Log` instead.
+- Remove device-management endpoints: `GetDevice`, `GetDevicesForUser`, `ApproveDevice`, `ReportDevice`, `ArchiveDevices` (and the `Device`, `DeviceList` and `User` response models).
+- Remove impersonation endpoints: `ImpersonateStart`, `ImpersonateEnd` (and the `ImpersonateStartRequest` / `ImpersonateEndRequest` models).
+- Remove client-id extraction: `Context.FromHttpRequest` no longer reads the `X-Castle-Client-ID` header or `__cid` cookie, and `RequestContext.ClientId` and `DeviceItem.IsCurrentDevice` are removed. The default request context is `headers`, `ip` and `library`.
 
 ## 2.3.0 (2026-04-02)
 

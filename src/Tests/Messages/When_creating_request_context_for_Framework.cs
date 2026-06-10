@@ -14,60 +14,6 @@ namespace Tests.Messages
     public class When_creating_request_context_for_Framework
     {
         [Theory, AutoFakeData]
-        public void Should_get_client_id_from_castle_header_if_present(
-            string castleHeaderValue,
-            string cookieValue)
-        {
-            var headers = new NameValueCollection
-            {
-                ["X-Castle-Client-ID"] = castleHeaderValue
-            };
-
-            string GetCookie(string name) => name == "__cid" ? cookieValue : null;
-
-            var result = Context.GetClientIdForFramework(headers, GetCookie);
-
-            result.Should().Be(castleHeaderValue);
-        }
-
-        [Theory, AutoFakeData]
-        public void Should_get_client_id_from_cookie_if_castle_header_not_present(
-            string otherHeader,
-            string otherHeaderValue,
-            string cookieValue)
-        {
-            var headers = new NameValueCollection
-            {
-                [otherHeader] = otherHeaderValue
-            };
-
-            string GetCookie(string name) => name == "__cid" ? cookieValue : null;
-
-            var result = Context.GetClientIdForFramework(headers, GetCookie);
-
-            result.Should().Be(cookieValue);
-        }
-
-        [Theory, AutoFakeData]
-        public void Should_use_empty_string_if_unable_to_get_client_id(
-            string otherHeader,
-            string otherHeaderValue,
-            string otherCookie,
-            string otherCookieValue)
-        {
-            var headers = new NameValueCollection
-            {
-                [otherHeader] = otherHeaderValue
-            };
-
-            string GetCookie(string name) => name == otherCookie ? otherCookieValue : null;
-
-            var result = Context.GetClientIdForFramework(headers, GetCookie);
-
-            result.Should().Be("");
-        }
-
-        [Theory, AutoFakeData]
         public void Should_get_ip_from_supplied_headers_in_order(
             CastleConfiguration cfg,
             string ipHeader,

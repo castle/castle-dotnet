@@ -19,7 +19,6 @@ namespace Tests.Messages
 
             var headers = new NameValueCollection
             {
-                ["X-Castle-Client-ID"] = "header-client-id",
                 ["X-Forwarded-For"] = "1.2.3.4"
             };
 
@@ -33,31 +32,8 @@ namespace Tests.Messages
             var result = Context.FromHttpRequest(request);
 
             result.Should().NotBeNull();
-            result.ClientId.Should().Be("header-client-id");
             result.Ip.Should().Be("1.2.3.4");
-            result.Headers.Should().ContainKey("X-Castle-Client-ID");
-        }
-
-        [Theory, AutoFakeData]
-        public void Should_get_client_id_from_cookie_when_castle_header_absent(CastleConfiguration cfg)
-        {
-            CastleConfiguration.SetConfiguration(cfg);
-
-            var headers = new NameValueCollection
-            {
-                ["X-Forwarded-For"] = "1.2.3.4"
-            };
-
-            var cookies = new HttpCookieCollection { new HttpCookie("__cid", "cookie-client-id") };
-
-            var request = Substitute.For<HttpRequestBase>();
-            request.Headers.Returns(headers);
-            request.Cookies.Returns(cookies);
-            request.UserHostAddress.Returns("9.9.9.9");
-
-            var result = Context.FromHttpRequest(request);
-
-            result.ClientId.Should().Be("cookie-client-id");
+            result.Headers.Should().ContainKey("X-Forwarded-For");
         }
     }
 }

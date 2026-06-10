@@ -25,8 +25,6 @@ namespace Tests.Messages
         public static IEnumerable<object[]> TestCases => new List<object[]>()
         {
             new object[] { new ActionRequest().Context },
-            new object[] { new ImpersonateStartRequest().Context },
-            new object[] { new ImpersonateEndRequest().Context },
         };
     }
 }

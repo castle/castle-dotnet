@@ -21,7 +21,5 @@ namespace Castle.Messages.Responses
         public DateTime? MitigatedAt { get; set; }
 
         public DeviceContext Context { get; set; }
-
-        public bool IsCurrentDevice { get; set; }
     }
 }
