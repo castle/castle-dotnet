@@ -2,9 +2,10 @@
 using System.Collections.Specialized;
 using Castle;
 using Castle.Config;
-using Castle.Messages.Requests;
 using FluentAssertions;
+#if !NET48
 using Microsoft.AspNetCore.Http;
+#endif
 using Tests.SetUp;
 using Xunit;
 
@@ -235,6 +236,7 @@ namespace Tests.Messages
             result.Should().Be("2.2.2.3");
         }
 
+#if !NET48
         [Theory, AutoFakeData]
         public void Should_get_default_from_http_request(HttpRequest request, CastleConfiguration cfg)
         {
@@ -244,5 +246,6 @@ namespace Tests.Messages
 
             result.Should().NotBe(null);
         }
+#endif
     }
 }

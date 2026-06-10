@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if !NET48
+using System.Collections.Generic;
 using Castle;
 using Castle.Config;
 using FluentAssertions;
@@ -255,3 +256,4 @@ namespace Tests.Messages
         }
     }
 }
+#endif

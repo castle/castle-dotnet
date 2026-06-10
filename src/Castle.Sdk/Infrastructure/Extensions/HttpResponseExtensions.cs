@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Castle.Infrastructure.Exceptions;
 using Castle.Infrastructure.Json;
+using Newtonsoft.Json;
 
 namespace Castle.Infrastructure.Extensions
 {

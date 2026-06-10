@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Castle.Messages.Requests
 {
@@ -11,8 +12,24 @@ namespace Castle.Messages.Requests
                 .Version
                 .ToString(3);
 
-        public string Platform { get; } = Sentry.PlatformAbstractions.Runtime.Current.Name;
+        public string Platform { get; } = GetPlatformName();
 
-        public string PlatformVersion { get; } = Sentry.PlatformAbstractions.Runtime.Current.Version;
+        public string PlatformVersion { get; } = GetPlatformVersion();
+
+        private static string GetPlatformName()
+        {
+            var description = RuntimeInformation.FrameworkDescription;
+            var lastSpace = description.LastIndexOf(' ');
+            return lastSpace > 0 ? description.Substring(0, lastSpace) : description;
+        }
+
+        private static string GetPlatformVersion()
+        {
+            var description = RuntimeInformation.FrameworkDescription;
+            var lastSpace = description.LastIndexOf(' ');
+            return lastSpace > 0 && lastSpace < description.Length - 1
+                ? description.Substring(lastSpace + 1)
+                : string.Empty;
+        }
     }
 }

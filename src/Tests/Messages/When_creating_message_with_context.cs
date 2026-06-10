@@ -12,7 +12,11 @@ namespace Tests.Messages
         {
             context.Library.Name.Should().Be("castle-dotnet");
             context.Library.Version.Split(".").Length.Should().Be(3);
+#if NET48
+            context.Library.Platform.Should().Be(".NET Framework");
+#else
             context.Library.Platform.Should().Be(".NET");
+#endif
 
             var platformVersionNumbers = context.Library.PlatformVersion.Replace(".", "");
             int.TryParse(platformVersionNumbers, out _).Should().BeTrue();

@@ -1,10 +1,8 @@
 # .NET SDK for Castle
 
-[![Build status](https://ci.appveyor.com/api/projects/status/rf0304hhym6k7d7s/branch/master?svg=true)](https://ci.appveyor.com/project/DevTools/castle-dotnet)
 [![NuGet](https://img.shields.io/nuget/v/castle.sdk.svg)](https://www.nuget.org/packages/Castle.Sdk/)
-[![Coverage Status](https://coveralls.io/repos/github/castle/castle-dotnet/badge.svg?branch=master)](https://coveralls.io/github/castle/castle-dotnet?branch=master)
 
-Supporting **.NET 8.0** and **.NET Standard 2.1**. Refer to Microsoft's [documentation](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) for compatibility information.
+Supporting **.NET 10.0**, **.NET 8.0**, **.NET Standard 2.0** and **.NET Framework 4.8**. Through .NET Standard 2.0 the SDK is also consumable from .NET Core 2.0+, .NET 5+, and .NET Framework 4.6.1+; refer to Microsoft's [documentation](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) for compatibility information.
 
 **[Castle](https://castle.io) analyzes user behavior in web and mobile apps to stop fraud before it happens.**
 

@@ -2,6 +2,13 @@
 
 ## master/develop
 
+## 2.4.0
+
+- Target `net10.0`, `net8.0`, `netstandard2.0` and `net48`; drop the `net461` and `netcoreapp3.1` build configurations.
+- Remove the `Sentry` dependency; runtime/platform information is now resolved via `System.Runtime.InteropServices.RuntimeInformation`.
+- Bump `Newtonsoft.Json` to `13.0.3`.
+- Build, test (across all target frameworks, including `net48`) and pack on GitHub Actions; add `dotnet format` linting and an `.editorconfig`.
+
 ## 2.3.0 (2026-04-02)
 
 Added `scores` property to `RiskResponse`, exposing individual score breakdowns (e.g. `account_abuse`, `account_takeover`, `bot`) from the Risk API.

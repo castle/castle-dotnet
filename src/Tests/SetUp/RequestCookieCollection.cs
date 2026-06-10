@@ -1,5 +1,5 @@
+#if !NET48
 using System.Collections.Generic;
-using System.Web;
 using Microsoft.AspNetCore.Http;
 
 namespace Tests.SetUp;
@@ -20,3 +20,4 @@ public class RequestCookieCollection : Dictionary<string, string>, IRequestCooki
         }
     }
 }
+#endif
