@@ -2,6 +2,23 @@
 
 ## master/develop
 
+## 3.0.0
+
+**Features:**
+
+- Add Lists API: `CreateList`, `GetAllLists`, `GetList`, `UpdateList`, `DeleteList`, `QueryLists`.
+- Add List items API: `CreateListItem`, `GetListItem`, `UpdateListItem`, `QueryListItems`, `CountListItems`, `ArchiveListItem`, `UnarchiveListItem`, `CreateBatchListItems`.
+- Add Privacy API: `RequestUserData`, `DeleteUserData` (`POST` / `DELETE /v1/privacy/users`).
+- Add Events API (enterprise): `EventsSchema`, `QueryEvents`, `GroupEvents`.
+- Add webhook signature verification: `Castle.Webhook.Verify(body, signature)` and `Castle.Webhook.Verify(body, signature, apiSecret)`, validating the `X-Castle-Signature` header (HMAC-SHA256, Base64). Adds `CastleWebhookVerificationException`.
+
+**BREAKING CHANGES:**
+
+- Remove the legacy `Authenticate` and `Track` endpoints (`CastleClient.Authenticate` / `Track` and the matching `Build*Request` / `Send*Request` methods) and the `Verdict` response. Use `Risk`, `Filter` and `Log` instead.
+- Remove device-management endpoints: `GetDevice`, `GetDevicesForUser`, `ApproveDevice`, `ReportDevice`, `ArchiveDevices` (and the `Device`, `DeviceList` and `User` response models).
+- Remove impersonation endpoints: `ImpersonateStart`, `ImpersonateEnd` (and the `ImpersonateStartRequest` / `ImpersonateEndRequest` models).
+- Remove client-id extraction: `Context.FromHttpRequest` no longer reads the `X-Castle-Client-ID` header or `__cid` cookie, and `RequestContext.ClientId` and `DeviceItem.IsCurrentDevice` are removed. The default request context is `headers`, `ip` and `library`.
+
 ## 2.3.0 (2026-04-02)
 
 Added `scores` property to `RiskResponse`, exposing individual score breakdowns (e.g. `account_abuse`, `account_takeover`, `bot`) from the Risk API.

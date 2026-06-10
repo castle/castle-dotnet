@@ -12,26 +12,57 @@
         <member name="M:Castle.CastleClient.#ctor(Castle.Config.CastleConfiguration)">
             <exception cref="T:System.ArgumentException">Thrown when <paramref name="configuration"/> is null</exception>
         </member>
-        <member name="M:Castle.CastleClient.GetDevicesForUser(System.String,System.String)">
-            <exception cref="T:System.ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
+        <member name="M:Castle.CastleClient.CreateList(Castle.Messages.Requests.CreateListRequest)">
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
         </member>
-        <member name="M:Castle.CastleClient.GetDevice(System.String)">
-            <exception cref="T:System.ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
+        <member name="M:Castle.CastleClient.GetList(System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
         </member>
-        <member name="M:Castle.CastleClient.ApproveDevice(System.String)">
-            <exception cref="T:System.ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
+        <member name="M:Castle.CastleClient.UpdateList(System.String,Castle.Messages.Requests.UpdateListRequest)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
         </member>
-        <member name="M:Castle.CastleClient.ReportDevice(System.String)">
-            <exception cref="T:System.ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
+        <member name="M:Castle.CastleClient.DeleteList(System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
         </member>
-        <member name="M:Castle.CastleClient.ImpersonateStart(Castle.Messages.Requests.ImpersonateStartRequest)">
-            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>>
+        <member name="M:Castle.CastleClient.CreateListItem(System.String,Castle.Messages.Requests.CreateListItemRequest)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
         </member>
-        <member name="M:Castle.CastleClient.ImpersonateEnd(Castle.Messages.Requests.ImpersonateEndRequest)">
-            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>>
+        <member name="M:Castle.CastleClient.GetListItem(System.String,System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> or <paramref name="itemId"/> is null or empty</exception>
         </member>
-        <member name="M:Castle.CastleClient.ArchiveDevices(System.String)">
-            <exception cref="T:System.ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
+        <member name="M:Castle.CastleClient.UpdateListItem(System.String,System.String,Castle.Messages.Requests.UpdateListItemRequest)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> or <paramref name="itemId"/> is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        </member>
+        <member name="M:Castle.CastleClient.QueryListItems(System.String,Castle.Messages.Requests.SearchQuery)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+        </member>
+        <member name="M:Castle.CastleClient.CountListItems(System.String,Castle.Messages.Requests.CountListItemsRequest)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+        </member>
+        <member name="M:Castle.CastleClient.ArchiveListItem(System.String,System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> or <paramref name="itemId"/> is null or empty</exception>
+        </member>
+        <member name="M:Castle.CastleClient.UnarchiveListItem(System.String,System.String)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> or <paramref name="itemId"/> is null or empty</exception>
+        </member>
+        <member name="M:Castle.CastleClient.CreateBatchListItems(System.String,Castle.Messages.Requests.BatchListItemsRequest)">
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        </member>
+        <member name="M:Castle.CastleClient.RequestUserData(Castle.Messages.Requests.PrivacyRequest)">
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        </member>
+        <member name="M:Castle.CastleClient.DeleteUserData(Castle.Messages.Requests.PrivacyRequest)">
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        </member>
+        <member name="M:Castle.CastleClient.QueryEvents(Castle.Messages.Requests.EventsQueryRequest)">
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        </member>
+        <member name="M:Castle.CastleClient.GroupEvents(Castle.Messages.Requests.EventsGroupRequest)">
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
         </member>
         <member name="T:Castle.Config.CastleConfiguration">
             <summary>
@@ -48,7 +79,7 @@
         </member>
         <member name="P:Castle.Config.CastleConfiguration.FailOverStrategy">
             <summary>
-            The response action to return in case of a failover in an Authenticate request
+            The response action to return in case of a failover in a Risk or Filter request
             </summary>
         </member>
         <member name="P:Castle.Config.CastleConfiguration.Timeout">
@@ -98,7 +129,7 @@
         </member>
         <member name="P:Castle.Config.CastleConfiguration.DoNotTrack">
             <summary>
-            If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response
+            If true, no requests are actually sent to the Castle Api, and Risk/Filter return a failover response
             </summary>
         </member>
         <member name="P:Castle.Config.CastleConfiguration.Logger">
@@ -141,6 +172,17 @@
              Exception for Invalid request token
             </summary>
         </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastleWebhookVerificationException">
+            <summary>
+            Thrown when an incoming webhook cannot be verified against the
+            <c>X-Castle-Signature</c> header.
+            </summary>
+        </member>
+        <member name="T:Castle.Messages.Requests.SearchQuery">
+            <summary>
+            Query payload shared by the list and list-item search endpoints.
+            </summary>
+        </member>
         <member name="T:Castle.Messages.Responses.VoidResponse">
             <summary>
             Provides consistent internal interfaces for requests with no response
@@ -153,6 +195,33 @@
             <param name="key"></param>
             <param name="message"></param>
             <returns></returns>
+        </member>
+        <member name="T:Castle.Webhook">
+            <summary>
+            Verifies the authenticity of incoming Castle webhooks.
+            </summary>
+        </member>
+        <member name="F:Castle.Webhook.SignatureHeader">
+            <summary>
+            HTTP header carrying the webhook signature.
+            </summary>
+        </member>
+        <member name="M:Castle.Webhook.Verify(System.String,System.String)">
+            <summary>
+            Verifies a webhook using the API secret from the active configuration.
+            </summary>
+            <param name="requestBody">The raw request body, exactly as received.</param>
+            <param name="signature">The value of the <c>X-Castle-Signature</c> header.</param>
+            <exception cref="T:Castle.Infrastructure.Exceptions.CastleWebhookVerificationException">Thrown when the signature does not match.</exception>
+        </member>
+        <member name="M:Castle.Webhook.Verify(System.String,System.String,System.String)">
+            <summary>
+            Verifies a webhook against an explicit API secret.
+            </summary>
+            <param name="requestBody">The raw request body, exactly as received.</param>
+            <param name="signature">The value of the <c>X-Castle-Signature</c> header.</param>
+            <param name="apiSecret">The Castle API secret.</param>
+            <exception cref="T:Castle.Infrastructure.Exceptions.CastleWebhookVerificationException">Thrown when the signature does not match.</exception>
         </member>
     </members>
 </doc>

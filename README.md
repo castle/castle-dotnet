@@ -54,13 +54,13 @@ The `CastleConfiguration` object has a number of properties that control the SDK
 | Property          | Default               | Description                                                                                                                                                             |
 | ----------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ApiSecret         |                       | Secret used to authenticate with the Castle Api. **_Required_**                                                                                                         |
-| FailOverStrategy  | Allow                 | The response action to return in case of a failover in an Authenticate request.                                                                                         |
+| FailOverStrategy  | Allow                 | The response action to return in case of a failover in a Risk or Filter request.                                                                                        |
 | Timeout           | 1000                  | Timeout for requests, in milliseconds.                                                                                                                                  |
 | BaseUrl           | https://api.castle.io | Base Castle Api url.                                                                                                                                                    |
 | LogLevel          | Error                 | The log level applied by the injected `ICastleLogger` implementation.                                                                                                   |
 | AllowList         |                       | List of headers that should be passed intact to the API. A list of recommended headers can be retrieved from the static property `Castle.Headers.AllowList` in the SDK. |
 | DenyList          |                       | List of headers that should _not_ be passed intact to the API.                                                                                                          |
-| DoNotTrack        | false                 | If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response.                                                                 |
+| DoNotTrack        | false                 | If true, no requests are actually sent to the Castle Api, and Risk/Filter return a failover response.                                                                    |
 | Logger            |                       | Your own logger implementation.                                                                                                                                         |
 | IpHeaders         |                       | IP Headers to look for a client IP address.                                                                                                                             |
 | TrustedProxies    |                       | Trusted public proxies list.                                                                                                                                            |
@@ -132,9 +132,114 @@ var response = await client.SendRiskRequest(jsonRequest);
 
 This pattern is available for all actions: `BuildRiskRequest` / `SendRiskRequest`, `BuildFilterRequest` / `SendFilterRequest`, `BuildLogRequest` / `SendLogRequest`.
 
+## Lists
+
+Manage lists and their items.
+
+```csharp
+var list = await client.CreateList(new CreateListRequest()
+{
+    Name = "Blocklist",
+    Color = "$red",
+    PrimaryField = "user.email"
+});
+
+var all = await client.GetAllLists();
+var fetched = await client.GetList(list.Id);
+await client.UpdateList(list.Id, new UpdateListRequest() { Name = "Renamed" });
+await client.DeleteList(list.Id);
+
+var matches = await client.QueryLists(new SearchQuery()
+{
+    Filters = new List<QueryFilter>()
+    {
+        new QueryFilter() { Field = "name", Op = "$eq", Value = "Blocklist" }
+    }
+});
+```
+
+List items:
+
+```csharp
+var item = await client.CreateListItem(list.Id, new CreateListItemRequest()
+{
+    PrimaryValue = "user@example.com",
+    Author = new ListItemAuthor() { Type = "$user", Identifier = "user:123" }
+});
+
+await client.GetListItem(list.Id, item.Id);
+await client.UpdateListItem(list.Id, item.Id, new UpdateListItemRequest() { Comment = "Flagged" });
+await client.QueryListItems(list.Id, new SearchQuery());
+await client.CountListItems(list.Id, new CountListItemsRequest());
+await client.ArchiveListItem(list.Id, item.Id);
+await client.UnarchiveListItem(list.Id, item.Id);
+await client.CreateBatchListItems(list.Id, new BatchListItemsRequest()
+{
+    Items = new List<CreateListItemRequest>() { /* ... */ }
+});
+```
+
+## Privacy
+
+Request or delete the data Castle stores for a user.
+
+```csharp
+await client.RequestUserData(new PrivacyRequest()
+{
+    Identifier = "user@example.com",
+    IdentifierType = "$email"
+});
+
+await client.DeleteUserData(new PrivacyRequest()
+{
+    Identifier = "user@example.com",
+    IdentifierType = "$email"
+});
+```
+
+## Events (enterprise)
+
+Query event data.
+
+```csharp
+var schema = await client.EventsSchema();
+
+var events = await client.QueryEvents(new EventsQueryRequest()
+{
+    Filters = new List<QueryFilter>()
+    {
+        new QueryFilter() { Field = "name", Op = "$eq", Value = "$login" }
+    }
+});
+
+var grouped = await client.GroupEvents(new EventsGroupRequest()
+{
+    Filters = new List<QueryFilter>(),
+    GroupBy = new EventsGroupBy() { Fields = new List<string>() { "name" } }
+});
+```
+
+## Webhooks
+
+Verify the authenticity of incoming Castle webhooks against the `X-Castle-Signature` header.
+
+```csharp
+try
+{
+    Castle.Webhook.Verify(requestBody, Request.Headers["X-Castle-Signature"]);
+    // handle the webhook payload
+}
+catch (CastleWebhookVerificationException)
+{
+    // reject the request
+}
+```
+
+By default the API secret is read from the active `CastleConfiguration`; an explicit secret can be passed as a third argument.
+
 ## Request Context
 
-Use `Castle.Context.FromHttpRequest()` to extract client context (IP, headers, client ID) from the current HTTP request.
+Use `Castle.Context.FromHttpRequest()` to extract client context (IP and headers) from the current HTTP request.
 
 ### ASP&#46;NET Core
 
