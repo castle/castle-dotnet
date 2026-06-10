@@ -30,11 +30,11 @@ CI runs the modern frameworks on Linux and the full matrix (including `net48`) o
 
 ## Formatting
 
-Code style is enforced with `dotnet format` against the `.editorconfig`:
+Code style follows the `.editorconfig`. You can apply it with `dotnet format`:
 
 `dotnet format src/Castle.Sdk.sln`
 
-Run with `--verify-no-changes` to check without writing (this is what CI runs).
+Run with `--verify-no-changes` to check without writing.
 
 ## Pack
 

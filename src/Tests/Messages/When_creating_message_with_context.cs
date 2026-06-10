@@ -11,7 +11,7 @@ namespace Tests.Messages
         public void Should_set_library_info(RequestContext context)
         {
             context.Library.Name.Should().Be("castle-dotnet");
-            context.Library.Version.Split(".").Length.Should().Be(3);
+            context.Library.Version.Split('.').Length.Should().Be(3);
 #if NET48
             context.Library.Platform.Should().Be(".NET Framework");
 #else
