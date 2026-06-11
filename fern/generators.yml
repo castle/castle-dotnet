@@ -1,0 +1,13 @@
+api:
+  specs:
+    - openapi: ./openapi/openapi.yml
+groups:
+  csharp-sdk:
+    generators:
+      - name: fernapi/fern-csharp-sdk
+        version: 2.68.2
+        output:
+          location: local-file-system
+          path: ../generated/csharp
+        github:
+          repository: castle/castle-dotnet
