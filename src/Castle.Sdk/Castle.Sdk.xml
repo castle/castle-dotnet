@@ -178,9 +178,112 @@
             <c>X-Castle-Signature</c> header.
             </summary>
         </member>
+        <member name="P:Castle.Messages.Requests.ActionRequest.AdditionalData">
+            <summary>
+            Arbitrary top-level request params not covered by a typed property. Serialized
+            inline, so new API params can be sent without an SDK release. Keys must use the
+            API's raw names (snake_case).
+            </summary>
+        </member>
         <member name="T:Castle.Messages.Requests.SearchQuery">
             <summary>
             Query payload shared by the list and list-item search endpoints.
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.BatchListItemsResponse.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.CountResponse.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.DeviceContext.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.DeviceItem.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.EventsResponse.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.EventsSchemaResponse.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.ListItemResponse.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.ListResponse.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.Location.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.Policy.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.ScoreItem.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.RiskResponse.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.RiskResponse.Internal">
+            <summary>
+            The full raw JSON payload as returned by the API, populated on deserialization.
+            </summary>
+        </member>
+        <member name="P:Castle.Messages.Responses.UserAgent.AdditionalData">
+            <summary>
+            Captures any fields returned by the API that are not mapped to a typed
+            property, so new fields are accessible without an SDK release. Keys are the
+            raw API names (snake_case).
             </summary>
         </member>
         <member name="T:Castle.Messages.Responses.VoidResponse">
