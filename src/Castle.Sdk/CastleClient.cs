@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Castle.Config;
 using Castle.Infrastructure;
@@ -29,47 +30,6 @@ namespace Castle
             _logger = new LoggerWithLevels(configuration.Logger, configuration.LogLevel);
 
             _messageSender = MessageSenderFactory.Create(configuration, _logger);
-        }
-
-        public JObject BuildAuthenticateRequest(ActionRequest request)
-        {
-            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
-            return JsonForCastle.FromObject(prepared);
-        }
-
-        public async Task<Verdict> SendAuthenticateRequest(JObject request)
-        {
-            return await TryRequest(() => Actions.Authenticate.Execute(
-                () => _messageSender.Post<Verdict>("/v1/authenticate", request),
-                _configuration,
-                _logger));
-        }
-
-        public async Task<Verdict> Authenticate(ActionRequest request)
-        {
-            var jsonRequest = BuildAuthenticateRequest(request);
-
-            return await SendAuthenticateRequest(jsonRequest);
-        }
-
-        public JObject BuildTrackRequest(ActionRequest request)
-        {
-            var prepared = (request ?? new ActionRequest()).PrepareApiCopy(_configuration.AllowList, _configuration.DenyList);
-            return JsonForCastle.FromObject(prepared);
-        }
-
-        public async Task SendTrackRequest(JObject request)
-        {
-            await TryRequest(() => Actions.Track.Execute(
-                () => _messageSender.Post<VoidResponse>("/v1/track", request),
-                _configuration));
-        }
-
-        public async Task Track(ActionRequest request)
-        {
-            var jsonRequest = BuildTrackRequest(request);
-
-            await SendTrackRequest(jsonRequest);
         }
 
         #region filter
@@ -145,62 +105,176 @@ namespace Castle
         #endregion
 
 
-        /// <exception cref="ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
-        public async Task<DeviceList> GetDevicesForUser(string userId, string clientId = null)
-        {
-            ArgumentGuard.NotNullOrEmpty(userId, nameof(userId));
+        #region lists
 
-            var endpoint = QueryStringBuilder.Append($"/v1/users/{userId}/devices", "client_id", clientId);
-            return await TryRequest(() => _messageSender.Get<DeviceList>(endpoint));
-        }
-
-        /// <exception cref="ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
-        public async Task<Device> GetDevice(string deviceToken)
-        {
-            ArgumentGuard.NotNullOrEmpty(deviceToken, nameof(deviceToken));
-
-            return await TryRequest(() => _messageSender.Get<Device>($"/v1/devices/{deviceToken}"));
-        }
-
-        /// <exception cref="ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
-        public async Task ApproveDevice(string deviceToken)
-        {
-            ArgumentGuard.NotNullOrEmpty(deviceToken, nameof(deviceToken));
-
-            await TryRequest(() => _messageSender.Put<VoidResponse>($"/v1/devices/{deviceToken}/approve"));
-        }
-
-        /// <exception cref="ArgumentException">Thrown when <paramref name="deviceToken"/> is null or empty</exception>>
-        public async Task ReportDevice(string deviceToken)
-        {
-            ArgumentGuard.NotNullOrEmpty(deviceToken, nameof(deviceToken));
-
-            await TryRequest(() => _messageSender.Put<VoidResponse>($"/v1/devices/{deviceToken}/report"));
-        }
-
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>>
-        public async Task ImpersonateStart(ImpersonateStartRequest request)
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        public async Task<ListResponse> CreateList(CreateListRequest request)
         {
             ArgumentGuard.NotNull(request, nameof(request));
 
-            await TryRequest(() => _messageSender.Post<VoidResponse>("/v1/impersonate", request));
+            return await TryRequest(() => _messageSender.Post<ListResponse>("/v1/lists", request));
         }
 
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>>
-        public async Task ImpersonateEnd(ImpersonateEndRequest request)
+        public async Task<List<ListResponse>> GetAllLists()
+        {
+            return await TryRequest(() => _messageSender.Get<List<ListResponse>>("/v1/lists"));
+        }
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+        public async Task<ListResponse> GetList(string listId)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+
+            return await TryRequest(() => _messageSender.Get<ListResponse>($"/v1/lists/{listId}"));
+        }
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        public async Task<ListResponse> UpdateList(string listId, UpdateListRequest request)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+            ArgumentGuard.NotNull(request, nameof(request));
+
+            return await TryRequest(() => _messageSender.Put<ListResponse>($"/v1/lists/{listId}", request));
+        }
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+        public async Task DeleteList(string listId)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+
+            await TryRequest(() => _messageSender.Delete<VoidResponse>($"/v1/lists/{listId}", null));
+        }
+
+        public async Task<List<ListResponse>> QueryLists(SearchQuery query)
+        {
+            return await TryRequest(() => _messageSender.Post<List<ListResponse>>("/v1/lists/query", query ?? new SearchQuery()));
+        }
+
+        #endregion
+
+        #region list items
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        public async Task<ListItemResponse> CreateListItem(string listId, CreateListItemRequest request)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+            ArgumentGuard.NotNull(request, nameof(request));
+
+            return await TryRequest(() => _messageSender.Post<ListItemResponse>($"/v1/lists/{listId}/items", request));
+        }
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> or <paramref name="itemId"/> is null or empty</exception>
+        public async Task<ListItemResponse> GetListItem(string listId, string itemId)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+            ArgumentGuard.NotNullOrEmpty(itemId, nameof(itemId));
+
+            return await TryRequest(() => _messageSender.Get<ListItemResponse>($"/v1/lists/{listId}/items/{itemId}"));
+        }
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> or <paramref name="itemId"/> is null or empty</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        public async Task<ListItemResponse> UpdateListItem(string listId, string itemId, UpdateListItemRequest request)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+            ArgumentGuard.NotNullOrEmpty(itemId, nameof(itemId));
+            ArgumentGuard.NotNull(request, nameof(request));
+
+            return await TryRequest(() => _messageSender.Put<ListItemResponse>($"/v1/lists/{listId}/items/{itemId}", request));
+        }
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+        public async Task<List<ListItemResponse>> QueryListItems(string listId, SearchQuery query)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+
+            return await TryRequest(() => _messageSender.Post<List<ListItemResponse>>($"/v1/lists/{listId}/items/query", query ?? new SearchQuery()));
+        }
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+        public async Task<CountResponse> CountListItems(string listId, CountListItemsRequest request)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+
+            return await TryRequest(() => _messageSender.Post<CountResponse>($"/v1/lists/{listId}/items/count", request ?? new CountListItemsRequest()));
+        }
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> or <paramref name="itemId"/> is null or empty</exception>
+        public async Task ArchiveListItem(string listId, string itemId)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+            ArgumentGuard.NotNullOrEmpty(itemId, nameof(itemId));
+
+            await TryRequest(() => _messageSender.Delete<VoidResponse>($"/v1/lists/{listId}/items/{itemId}/archive", null));
+        }
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> or <paramref name="itemId"/> is null or empty</exception>
+        public async Task UnarchiveListItem(string listId, string itemId)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+            ArgumentGuard.NotNullOrEmpty(itemId, nameof(itemId));
+
+            await TryRequest(() => _messageSender.Put<VoidResponse>($"/v1/lists/{listId}/items/{itemId}/unarchive"));
+        }
+
+        /// <exception cref="ArgumentException">Thrown when <paramref name="listId"/> is null or empty</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        public async Task<BatchListItemsResponse> CreateBatchListItems(string listId, BatchListItemsRequest request)
+        {
+            ArgumentGuard.NotNullOrEmpty(listId, nameof(listId));
+            ArgumentGuard.NotNull(request, nameof(request));
+
+            return await TryRequest(() => _messageSender.Post<BatchListItemsResponse>($"/v1/lists/{listId}/items/batch", request));
+        }
+
+        #endregion
+
+        #region privacy
+
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        public async Task RequestUserData(PrivacyRequest request)
         {
             ArgumentGuard.NotNull(request, nameof(request));
 
-            await TryRequest(() => _messageSender.Delete<VoidResponse>("/v1/impersonate", request));
+            await TryRequest(() => _messageSender.Post<VoidResponse>("/v1/privacy/users", request));
         }
 
-        /// <exception cref="ArgumentException">Thrown when <paramref name="userId"/> is null or empty</exception>>
-        public async Task<User> ArchiveDevices(string userId)
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        public async Task DeleteUserData(PrivacyRequest request)
         {
-            ArgumentGuard.NotNullOrEmpty(userId, nameof(userId));
+            ArgumentGuard.NotNull(request, nameof(request));
 
-            return await TryRequest(() => _messageSender.Put<User>($"/v1/users/{userId}/archive_devices"));
+            await TryRequest(() => _messageSender.Delete<VoidResponse>("/v1/privacy/users", request));
         }
+
+        #endregion
+
+        #region events
+
+        public async Task<EventsSchemaResponse> EventsSchema()
+        {
+            return await TryRequest(() => _messageSender.Get<EventsSchemaResponse>("/v1/events/schema"));
+        }
+
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        public async Task<EventsResponse> QueryEvents(EventsQueryRequest request)
+        {
+            ArgumentGuard.NotNull(request, nameof(request));
+
+            return await TryRequest(() => _messageSender.Post<EventsResponse>("/v1/events/query", request));
+        }
+
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null</exception>
+        public async Task<EventsResponse> GroupEvents(EventsGroupRequest request)
+        {
+            ArgumentGuard.NotNull(request, nameof(request));
+
+            return await TryRequest(() => _messageSender.Post<EventsResponse>("/v1/events/group", request));
+        }
+
+        #endregion
 
         private async Task<T> TryRequest<T>(Func<Task<T>> request)
             where T : class

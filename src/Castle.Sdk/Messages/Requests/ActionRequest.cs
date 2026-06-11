@@ -49,6 +49,14 @@ namespace Castle.Messages.Requests
 
         public RequestContext Context { get; set; } = new RequestContext();
 
+        /// <summary>
+        /// Arbitrary top-level request params not covered by a typed property. Serialized
+        /// inline, so new API params can be sent without an SDK release. Keys must use the
+        /// API's raw names (snake_case).
+        /// </summary>
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalData { get; } = new Dictionary<string, object>();
+
         internal ActionRequest PrepareApiCopy(string[] allowList, string[] denyList)
         {
             var copy = (ActionRequest)MemberwiseClone();
@@ -56,9 +64,6 @@ namespace Castle.Messages.Requests
             copy.Context = Context.WithHeaders(scrubbed);
 
             copy.SentAt = DateTime.Now;
-
-            // Newtonsoft.Json doesn't apply custom converter to null values, so this must be empty instead
-            copy.Context.ClientId = copy.Context.ClientId ?? "";
 
             return copy;
         }

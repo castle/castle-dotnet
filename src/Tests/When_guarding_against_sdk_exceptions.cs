@@ -14,10 +14,10 @@ namespace Tests
     {
         [Theory, AutoFakeData]
         public async Task Should_return_request_response_if_no_exception_is_thrown(
-            Verdict response)
+            RiskResponse response)
         {
             var logger = Substitute.For<IInternalLogger>();
-            async Task<Verdict> DoRequest()
+            async Task<RiskResponse> DoRequest()
             {
                 return await Task.FromResult(response);
             }
@@ -32,9 +32,9 @@ namespace Tests
             CastleExternalException exception)
         {
             var logger = Substitute.For<IInternalLogger>();
-            async Task<Verdict> DoRequest()
+            async Task<RiskResponse> DoRequest()
             {
-                return await Task.FromException<Verdict>(exception);
+                return await Task.FromException<RiskResponse>(exception);
             }
 
             Func<Task> act = async () => await ExceptionGuard.Try(DoRequest, logger);
@@ -47,9 +47,9 @@ namespace Tests
             Exception exception)
         {
             var logger = Substitute.For<IInternalLogger>();
-            async Task<Verdict> DoRequest()
+            async Task<RiskResponse> DoRequest()
             {
-                return await Task.FromException<Verdict>(exception);
+                return await Task.FromException<RiskResponse>(exception);
             }
 
             Func<Task> act = async () => await ExceptionGuard.Try(DoRequest, logger);
@@ -62,9 +62,9 @@ namespace Tests
             Exception exception)
         {
             var logger = Substitute.For<IInternalLogger>();
-            async Task<Verdict> DoRequest()
+            async Task<RiskResponse> DoRequest()
             {
-                return await Task.FromException<Verdict>(exception);
+                return await Task.FromException<RiskResponse>(exception);
             }
 
             await ExceptionGuard.Try(DoRequest, logger);
@@ -77,9 +77,9 @@ namespace Tests
             Exception exception)
         {
             var logger = Substitute.For<IInternalLogger>();
-            async Task<Verdict> DoRequest()
+            async Task<RiskResponse> DoRequest()
             {
-                return await Task.FromException<Verdict>(exception);
+                return await Task.FromException<RiskResponse>(exception);
             }
 
             var result = await ExceptionGuard.Try(DoRequest, logger);
@@ -88,36 +88,33 @@ namespace Tests
         }
 
         [Theory, AutoFakeData]
-        public Task Should_throw_if_exception_of_type_not_found(CastleClientErrorException exception)
+        public async Task Should_throw_if_exception_of_type_not_found(CastleClientErrorException exception)
         {
             var logger = Substitute.For<IInternalLogger>();
 
-            Func<Task<Verdict>> request = async () => await Task.FromException<Verdict>(exception);
-            Func<Task<Verdict>> res = async() => await ExceptionGuard.Try(request, logger);
-            res.Should().Throw<CastleClientErrorException>();
-            return Task.CompletedTask;
+            Func<Task<RiskResponse>> request = async () => await Task.FromException<RiskResponse>(exception);
+            Func<Task<RiskResponse>> res = async() => await ExceptionGuard.Try(request, logger);
+            await res.Should().ThrowAsync<CastleClientErrorException>();
         }
 
         [Theory, AutoFakeData]
-        public Task Should_throw_if_exception_of_type_invalid_parameters(CastleInvalidParametersException exception)
+        public async Task Should_throw_if_exception_of_type_invalid_parameters(CastleInvalidParametersException exception)
         {
             var logger = Substitute.For<IInternalLogger>();
 
-            Func<Task<Verdict>> request = async () => await Task.FromException<Verdict>(exception);
-            Func<Task<Verdict>> res = async() => await ExceptionGuard.Try(request, logger);
-            res.Should().Throw<CastleInvalidParametersException>();
-            return Task.CompletedTask;
+            Func<Task<RiskResponse>> request = async () => await Task.FromException<RiskResponse>(exception);
+            Func<Task<RiskResponse>> res = async() => await ExceptionGuard.Try(request, logger);
+            await res.Should().ThrowAsync<CastleInvalidParametersException>();
         }
 
         [Theory, AutoFakeData]
-        public Task Should_throw_if_exception_of_type_invalid_token(CastleInvalidTokenException exception)
+        public async Task Should_throw_if_exception_of_type_invalid_token(CastleInvalidTokenException exception)
         {
             var logger = Substitute.For<IInternalLogger>();
 
-            Func<Task<Verdict>> request = async () => await Task.FromException<Verdict>(exception);
-            Func<Task<Verdict>> res = async() => await ExceptionGuard.Try(request, logger);
-            res.Should().Throw<CastleInvalidTokenException>();
-            return Task.CompletedTask;
+            Func<Task<RiskResponse>> request = async () => await Task.FromException<RiskResponse>(exception);
+            Func<Task<RiskResponse>> res = async() => await ExceptionGuard.Try(request, logger);
+            await res.Should().ThrowAsync<CastleInvalidTokenException>();
         }
     }
 }

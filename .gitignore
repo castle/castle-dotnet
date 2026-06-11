@@ -4,6 +4,9 @@ project.lock.json
 .DS_Store
 *.pyc
 nupkg/
+*.nupkg
+*.snupkg
+*.zip
 
 # Visual Studio Code
 .vscode
@@ -27,6 +30,9 @@ x86/
 build/
 bld/
 [Bb]in/
+# Keep the repo's top-level bin/ scripts (build output bin/ dirs stay ignored).
+!/bin/
+!/bin/**
 [Oo]bj/
 [Oo]ut/
 msbuild.log

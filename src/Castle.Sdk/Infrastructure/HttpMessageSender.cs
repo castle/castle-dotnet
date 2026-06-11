@@ -51,10 +51,10 @@ namespace Castle.Infrastructure
             return await SendRequest<TResponse>(HttpMethod.Get, endpoint);
         }
 
-        public async Task<TResponse> Put<TResponse>(string endpoint)
+        public async Task<TResponse> Put<TResponse>(string endpoint, object payload = null)
             where TResponse : class, new()
         {
-            return await SendRequest<TResponse>(HttpMethod.Put, endpoint);
+            return await SendRequest<TResponse>(HttpMethod.Put, endpoint, payload);
         }
 
         public async Task<TResponse> Delete<TResponse>(string endpoint, object payload)

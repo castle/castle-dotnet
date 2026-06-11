@@ -11,8 +11,12 @@ namespace Tests.Messages
         public void Should_set_library_info(RequestContext context)
         {
             context.Library.Name.Should().Be("castle-dotnet");
-            context.Library.Version.Split(".").Length.Should().Be(3);
+            context.Library.Version.Split('.').Length.Should().Be(3);
+#if NET48
+            context.Library.Platform.Should().Be(".NET Framework");
+#else
             context.Library.Platform.Should().Be(".NET");
+#endif
 
             var platformVersionNumbers = context.Library.PlatformVersion.Replace(".", "");
             int.TryParse(platformVersionNumbers, out _).Should().BeTrue();
@@ -21,8 +25,6 @@ namespace Tests.Messages
         public static IEnumerable<object[]> TestCases => new List<object[]>()
         {
             new object[] { new ActionRequest().Context },
-            new object[] { new ImpersonateStartRequest().Context },
-            new object[] { new ImpersonateEndRequest().Context },
         };
     }
 }

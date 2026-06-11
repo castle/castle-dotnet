@@ -1,0 +1,41 @@
+name: Test
+
+on:
+  push:
+    branches: [develop, master]
+  pull_request:
+
+jobs:
+  test-linux:
+    name: Test (Linux, modern frameworks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+      - name: Test net8.0
+        run: dotnet test src/Tests/Tests.csproj -c Release -f net8.0
+      - name: Test net10.0
+        run: dotnet test src/Tests/Tests.csproj -c Release -f net10.0
+
+  test-windows:
+    name: Test (Windows, all frameworks) and pack
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+      - name: Test all target frameworks (incl. net48)
+        run: dotnet test src/Tests/Tests.csproj -c Release
+      - name: Pack
+        run: dotnet pack src/Castle.Sdk/Castle.Sdk.csproj -c Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: src/Castle.Sdk/bin/Release/*.nupkg

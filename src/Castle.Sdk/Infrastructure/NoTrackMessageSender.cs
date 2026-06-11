@@ -14,7 +14,7 @@ namespace Castle.Infrastructure
             return await Task.FromResult(new TResponse());
         }
 
-        public async Task<TResponse> Put<TResponse>(string endpoint) where TResponse : class, new()
+        public async Task<TResponse> Put<TResponse>(string endpoint, object payload = null) where TResponse : class, new()
         {
             return await Task.FromResult(new TResponse());
         }

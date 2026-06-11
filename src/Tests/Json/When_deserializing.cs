@@ -32,7 +32,7 @@ namespace Tests.Json
         public void Should_deserialize_with_json_property_if_appropriate_type(IHasJson obj)
         {
             var json = JsonForCastle.SerializeObject(obj);
-            var result = JsonForCastle.DeserializeObject<Device>(json);
+            var result = JsonForCastle.DeserializeObject<ListResponse>(json);
 
             result.Internal.Should().NotBeNull();
         }
@@ -59,9 +59,8 @@ namespace Tests.Json
 
                 return new List<object[]>()
                 {
-                    new object[] {fixture.Create<Device>()},
-                    new object[] {fixture.Create<DeviceList>()},
-                    new object[] {fixture.Create<Verdict>()}
+                    new object[] {fixture.Create<ListResponse>()},
+                    new object[] {fixture.Create<ListItemResponse>()}
                 };
             }
         }

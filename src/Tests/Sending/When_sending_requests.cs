@@ -66,7 +66,7 @@ namespace Tests.Sending
         }
 
         [Theory, AutoFakeData(typeof(HttpMessageHandlerFailureCustomization))]
-        public void Should_throw_castle_exception_if_not_success_code(
+        public async Task Should_throw_castle_exception_if_not_success_code(
             CastleConfiguration configuration,
             HttpMessageHandler handler)
         {
@@ -76,12 +76,12 @@ namespace Tests.Sending
             foreach (var testMethod in TestMethods)
             {
                 Func<Task> act = async () => await testMethod(sut);
-                act.Should().Throw<CastleInternalException>();
+                await act.Should().ThrowAsync<CastleInternalException>();
             }
         }
 
         [Theory, AutoFakeData(typeof(HttpMessageHandlerCancelledCustomization))]
-        public void Should_throw_timeout_exception_if_operation_cancelled(
+        public async Task Should_throw_timeout_exception_if_operation_cancelled(
             CastleConfiguration configuration,
             HttpMessageHandler handler)
         {
@@ -91,7 +91,7 @@ namespace Tests.Sending
             foreach (var testMethod in TestMethods)
             {
                 Func<Task> act = async () => await testMethod(sut);
-                act.Should().Throw<CastleTimeoutException>();
+                await act.Should().ThrowAsync<CastleTimeoutException>();
             }
         }
 
