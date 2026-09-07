@@ -1,6 +1,6 @@
 # Changelog
 
-## master/develop
+## Unreleased
 
 ## 3.0.0
 
