@@ -22,208 +22,222 @@ namespace Tests
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_authenticate(ActionRequest request, CastleClient sut)
-        {
-            Func<Task> act = async () => await sut.Authenticate(request);
-            act.Should().NotThrow();
-        }
-
-        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_not_throw_exception_if_calling_authenticate_with_null_request(CastleClient sut)
-        {
-            Func<Task> act = async () => await sut.Authenticate(null);
-            act.Should().NotThrow();
-        }
-
-        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_send_risk(ActionRequest request, CastleClient sut)
+        public async Task Should_send_risk(ActionRequest request, CastleClient sut)
         {
             Func<Task> act = async () => await sut.Risk(request);
-            act.Should().NotThrow();
+            await act.Should().NotThrowAsync();
         }
 
-
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_not_throw_exception_if_calling_risk_with_null_request(CastleClient sut)
+        public async Task Should_not_throw_exception_if_calling_risk_with_null_request(CastleClient sut)
         {
             Func<Task> act = async () => await sut.Risk(null);
-            act.Should().NotThrow();
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_send_filter(ActionRequest request, CastleClient sut)
+        public async Task Should_send_filter(ActionRequest request, CastleClient sut)
         {
             Func<Task> act = async () => await sut.Filter(request);
-            act.Should().NotThrow();
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_not_throw_exception_if_calling_filter_with_null_request(CastleClient sut)
+        public async Task Should_not_throw_exception_if_calling_filter_with_null_request(CastleClient sut)
         {
             Func<Task> act = async () => await sut.Filter(null);
-            act.Should().NotThrow();
-        }
-
-
-        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_track(ActionRequest request, CastleClient sut)
-        {
-            Func<Task> act = async () => await sut.Track(request);
-            act.Should().NotThrow();
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_not_throw_exception_if_calling_track_with_null_request(CastleClient sut)
-        {
-            Func<Task> act = async () => await sut.Track(null);
-            act.Should().NotThrow();
-        }
-
-        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_log(ActionRequest request, CastleClient sut)
+        public async Task Should_log(ActionRequest request, CastleClient sut)
         {
             Func<Task> act = async () => await sut.Log(request);
-            act.Should().NotThrow();
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_not_throw_exception_if_calling_log_with_null_request(CastleClient sut)
+        public async Task Should_not_throw_exception_if_calling_log_with_null_request(CastleClient sut)
         {
             Func<Task> act = async () => await sut.Log(null);
-            act.Should().NotThrow();
+            await act.Should().NotThrowAsync();
+        }
+
+        #region lists
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public async Task Should_create_list(CreateListRequest request, CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.CreateList(request);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_get_user_devices(string userId, CastleClient sut)
+        public async Task Should_throw_if_creating_list_with_null_request(CastleClient sut)
         {
-            Func<Task> act = async () => await sut.GetDevicesForUser(userId);
-            act.Should().NotThrow();
+            Func<Task> act = async () => await sut.CreateList(null);
+            await act.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_user_devices_with_empty_userId(CastleClient sut)
+        public async Task Should_get_all_lists(CastleClient sut)
         {
-            Func<Task> act = async () => await sut.GetDevicesForUser("");
-            act.Should().Throw<ArgumentException>();
+            Func<Task> act = async () => await sut.GetAllLists();
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_user_devices_with_null_userId(CastleClient sut)
+        public async Task Should_get_list(string listId, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.GetDevicesForUser(null);
-            act.Should().Throw<ArgumentException>();
+            Func<Task> act = async () => await sut.GetList(listId);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_get_device(string deviceToken, CastleClient sut)
+        public async Task Should_throw_if_getting_list_with_empty_id(CastleClient sut)
         {
-            Func<Task> act = async () => await sut.GetDevice(deviceToken);
-            act.Should().NotThrow();
+            Func<Task> act = async () => await sut.GetList("");
+            await act.Should().ThrowAsync<ArgumentException>();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_get_device_with_empty_token(CastleClient sut)
+        public async Task Should_update_list(string listId, UpdateListRequest request, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.GetDevice("");
-            act.Should().Throw<ArgumentException>();
+            Func<Task> act = async () => await sut.UpdateList(listId, request);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_get_device_with_null_token(CastleClient sut)
+        public async Task Should_delete_list(string listId, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.GetDevice(null);
-            act.Should().Throw<ArgumentException>();
+            Func<Task> act = async () => await sut.DeleteList(listId);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_approve_device(string deviceToken, CastleClient sut)
+        public async Task Should_query_lists(SearchQuery query, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ApproveDevice(deviceToken);
-            act.Should().NotThrow();
+            Func<Task> act = async () => await sut.QueryLists(query);
+            await act.Should().NotThrowAsync();
+        }
+
+        #endregion
+
+        #region list items
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public async Task Should_create_list_item(string listId, CreateListItemRequest request, CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.CreateListItem(listId, request);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_approve_device_with_empty_token(CastleClient sut)
+        public async Task Should_throw_if_creating_list_item_with_empty_list_id(CreateListItemRequest request, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ApproveDevice("");
-            act.Should().Throw<ArgumentException>();
+            Func<Task> act = async () => await sut.CreateListItem("", request);
+            await act.Should().ThrowAsync<ArgumentException>();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_approve_device_with_null_token(CastleClient sut)
+        public async Task Should_get_list_item(string listId, string itemId, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ApproveDevice(null);
-            act.Should().Throw<ArgumentException>();
+            Func<Task> act = async () => await sut.GetListItem(listId, itemId);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_report_device(string deviceToken, CastleClient sut)
+        public async Task Should_update_list_item(string listId, string itemId, UpdateListItemRequest request, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ReportDevice(deviceToken);
-            act.Should().NotThrow();
+            Func<Task> act = async () => await sut.UpdateListItem(listId, itemId, request);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_report_device_with_empty_token(CastleClient sut)
+        public async Task Should_query_list_items(string listId, SearchQuery query, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ReportDevice("");
-            act.Should().Throw<ArgumentException>();
+            Func<Task> act = async () => await sut.QueryListItems(listId, query);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_report_device_with_null_token(CastleClient sut)
+        public async Task Should_count_list_items(string listId, CountListItemsRequest request, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ReportDevice(null);
-            act.Should().Throw<ArgumentException>();
+            Func<Task> act = async () => await sut.CountListItems(listId, request);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_start_impersonation(ImpersonateStartRequest request, CastleClient sut)
+        public async Task Should_archive_list_item(string listId, string itemId, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ImpersonateStart(request);
-            act.Should().NotThrow();
+            Func<Task> act = async () => await sut.ArchiveListItem(listId, itemId);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_impersonate_start_with_null_request(CastleClient sut)
+        public async Task Should_unarchive_list_item(string listId, string itemId, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ImpersonateStart(null);
-            act.Should().Throw<ArgumentNullException>();
+            Func<Task> act = async () => await sut.UnarchiveListItem(listId, itemId);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_end_impersonation(ImpersonateEndRequest request, CastleClient sut)
+        public async Task Should_create_batch_list_items(string listId, BatchListItemsRequest request, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ImpersonateEnd(request);
-            act.Should().NotThrow();
+            Func<Task> act = async () => await sut.CreateBatchListItems(listId, request);
+            await act.Should().NotThrowAsync();
+        }
+
+        #endregion
+
+        #region privacy
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public async Task Should_request_user_data(PrivacyRequest request, CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.RequestUserData(request);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_impersonate_end_with_null_request(CastleClient sut)
+        public async Task Should_throw_if_requesting_user_data_with_null_request(CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ImpersonateEnd(null);
-            act.Should().Throw<ArgumentNullException>();
+            Func<Task> act = async () => await sut.RequestUserData(null);
+            await act.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_archive_devices(string userId, CastleClient sut)
+        public async Task Should_delete_user_data(PrivacyRequest request, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ArchiveDevices(userId);
-            act.Should().NotThrow();
+            Func<Task> act = async () => await sut.DeleteUserData(request);
+            await act.Should().NotThrowAsync();
+        }
+
+        #endregion
+
+        #region events
+
+        [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
+        public async Task Should_get_events_schema(CastleClient sut)
+        {
+            Func<Task> act = async () => await sut.EventsSchema();
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_archive_devices_with_empty_userId(CastleClient sut)
+        public async Task Should_query_events(EventsQueryRequest request, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ArchiveDevices("");
-            act.Should().Throw<ArgumentException>();
+            Func<Task> act = async () => await sut.QueryEvents(request);
+            await act.Should().NotThrowAsync();
         }
 
         [Theory, AutoFakeData(typeof(CastleConfigurationNoTrackCustomization))]
-        public void Should_throw_exception_if_calling_archive_devices_with_null_userId(CastleClient sut)
+        public async Task Should_group_events(EventsGroupRequest request, CastleClient sut)
         {
-            Func<Task> act = async () => await sut.ArchiveDevices(null);
-            act.Should().Throw<ArgumentException>();
+            Func<Task> act = async () => await sut.GroupEvents(request);
+            await act.Should().NotThrowAsync();
         }
+
+        #endregion
     }
 }

@@ -40,33 +40,46 @@ namespace Tests.Sending
         }
 
         [Theory, AutoFakeData]
-        public void Should_create_exception_from_httpresponse_not_found(HttpResponseMessage response, string uri)
+        public async Task Should_create_exception_from_httpresponse_not_found(HttpResponseMessage response, string uri)
         {
 
             response.StatusCode = HttpStatusCode.NotFound;
             Func<Task> act = async () => await response.ToCastleException(uri);
-            act.Should().Throw<CastleClientErrorException>();
+            await act.Should().ThrowAsync<CastleClientErrorException>();
         }
 
         [Theory, AutoFakeData]
-        public void Should_create_exception_from_httpresponse_invalid_token(HttpResponseMessage response, string uri)
+        public async Task Should_create_exception_from_httpresponse_invalid_token(HttpResponseMessage response, string uri)
         {
             response.StatusCode = (HttpStatusCode)422;
             response.Content = new StringContent("{'type': 'invalid_request_token','message': 'the token is not valid'}", Encoding.UTF8, "application/json");
 
             Func<Task> act = async () => await response.ToCastleException(uri);
-            act.Should().Throw<CastleInvalidTokenException>();
+            await act.Should().ThrowAsync<CastleInvalidTokenException>();
 
         }
 
                [Theory, AutoFakeData]
-        public void Should_create_exception_from_httpresponse_invalid_parameters(HttpResponseMessage response, string uri)
+        public async Task Should_create_exception_from_httpresponse_invalid_parameters(HttpResponseMessage response, string uri)
         {
             response.StatusCode = (HttpStatusCode)422;
             response.Content = new StringContent("{'message': 'parameters are invalid'}", Encoding.UTF8, "application/json");
 
             Func<Task> act = async () => await response.ToCastleException(uri);
-            act.Should().Throw<CastleInvalidParametersException>();
+            await act.Should().ThrowAsync<CastleInvalidParametersException>();
+        }
+
+        [Theory, AutoFakeData]
+        public async Task Should_create_exception_from_httpresponse_payment_required(HttpResponseMessage response, string uri)
+        {
+            response.StatusCode = HttpStatusCode.PaymentRequired;
+            response.Content = new StringContent(
+                "{'type': 'credit_exhausted','message': 'Included usage credit for this billing period has been used up'}",
+                Encoding.UTF8,
+                "application/json");
+
+            Func<Task> act = async () => await response.ToCastleException(uri);
+            await act.Should().ThrowAsync<CastlePaymentRequiredException>();
         }
     }
 }

@@ -21,27 +21,17 @@ namespace Castle
                 headers.Add(key, request.Headers[key]);
             }
 
-            var clientId = GetClientIdForFramework(request.Headers, name => request.Cookies[name]?.Value);
-
             var ip = GetIpForFramework(request.Headers, ipHeaders,
                 () => request.UserHostAddress,
                 () => CastleConfiguration.Configuration);
 
             return new RequestContext()
             {
-                ClientId = clientId,
                 Headers = headers,
                 Ip = ip
             };
         }
 #endif
-
-        internal static string GetClientIdForFramework(NameValueCollection headers, Func<string, string> getCookieValue)
-        {
-            return headers.AllKeys.Contains("X-Castle-Client-ID", StringComparer.OrdinalIgnoreCase)
-                ? headers["X-Castle-Client-ID"]
-                : getCookieValue("__cid") ?? "";
-        }
 
         internal static string GetIpForFramework(NameValueCollection headers, string[] ipHeaders, Func<string> getIpFromHttpContext, Func<CastleConfiguration> getCastleConfiguration)
         {
@@ -122,21 +112,11 @@ namespace Castle
         {
             return new RequestContext()
             {
-                ClientId = GetClientIdForCore(request.Headers, request.Cookies),
                 Headers = request.Headers.ToDictionary(x => x.Key, y => y.Value.FirstOrDefault()),
                 Ip = GetIpForCore(request.Headers, ipHeaders,
                     () => request.HttpContext.Connection.RemoteIpAddress?.ToString(),
                     () => CastleConfiguration.Configuration)
             };
-        }
-        
-        internal static string GetClientIdForCore(
-            IDictionary<string, Microsoft.Extensions.Primitives.StringValues> headers,
-            Microsoft.AspNetCore.Http.IRequestCookieCollection cookies)
-        {
-            return headers.TryGetValue("X-Castle-Client-ID", out var headerId)
-                ? headerId.First()
-                : cookies["__cid"] ?? "";
         }
         
         internal static string GetIpForCore(

@@ -15,9 +15,9 @@ namespace Tests.Messages
             string[] allowed,
             string[] denyList)
         {
-            var headers = new Dictionary<string, string>(
-                allowed.Select(ToDictionaryEntry)
-                    .Union(denyList.Select(x => ToDictionaryEntry(x.ToUpper()))));
+            var headers = allowed.Select(ToDictionaryEntry)
+                .Union(denyList.Select(x => ToDictionaryEntry(x.ToUpper())))
+                .ToDictionary(p => p.Key, p => p.Value);
 
             var result = HeaderScrubber.Scrub(headers, new string[] { }, denyList);
 
@@ -33,9 +33,9 @@ namespace Tests.Messages
             string[] unallowed,
             string[] allowList)
         {
-            var headers = new Dictionary<string, string>(
-                unallowed.Select(ToDictionaryEntry)
-                    .Union(allowList.Select(x => ToDictionaryEntry(x.ToUpper()))));
+            var headers = unallowed.Select(ToDictionaryEntry)
+                .Union(allowList.Select(x => ToDictionaryEntry(x.ToUpper())))
+                .ToDictionary(p => p.Key, p => p.Value);
 
             var result = HeaderScrubber.Scrub(headers, allowList, new string[] { });
 

@@ -89,5 +89,19 @@ namespace Tests
             await act.Should().ThrowAsync<CastleClientErrorException>();
         }
 
+        [Theory, AutoFakeData]
+        public async Task Should_throw_if_payment_required(
+            CastlePaymentRequiredException exception,
+            CastleConfiguration configuration)
+        {
+            configuration.FailOverStrategy = ActionType.Allow;
+            var logger = Substitute.For<IInternalLogger>();
+
+            Task<RiskResponse> Send() => throw exception;
+
+            Func<Task> act = async () => await Filter.Execute(Send, configuration, logger);
+
+            await act.Should().ThrowAsync<CastlePaymentRequiredException>();
+        }
     }
 }

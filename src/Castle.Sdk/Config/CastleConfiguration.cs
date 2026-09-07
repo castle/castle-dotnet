@@ -24,7 +24,7 @@ namespace Castle.Config
         public string ApiSecret { get; }
 
         /// <summary>
-        /// The response action to return in case of a failover in an Authenticate request
+        /// The response action to return in case of a failover in a Risk or Filter request
         /// </summary>
         public ActionType FailOverStrategy { get; set; } = ActionType.Allow;
 
@@ -74,7 +74,7 @@ namespace Castle.Config
         public bool TrustProxyChain { get; set; } = false;
 
         /// <summary>
-        /// If true, no requests are actually sent to the Castle Api, and Authenticate returns a failover response
+        /// If true, no requests are actually sent to the Castle Api, and Risk/Filter return a failover response
         /// </summary>
         public bool DoNotTrack { get; set; } = false;
 

@@ -9,7 +9,7 @@ namespace Castle.Infrastructure
 
         Task<TResponse> Get<TResponse>(string endpoint) where TResponse : class, new();
 
-        Task<TResponse> Put<TResponse>(string endpoint) where TResponse : class, new();
+        Task<TResponse> Put<TResponse>(string endpoint, object payload = null) where TResponse : class, new();
 
         Task<TResponse> Delete<TResponse>(string endpoint, object payload) where TResponse : class, new();
     }

@@ -6,9 +6,6 @@ namespace Castle.Messages.Requests
 {
     public class RequestContext
     {
-        [JsonConverter(typeof(EmptyStringToFalseConverter))]
-        public string ClientId { get; set; }
-
         public string Ip { get; set; }
 
         [JsonProperty(ItemConverterType = typeof(StringScrubConverter))]
@@ -21,7 +18,6 @@ namespace Castle.Messages.Requests
         {
             return new RequestContext()
             {
-                ClientId = ClientId,
                 Ip = Ip,
                 Library = Library,
                 Headers = headers

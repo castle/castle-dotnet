@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Castle.Infrastructure.Exceptions;
 using Castle.Infrastructure.Json;
+using Newtonsoft.Json;
 
 namespace Castle.Infrastructure.Extensions
 {
@@ -19,6 +19,22 @@ namespace Castle.Infrastructure.Extensions
                 throw new CastleClientErrorException("Invalid response from Castle API", requestUri, message.StatusCode);
             }
             var content = await message.Content.ReadAsStringAsync();
+            if (message.StatusCode == HttpStatusCode.PaymentRequired)
+            {
+                try
+                {
+                    var parsedContent = JsonForCastle.DeserializeObject<Dictionary<string, string>>(content);
+                    if (parsedContent.ContainsKey("message"))
+                    {
+                        throw new CastlePaymentRequiredException(parsedContent["message"], requestUri, message.StatusCode);
+                    }
+                }
+                catch (JsonException)
+                {
+                    throw new CastlePaymentRequiredException(content, requestUri, message.StatusCode);
+                }
+                throw new CastlePaymentRequiredException(content, requestUri, message.StatusCode);
+            }
             if ((int)message.StatusCode == 422)
             {
                 try

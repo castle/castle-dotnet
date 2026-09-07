@@ -14,7 +14,7 @@ namespace Tests
             var result = Castle.Signature.Compute(key, message);
 
             var numberGroups = Regex.Matches(result, @".{2}");
-            var numbers = numberGroups.Select(s => int.Parse(s.Value, NumberStyles.HexNumber)).ToList();
+            var numbers = numberGroups.Cast<Match>().Select(s => int.Parse(s.Value, NumberStyles.HexNumber)).ToList();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Castle.Actions
             {
                 return await send();
             }
-            catch (Exception e) when (e is CastleClientErrorException || e is CastleInvalidTokenException || e is CastleInvalidParametersException)
+            catch (Exception e) when (e is CastleClientErrorException || e is CastleInvalidTokenException || e is CastleInvalidParametersException || e is CastlePaymentRequiredException)
             {
                 throw e;
             }
