@@ -10,8 +10,8 @@
 # publish it to NuGet.
 #
 # Usage:
-#   bin/fetch-nupkg.sh                  # latest successful run on master
-#   bin/fetch-nupkg.sh develop          # latest successful run on a branch
+#   bin/fetch-nupkg.sh                  # latest successful run on main
+#   bin/fetch-nupkg.sh main             # latest successful run on a branch
 #   bin/fetch-nupkg.sh vX.Y.Z           # the run for the commit a tag points at
 #   bin/fetch-nupkg.sh 1a2b3c4          # the run for a specific commit SHA
 #   NUGET_API_KEY=xxx bin/fetch-nupkg.sh vX.Y.Z --push   # download and publish
@@ -30,7 +30,7 @@ NUGET_SOURCE="https://api.nuget.org/v3/index.json"
 
 die() { echo "error: $*" >&2; exit 1; }
 
-REF="master"
+REF="main"
 PUSH="false"
 for arg in "$@"; do
   case "$arg" in
