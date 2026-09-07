@@ -32,6 +32,20 @@ namespace Tests.Json
         }        
 
         [Fact]
+        public void Should_serialize_expand()
+        {
+            var obj = new ActionRequest
+            {
+                Event = "$login",
+                Expand = new List<string> { "all" }
+            };
+
+            var result = JsonForCastle.SerializeObject(obj);
+
+            result.Should().Contain("\"expand\":[\"all\"]");
+        }
+
+        [Fact]
         public void Should_only_allow_serialization_for_scrub()
         {
             Action act = () => JsonForCastle.DeserializeObject<NotValidScrubbing>("{ \"generic_property\":\"test\" }");

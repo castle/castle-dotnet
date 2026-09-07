@@ -26,7 +26,29 @@ namespace Castle.Messages.Responses
         public Policy Policy { get; set; }
         public JObject Signals { get; set; }
 
-       public Dictionary<string, ScoreItem> Scores { get; set; }
+        public Dictionary<string, ScoreItem> Scores { get; set; }
+
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
+        public string Status { get; set; }
+
+        public DateTime? CreatedAt { get; set; }
+
+        public bool? Authenticated { get; set; }
+
+        public string Endpoint { get; set; }
+
+        public JObject Email { get; set; }
+
+        public JObject Ip { get; set; }
+
+        public JObject User { get; set; }
+
+        public JObject Metrics { get; set; }
 
         // FailOver
         public ActionType Action { get; set; }

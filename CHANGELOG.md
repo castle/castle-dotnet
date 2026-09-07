@@ -11,13 +11,17 @@
 - Add Privacy API: `RequestUserData`, `DeleteUserData` (`POST` / `DELETE /v1/privacy/users`).
 - Add Events API (enterprise): `EventsSchema`, `QueryEvents`, `GroupEvents`.
 - Add webhook signature verification: `Castle.Webhook.Verify(body, signature)` and `Castle.Webhook.Verify(body, signature, apiSecret)`, validating the `X-Castle-Signature` header (HMAC-SHA256, Base64). Adds `CastleWebhookVerificationException`.
+- Add `CastlePaymentRequiredException` for HTTP 402.
+- Add `ActionRequest.Expand` for the expanded Event response.
+- Add typed expanded Event fields on `RiskResponse` (`id`, `name`, `type`, `status`, `created_at`, `authenticated`, `endpoint`, `email`, `ip`, `user`, `metrics`).
 
 **Maintenance:**
 
 - Target `net10.0`, `net8.0`, `netstandard2.0` and `net48`; drop the `net461` and `netcoreapp3.1` build configurations.
 - Remove the `Sentry` dependency; runtime/platform information is now resolved via `System.Runtime.InteropServices.RuntimeInformation`.
-- Bump `Newtonsoft.Json` to `13.0.3`.
-- Build, test (across all target frameworks, including `net48`) and pack on GitHub Actions; add an `.editorconfig`.
+- Bump `Newtonsoft.Json` to `13.0.4`.
+- Build, test (across all target frameworks, including `net48`) and pack on GitHub Actions (`checkout` / `setup-dotnet` v5); add an `.editorconfig`.
+- Bump test packages within the same major: `xunit` 2.9.3, `NSubstitute` 5.3.0, `FluentAssertions` 6.12.2, `Microsoft.NET.Test.Sdk` 17.14.1, `coverlet.msbuild` 6.0.4.
 
 **BREAKING CHANGES:**
 

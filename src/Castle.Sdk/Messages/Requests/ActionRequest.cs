@@ -47,6 +47,8 @@ namespace Castle.Messages.Requests
         [JsonProperty("skip_context_validation")]
         public bool SkipContextValidation { get; set; }
 
+        public IList<string> Expand { get; set; }
+
         public RequestContext Context { get; set; } = new RequestContext();
 
         /// <summary>

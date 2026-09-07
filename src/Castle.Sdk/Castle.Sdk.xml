@@ -172,6 +172,11 @@
              Exception for Invalid request token
             </summary>
         </member>
+        <member name="T:Castle.Infrastructure.Exceptions.CastlePaymentRequiredException">
+            <summary>
+            Exception for Payment Required
+            </summary>
+        </member>
         <member name="T:Castle.Infrastructure.Exceptions.CastleWebhookVerificationException">
             <summary>
             Thrown when an incoming webhook cannot be verified against the

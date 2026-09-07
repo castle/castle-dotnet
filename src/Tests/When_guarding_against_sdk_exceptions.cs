@@ -116,5 +116,15 @@ namespace Tests
             Func<Task<RiskResponse>> res = async() => await ExceptionGuard.Try(request, logger);
             await res.Should().ThrowAsync<CastleInvalidTokenException>();
         }
+
+        [Theory, AutoFakeData]
+        public async Task Should_throw_if_exception_of_type_payment_required(CastlePaymentRequiredException exception)
+        {
+            var logger = Substitute.For<IInternalLogger>();
+
+            Func<Task<RiskResponse>> request = async () => await Task.FromException<RiskResponse>(exception);
+            Func<Task<RiskResponse>> res = async () => await ExceptionGuard.Try(request, logger);
+            await res.Should().ThrowAsync<CastlePaymentRequiredException>();
+        }
     }
 }
